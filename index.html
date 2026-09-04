@@ -178,13 +178,16 @@ textarea.reason-input:focus-visible, input.meta-input:focus-visible, select.meta
 .addeval-form.show{display:block;}
 .addeval-header{font-size:13px;font-weight:700;color:var(--primary);margin-bottom:10px;}
 
-table.ind-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:6px;}
-table.ind-table th{background:var(--grey-soft);padding:7px 6px;font-size:11px;text-align:left;}
-table.ind-table td{padding:6px;border-bottom:1px solid var(--border);vertical-align:top;}
-table.ind-table input{width:100%;border:1px solid var(--border);border-radius:5px;padding:5px 6px;font-size:12px;font-family:inherit;}
-.ach-bar-wrap{width:80px;height:7px;background:var(--grey-soft);border-radius:4px;overflow:hidden;}
-.ach-bar-fill{height:100%;border-radius:4px;}
-.ach-pct{font-size:10.5px;color:var(--ink-soft);margin-top:2px;}
+.ind-card{border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:12px;background:#fafbfc;}
+.ind-card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
+.ind-text{font-size:13px;font-weight:600;color:var(--ink);max-width:520px;}
+.ind-fields-row{display:grid;grid-template-columns:1fr 1fr 90px;gap:10px;margin-bottom:12px;}
+@media (max-width:600px){.ind-fields-row{grid-template-columns:1fr 1fr;}}
+.ind-fields-row input, .ind-years-row input{width:100%;border:1px solid var(--border);border-radius:6px;padding:6px 8px;font-size:12.5px;font-family:inherit;}
+.ind-years-row{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:10px;}
+@media (max-width:600px){.ind-years-row{grid-template-columns:repeat(3,1fr);}}
+.ind-year-label{font-size:10.5px;color:var(--ink-soft);font-weight:600;margin-bottom:3px;text-align:center;}
+.ind-chart-wrap{background:#fff;border:1px solid var(--border);border-radius:8px;padding:8px 10px 4px;}
 
 .budget-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
 @media (max-width:700px){.budget-grid{grid-template-columns:1fr;}}
@@ -467,6 +470,7 @@ footer.appfoot{text-align:center;font-size:12px;color:var(--ink-soft);padding:20
 const DATA = {"strategies": [{"id": 1, "name": "การพัฒนาการจัดการศึกษาทางไกล", "goal": "ลดความเหลื่อมล้ำและสร้างโอกาสในการเข้าถึงการศึกษาอย่างมีคุณภาพ และมีองค์ความรู้ตามหลักวิชาการสำหรับผู้เรียนกลุ่มเป้าหมายทั้งเด็ก เยาวชน และประชาชนทั่วไป"}, {"id": 2, "name": "การพัฒนาครูและโรงเรียนต้นทาง", "goal": "โรงเรียนและครูโรงเรียนต้นทางมีศักยภาพและความพร้อมในการจัดการศึกษาทางไกลได้อย่างมีประสิทธิภาพ และสามารถเป็นต้นแบบในการน้อมนำพระบรมราโชบายไปจัดการเรียนรู้อย่างเหมาะสม"}, {"id": 3, "name": "การพัฒนาครูและโรงเรียนปลายทาง", "goal": "โรงเรียนและครูโรงเรียนปลายทาง สามารถเข้าถึงการศึกษาทางไกล และสามารถใช้ชุดกิจกรรมและสื่อการเรียนรู้ในการจัดการเรียนการสอน และประยุกต์ใช้ได้เหมาะกับบริบทของผู้เรียน รวมถึงน้อมนำพระบรมราโชบายด้านการศึกษาไปจัดการเรียนรู้ได้อย่างเหมาะสม"}, {"id": 4, "name": "การพัฒนาระบบการบริหารจัดการ", "goal": "มูลนิธิฯ มีระบบการบริหารจัดการที่มีประสิทธิภาพเป็นองค์กรสมรรถนะสูง มุ่งสร้างธรรมาภิบาลและได้รับการยอมรับจากภาคส่วนต่าง ๆ"}], "items": [{"id": "1-1", "strategyId": 1, "num": 1, "text": "พัฒนาชุดกิจกรรมและสื่อการเรียนรู้ในการจัดการศึกษาทางไกลที่มีคุณภาพ", "indicators": ["ชุดกิจกรรมและสื่อการเรียนรู้ได้รับการพัฒนาและปรับปรุงให้สอดคล้องกับหลักสูตรการศึกษาปฐมวัย หลักสูตรแกนกลางการศึกษาขั้นพื้นฐาน", "โรงเรียนปลายทางหรือห้องเรียนปลายทางที่ใช้ระบบการจัดการเรียนการสอนทางไกลมีค่าผลสัมฤทธิ์ทางการศึกษาที่เพิ่มขึ้นจากฐานเดิม", "ห้องเรียนต้นทางมีค่าผลสัมฤทธิ์ทางการศึกษาที่เพิ่มขึ้นจากฐานเดิม"], "period": "2566-2570", "owner": "ฝ่ายวิชาการ"}, {"id": "1-2", "strategyId": 1, "num": 2, "text": "ส่งเสริมการผลิตรายการเพื่อการสอนเสริมและแนะแนวอาชีพสำหรับเด็กและเยาวชน ตลอดจนปรับปรุงผังรายการให้มีสัดส่วนที่เหมาะสมสำหรับการส่งเสริมการเรียนรู้ตลอดชีวิตให้กับประชาชนทุกช่วงวัย", "indicators": ["จำนวนรายการ/ตอน ออกอากาศเกี่ยวกับการสอนเสริม การแนะแนวอาชีพ สำหรับเด็กและเยาวชน", "จำนวนรายการ/ตอน ออกอากาศเกี่ยวกับสาระการเรียนรู้ตลอดชีวิตสำหรับประชาชน", "ความพึงพอใจของเด็ก เยาวชน ครูโรงเรียนปลายทาง และประชาชนที่รับชมรายการที่ออกอากาศ", "มีผังรายการออกอากาศที่เหมาะสมกับความต้องการการเรียนรู้ของแต่ละช่วงวัย"], "period": "2566-2570", "owner": "ฝ่ายแผน / ฝ่ายเทคนิค-สถานีฯ"}, {"id": "1-3", "strategyId": 1, "num": 3, "text": "พัฒนาคลังการศึกษาแบบเปิด เพื่อส่งเสริมการเรียนรู้ตลอดชีวิตสำหรับประชาชนทุกช่วงวัย", "indicators": ["มีคลังการศึกษาแบบเปิดสำหรับบุคลากรทางการศึกษา และประชาชนทุกช่วงวัย", "จำนวนผู้ใช้บริการคลังการศึกษาแบบเปิด และการใช้งานเพิ่มขึ้น"], "period": "2566-2568", "owner": "ฝ่ายเทคนิค-สถานีฯ / ฝ่ายวิชาการ"}, {"id": "1-4", "strategyId": 1, "num": 4, "text": "เสริมสร้างความร่วมมือกับทุกภาคส่วนเพื่อเพิ่มประสิทธิภาพในการจัดการศึกษา", "indicators": ["จำนวนภาคีเครือข่ายและรายการการสนับสนุน", "จำนวนระบบ รูปแบบเครือข่ายระหว่างโรงเรียนต้นทางกับโรงเรียนปลายทาง หรือระหว่างโรงเรียนปลายทางกับโรงเรียนปลายทาง"], "period": "2566-2570", "owner": "ฝ่ายวิชาการ / ฝ่ายแผน / ฝ่ายประชาสัมพันธ์"}, {"id": "1-5", "strategyId": 1, "num": 5, "text": "พัฒนาระบบการติดต่อสื่อสาร และช่องทางการเข้าถึงรายการของมูลนิธิฯ ให้มีประสิทธิภาพ", "indicators": ["มีระบบการติดต่อผ่านช่องทางการสื่อสารและการเข้าถึงการศึกษาทางไกลที่เพิ่มขึ้นและมีประสิทธิภาพในทุกกลุ่มเป้าหมาย"], "period": "2566-2570", "owner": "ฝ่ายแผน / ฝ่ายประชาสัมพันธ์ / ฝ่ายเทคนิค-สถานีฯ"}, {"id": "2-1", "strategyId": 2, "num": 1, "text": "ปรับปรุงโครงสร้างพื้นฐานสำหรับการผลิตรายการ", "indicators": ["มีโครงสร้างพื้นฐานสำหรับการจัดการเรียนการสอนออกอากาศที่มีประสิทธิภาพ"], "period": "2566-2570", "owner": "ฝ่ายเทคนิค-สถานีฯ"}, {"id": "2-2", "strategyId": 2, "num": 2, "text": "พัฒนาศักยภาพครูห้องเรียนต้นทาง", "indicators": ["ครูห้องเรียนต้นทางได้รับการพัฒนาศักยภาพในการจัดการเรียนการสอนในเรื่องต่าง ๆ", "มีการบูรณาการศาสตร์พระราชาและน้อมนำพระบรมราโชบายด้านการศึกษาสู่การจัดการเรียนการสอนในแต่ละวิชาและสามารถสอนออกอากาศได้อย่างหลากหลาย ถูกต้อง และน่าสนใจ"], "period": "2566-2570", "owner": "ฝ่ายวิชาการ"}, {"id": "2-3", "strategyId": 2, "num": 3, "text": "พัฒนารูปแบบการสอนออกอากาศให้มีความทันสมัย สอดคล้องกับบริบทการบริโภคสื่อของผู้เรียนในแต่ละช่วงวัยหรือระดับชั้น", "indicators": ["รายวิชาสอนออกอากาศที่ปรับปรุงรูปแบบการนำเสนอ และรูปแบบการจัดการเรียนการสอน ตามหลักสูตรการศึกษาปฐมวัยและการศึกษาขั้นพื้นฐานที่สอดคล้องกับแนวทางการเรียนรู้ที่เปลี่ยนแปลงไป"], "period": "2566-2567", "owner": "ฝ่ายวิชาการ"}, {"id": "2-4", "strategyId": 2, "num": 4, "text": "จัดทำระบบประเมินสมรรถนะครูห้องเรียนต้นทางตามสมรรถนะประจำตำแหน่ง โดยเชื่อมโยงกับระบบจูงใจอย่างเหมาะสม", "indicators": ["มีระบบประเมินสมรรถนะครูห้องเรียนต้นทาง ที่เป็นไปตามสมรรถนะประจำตำแหน่ง"], "period": "2567", "owner": "ฝ่ายวิชาการ"}, {"id": "3-1", "strategyId": 3, "num": 1, "text": "ส่งเสริมให้โรงเรียนขนาดเล็ก โรงเรียนในพื้นที่ห่างไกล ที่มีครูไม่ครบชั้น ได้รับการสนับสนุนให้สามารถเข้าถึงระบบการศึกษาทางไกลของมูลนิธิฯ ได้อย่างทั่วถึง", "indicators": ["โรงเรียนขนาดเล็ก โรงเรียนในพื้นที่ห่างไกล ที่มีครูไม่ครบชั้น สามารถเข้าถึงการศึกษาทางไกลได้อย่างมีคุณภาพ", "มีระบบลงทะเบียนสมาชิก DLTV ที่แบ่งตามประเภท หรือกลุ่มโรงเรียนปลายทาง"], "period": "2566-2570", "owner": "ฝ่ายแผน / ฝ่ายเทคนิค-สถานีฯ / ฝ่ายวิชาการ"}, {"id": "3-2", "strategyId": 3, "num": 2, "text": "สร้างความเข้าใจกับผู้บริหารการศึกษา ผู้บริหารสถานศึกษา ครูและศึกษานิเทศก์ในเรื่องการจัดการศึกษาทางไกลของมูลนิธิฯ", "indicators": ["ผู้บริหารการศึกษา ผู้บริหารสถานศึกษา ครู ศึกษานิเทศก์ โรงเรียนปลายทาง เข้าใจและสนับสนุนการดำเนินการจัดการศึกษาทางไกลของมูลนิธิฯ"], "period": "2566", "owner": "ฝ่ายวิชาการ"}, {"id": "3-3", "strategyId": 3, "num": 3, "text": "สนับสนุนชุดกิจกรรม สื่อการเรียนรู้ องค์ความรู้ และเครือข่ายด้านการศึกษา ให้กับโรงเรียนปลายทาง และพัฒนาศักยภาพการสอนของครูโรงเรียนปลายทาง", "indicators": ["โรงเรียนปลายทางมีชุดกิจกรรม สื่อการเรียนรู้ องค์ความรู้ และเครือข่ายด้านการศึกษา", "ครูโรงเรียนปลายทางสามารถใช้ชุดกิจกรรม สื่อการเรียนรู้ได้อย่างมีประสิทธิภาพ"], "period": "2566-2570", "owner": "ฝ่ายวิชาการ"}, {"id": "3-4", "strategyId": 3, "num": 4, "text": "โรงเรียนปลายทางสามารถบูรณาการศาสตร์พระราชาและน้อมนำพระบรมราโชบายด้านการศึกษาสู่การจัดการเรียนการสอน", "indicators": ["ครูโรงเรียนปลายทางสามารถบูรณาการศาสตร์พระราชาและน้อมนำพระบรมราโชบายด้านการศึกษาในการจัดการเรียนการสอนในแต่ละวิชาได้อย่างหลากหลาย ถูกต้อง และน่าสนใจ"], "period": "2566-2570", "owner": "ฝ่ายวิชาการ"}, {"id": "3-5", "strategyId": 3, "num": 5, "text": "พัฒนากลไกการวัดและประเมินผลการจัดการเรียนรู้ และส่งเสริมการนิเทศ กำกับ ติดตาม ประเมินผลการจัดการศึกษาทางไกล", "indicators": ["มีกลไกการวัดประเมินผล และการติดตามการใช้งาน DLTV", "โรงเรียนปลายทางมีการรายงานผลการจัดการเรียนการสอนทางไกล ตามระบบนิเทศ กำกับ ติดตามและประเมินผล"], "period": "2566-2570", "owner": "ฝ่ายวิชาการ / ฝ่ายแผน"}, {"id": "3-6", "strategyId": 3, "num": 6, "text": "ยกระดับคุณภาพการศึกษาของโรงเรียนปลายทาง โดยจัดทำเกณฑ์การประเมิน/พัฒนาเพื่อนำไปสู่โรงเรียนปลายทางที่มีวิธีการปฏิบัติที่เป็นเลิศ", "indicators": ["โรงเรียนปลายทางที่มีวิธีปฏิบัติที่เป็นเลิศ (Best Practice) จำแนกตามประเภทโรงเรียนปลายทาง", "โรงเรียนปลายทางที่ได้รับการพัฒนาและยกระดับศักยภาพให้มีความพร้อมในการจัดการศึกษาทางไกลตามแนวทางการจัดการเรียนการสอน"], "period": "2566-2570", "owner": "ฝ่ายวิชาการ"}, {"id": "4-1", "strategyId": 4, "num": 1, "text": "พัฒนาระบบการบริหารบุคลากร โครงสร้าง และอัตรากำลัง", "indicators": ["มีแผนโครงสร้าง และอัตรากำลัง", "มีอัตราการครองตำแหน่งของบุคลากรอย่างน้อยร้อยละ 95"], "period": "2566", "owner": "ฝ่ายอำนวยการ"}, {"id": "4-2", "strategyId": 4, "num": 2, "text": "พัฒนาความเชี่ยวชาญในการปฏิบัติงาน (Upskill Reskill)", "indicators": ["บุคลากรได้รับการพัฒนาศักยภาพที่ตรงกับความต้องการและบทบาทหน้าที่", "ร้อยละ 80 ของบุคลากรที่ผ่านการอบรมและสามารถนำไปใช้ปฏิบัติงานได้"], "period": "2566", "owner": "ฝ่ายอำนวยการ"}, {"id": "4-3", "strategyId": 4, "num": 3, "text": "พัฒนาระบบบริหารจัดการ สร้างกลไกการกำกับดูแลเพื่อมุ่งสู่การเป็นองค์กรสมรรถนะสูง โปร่งใส และมีธรรมาภิบาล", "indicators": ["มีคู่มือแนวทางการพัฒนาองค์กรเพื่อเป็นองค์กรสมรรถนะสูง มีความโปร่งใส และมีธรรมาภิบาล", "มีแบบประเมินการส่งเสริมจริยธรรมและการต่อต้านการทุจริตของมูลนิธิฯ"], "period": "2567-2570", "owner": "ฝ่ายแผน / ฝ่ายอำนวยการ"}, {"id": "4-4", "strategyId": 4, "num": 4, "text": "ทบทวนมาตรฐานและจัดทำแผน/วางระบบการปฏิบัติงานในเรื่องคุณภาพ การติดตามประเมินผล ระบบบริหารความเสี่ยง และระบบการบริหารงานในภาวะวิกฤต", "indicators": ["มีแผนการบริหารความเสี่ยง และระบบการบริหารงานในภาวะวิกฤต", "มีแนวทางการกำกับ ติดตาม ประเมินผลโครงการของมูลนิธิฯ"], "period": "2567", "owner": "ฝ่ายแผน"}, {"id": "4-5", "strategyId": 4, "num": 5, "text": "พัฒนาโครงสร้างพื้นฐานด้านเทคโนโลยีดิจิทัล และการใช้เทคโนโลยีดิจิทัล เพื่อเพิ่มประสิทธิภาพในการปฏิบัติงาน", "indicators": ["มีแผนพัฒนาโครงสร้างพื้นฐานด้านเทคโนโลยีดิจิทัล และการใช้เทคโนโลยีดิจิทัล ตลอดจนระบบความมั่นคงปลอดภัยทางไซเบอร์", "ความสำเร็จในการดำเนินการตามแผนฯ", "มีการปรับเทคโนโลยีให้มีความทันสมัยตลอดเวลา"], "period": "2566-2570", "owner": "ฝ่ายเทคนิค-สถานีฯ"}, {"id": "4-6", "strategyId": 4, "num": 6, "text": "บริหารจัดการระบบฐานข้อมูล เพื่อสนับสนุนกระบวนงานและการกำหนดนโยบาย", "indicators": ["มีระบบฐานข้อมูลที่ทันสมัย ถูกต้อง เชื่อมโยงกันทั้งระบบ และสามารถสืบค้นได้อย่างรวดเร็ว"], "period": "2567", "owner": "ฝ่ายแผน / ฝ่ายเทคนิค-สถานีฯ"}, {"id": "4-7", "strategyId": 4, "num": 7, "text": "มุ่งเน้นการสื่อสารกับกลุ่มเป้าหมาย เพื่อสร้างการรับรู้กับสาธารณะที่เป็นการสื่อสารเชิงกลยุทธ์", "indicators": ["มีช่องทางการสื่อสารที่เข้าถึงแต่ละกลุ่มเป้าหมาย", "มีสื่อประชาสัมพันธ์ที่ตรงกับกลุ่มเป้าหมาย", "กลุ่มเป้าหมายมีความพึงพอใจการดำเนินงานของมูลนิธิฯ"], "period": "2567-2570", "owner": "ฝ่ายประชาสัมพันธ์"}, {"id": "4-8", "strategyId": 4, "num": 8, "text": "พัฒนาระบบการจัดการความรู้และนำไปสู่การสร้างนวัตกรรม", "indicators": ["มีระบบการจัดการความรู้", "มีองค์ความรู้ นวัตกรรมจากกระบวนการมีส่วนร่วมกับบุคลากรหรือหน่วยงานทั้งภายในและภายนอกองค์กรที่สามารถนำไปใช้ได้จริง"], "period": "2567-2570", "owner": "ฝ่ายแผน"}], "criteria": [{"th": "ความสอดคล้อง", "en": "Relevance", "desc": "แผน/กลยุทธ์นี้ตอบสนองความต้องการของกลุ่มเป้าหมาย นโยบายรัฐ พระบรมราโชบายด้านการศึกษา และบริบทที่เปลี่ยนแปลงไป (Disruption, New Normal) มากน้อยเพียงใด"}, {"th": "ความสอดคล้องเชิงระบบ", "en": "Coherence", "desc": "กลยุทธ์นี้เชื่อมโยง ไม่ซ้ำซ้อน และเสริมพลังกับยุทธศาสตร์อื่นภายในมูลนิธิฯ และสอดคล้อง/บูรณาการกับหน่วยงานภายนอก (สพฐ. สช. กศน. กระทรวงศึกษาธิการ) ได้ดีเพียงใด"}, {"th": "ประสิทธิผล", "en": "Effectiveness", "desc": "การดำเนินงานบรรลุตัวชี้วัดและเป้าหมายที่กำหนดไว้มากน้อยเพียงใด (ผลสัมฤทธิ์ทางการศึกษา ความครอบคลุมกลุ่มเป้าหมาย ฯลฯ)"}, {"th": "ประสิทธิภาพ", "en": "Efficiency", "desc": "ผลลัพธ์ที่ได้คุ้มค่ากับทรัพยากร (คน งบประมาณ เวลา อุปกรณ์) ที่ใช้ไปหรือไม่ เมื่อเทียบกับทางเลือกอื่น"}, {"th": "ผลกระทบ", "en": "Impact", "desc": "ก่อให้เกิดการเปลี่ยนแปลงเชิงบวก (หรือลบ) ในระดับกว้างต่อผู้เรียน ครู โรงเรียน และระบบการศึกษาไทย ทั้งที่ตั้งใจและไม่ตั้งใจ มากน้อยเพียงใด"}, {"th": "ความยั่งยืน", "en": "Sustainability", "desc": "ผลลัพธ์และประโยชน์ของกลยุทธ์นี้มีแนวโน้มจะดำรงอยู่ต่อเนื่องได้หลังสิ้นสุดแผน (ด้านงบประมาณ บุคลากร เทคโนโลยี ความร่วมมือ) มากน้อยเพียงใด"}], "scale": [{"score": 1, "level": "น้อยที่สุด/ไม่พบหลักฐาน", "desc": "ไม่สอดคล้อง ไม่บรรลุผล หรือไม่มีความคุ้มค่าอย่างชัดเจน ควรพิจารณายกเลิก"}, {"score": 2, "level": "น้อย", "desc": "มีความสอดคล้อง/ผลลัพธ์บางส่วน แต่มีปัญหาเชิงโครงสร้างหรือช่องว่างสำคัญ"}, {"score": 3, "level": "ปานกลาง", "desc": "ดำเนินการได้ตามเกณฑ์ขั้นต่ำ แต่ยังต้องปรับปรุงสาระสำคัญหรือวิธีการดำเนินงาน"}, {"score": 4, "level": "ดี", "desc": "ดำเนินการได้ดี บรรลุผลตามเป้าหมายเป็นส่วนใหญ่ อาจต้องปรับปรุงในรายละเอียดปลีกย่อย"}, {"score": 5, "level": "ดีมาก/เป็นเลิศ", "desc": "บรรลุผลสูงกว่าเป้าหมาย มีหลักฐานเชิงประจักษ์ชัดเจน ควรคงไว้และขยายผลเป็นแนวปฏิบัติที่ดี"}]};
 
 const CRIT_KEYS = ['rel','coh','eff','effy','imp','sus'];
+const YEARS = ['2566','2567','2568','2569','2570'];
 const CRIT_LABELS = DATA.criteria;
 const RECO = {
   red:    {label:'ตัดออก (Discontinue)'},
@@ -540,12 +544,58 @@ function budgetVariancePct(budget){
   if(!budget || budget.planned===null || budget.planned===undefined || budget.planned===0 || budget.actual===null || budget.actual===undefined) return null;
   return (budget.actual - budget.planned) / budget.planned * 100;
 }
+function latestActualOf(ind){
+  if(!ind || !ind.yearly) return null;
+  for(let i=YEARS.length-1;i>=0;i--){
+    const v = ind.yearly[YEARS[i]];
+    if(v!==null && v!==undefined && v!=='') return {year:YEARS[i], value:Number(v)};
+  }
+  return null;
+}
 function indicatorAchievementPct(ind){
-  if(ind.baseline===null || ind.target===null || ind.actual===null || ind.baseline===undefined || ind.target===undefined || ind.actual===undefined) return null;
+  const latest = latestActualOf(ind);
+  if(ind.baseline===null || ind.target===null || ind.baseline===undefined || ind.target===undefined || !latest) return null;
   const denom = ind.target - ind.baseline;
-  if(denom === 0) return ind.actual >= ind.target ? 100 : 0;
-  const pct = (ind.actual - ind.baseline) / denom * 100;
+  if(denom === 0) return latest.value >= ind.target ? 100 : 0;
+  const pct = (latest.value - ind.baseline) / denom * 100;
   return Math.max(0, Math.min(150, pct));
+}
+function trendChartSvg(ind){
+  const W=260, H=84, padL=30, padR=12, padT=10, padB=20;
+  const vals = YEARS.map(y => (ind.yearly && ind.yearly[y]!==null && ind.yearly[y]!==undefined && ind.yearly[y]!=='') ? Number(ind.yearly[y]) : null);
+  const known = vals.filter(v=>v!==null);
+  if(known.length===0){
+    return '<div style="font-size:11.5px;color:var(--ink-soft);padding:10px 0;">ยังไม่มีข้อมูลผลจริงรายปี — กรอกอย่างน้อย 1 ปีเพื่อแสดงกราฟแนวโน้ม</div>';
+  }
+  let allNums = known.slice();
+  if(ind.baseline!==null && ind.baseline!==undefined) allNums.push(Number(ind.baseline));
+  if(ind.target!==null && ind.target!==undefined) allNums.push(Number(ind.target));
+  let min = Math.min(...allNums), max = Math.max(...allNums);
+  if(min === max){ min -= 1; max += 1; }
+  const pad = (max-min)*0.15;
+  min -= pad; max += pad;
+  const xStep = (W-padL-padR)/(YEARS.length-1);
+  const yScale = v => H-padB - (v-min)/(max-min)*(H-padT-padB);
+  const xFor = i => padL + i*xStep;
+  let path = '', points = '';
+  vals.forEach((v,i)=>{
+    if(v===null) return;
+    const x=xFor(i), y=yScale(v);
+    path += (path?'L':'M') + x.toFixed(1) + ',' + y.toFixed(1) + ' ';
+    points += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.2" fill="#1B2340"/><text x="${x.toFixed(1)}" y="${(y-7).toFixed(1)}" font-size="8.5" fill="#1B2340" text-anchor="middle">${v}</text>`;
+  });
+  let targetLine = '';
+  if(ind.target!==null && ind.target!==undefined){
+    const ty = yScale(Number(ind.target));
+    targetLine = `<line x1="${padL}" y1="${ty.toFixed(1)}" x2="${W-padR}" y2="${ty.toFixed(1)}" stroke="#3F7A5C" stroke-dasharray="4,3" stroke-width="1.3"/><text x="${W-padR}" y="${(ty-3).toFixed(1)}" font-size="8" fill="#3F7A5C" text-anchor="end">เป้าหมาย ${ind.target}</text>`;
+  }
+  let baseLine = '';
+  if(ind.baseline!==null && ind.baseline!==undefined){
+    const by = yScale(Number(ind.baseline));
+    baseLine = `<line x1="${padL}" y1="${by.toFixed(1)}" x2="${W-padR}" y2="${by.toFixed(1)}" stroke="#9aa0ad" stroke-dasharray="2,2" stroke-width="1"/><text x="${padL}" y="${(by-3).toFixed(1)}" font-size="8" fill="#9aa0ad">ฐาน ${ind.baseline}</text>`;
+  }
+  const yearLabels = YEARS.map((y,i)=>`<text x="${xFor(i).toFixed(1)}" y="${H-4}" font-size="8.5" fill="#4A5170" text-anchor="middle">${y}</text>`).join('');
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" style="max-width:280px;display:block;">${baseLine}${targetLine}<path d="${path}" fill="none" stroke="#1B2340" stroke-width="2"/>${points}${yearLabels}</svg>`;
 }
 
 /* ---------------- Backend (GAS) ---------------- */
@@ -566,7 +616,11 @@ function applyData(data){
   (data.items||[]).forEach(it=>{
     evalState[it.itemId] = {
       evaluations: (it.evaluations||[]).map(e=>({evalId:e.evalId, evaluator:e.evaluator||'', date:e.date||'', scores:e.scores||{}, reason:e.reason||''})),
-      indicators: (it.indicators||[]).map(ind=>({index:ind.index, text:ind.text, baseline:numOrNull(ind.baseline), target:numOrNull(ind.target), actual:numOrNull(ind.actual), unit:ind.unit||'', note:ind.note||''})),
+      indicators: (it.indicators||[]).map(ind=>{
+        const yearly = {};
+        YEARS.forEach(y => { yearly[y] = numOrNull(ind.yearly ? ind.yearly[y] : null); });
+        return {index:ind.index, text:ind.text, baseline:numOrNull(ind.baseline), target:numOrNull(ind.target), yearly, unit:ind.unit||'', note:ind.note||''};
+      }),
       budget: {planned: numOrNull(it.budget && it.budget.planned), actual: numOrNull(it.budget && it.budget.actual), note: (it.budget && it.budget.note) || ''},
       progress: {status: (it.progress && it.progress.status) || 'not_started', percent: (it.progress && it.progress.percent) || 0, note: (it.progress && it.progress.note) || ''},
       evidence: (it.evidence||[]).map(ev=>({evidenceId:ev.evidenceId, label:ev.label||'', url:ev.url||''}))
@@ -584,7 +638,10 @@ function defaultLocalState(){
   DATA.items.forEach(it=>{
     items[it.id] = {
       evaluations: [],
-      indicators: it.indicators.map((t,idx)=>({index:idx, text:t, baseline:null, target:null, actual:null, unit:'', note:''})),
+      indicators: it.indicators.map((t,idx)=>{
+        const yearly = {}; YEARS.forEach(y => yearly[y] = null);
+        return {index:idx, text:t, baseline:null, target:null, yearly, unit:'', note:''};
+      }),
       budget: {planned:null, actual:null, note:''},
       progress: {status:'not_started', percent:0, note:''},
       evidence: []
@@ -812,29 +869,38 @@ function avgOfScores(scores){
 }
 
 function renderIndicatorsPanel(item, st){
-  const inds = (st.indicators && st.indicators.length) ? st.indicators : item.indicators.map((t,idx)=>({index:idx,text:t,baseline:null,target:null,actual:null,unit:''}));
-  const rows = inds.map(ind => {
+  const inds = (st.indicators && st.indicators.length) ? st.indicators : item.indicators.map((t,idx)=>{
+    const yearly = {}; YEARS.forEach(y=>yearly[y]=null);
+    return {index:idx,text:t,baseline:null,target:null,yearly,unit:''};
+  });
+  const cards = inds.map(ind => {
     const pct = indicatorAchievementPct(ind);
-    const color = pct===null ? 'var(--grey)' : pct>=100 ? 'var(--green)' : pct>=50 ? 'var(--yellow)' : 'var(--red)';
+    const latest = latestActualOf(ind);
+    const rk = pct===null ? 'grey' : pct>=100 ? 'green' : pct>=50 ? 'yellow' : 'red';
+    const pctLabel = pct===null ? 'ยังไม่มีข้อมูลผลจริง' : `${pct.toFixed(0)}% บรรลุเป้าหมาย (ข้อมูลปี ${latest.year})`;
     return `
-    <tr data-item="${item.id}" data-index="${ind.index}">
-      <td style="max-width:220px;">${escapeHtml(ind.text)}</td>
-      <td style="width:70px;"><input type="number" step="any" data-ind-field="baseline" value="${ind.baseline ?? ''}" placeholder="ฐาน"></td>
-      <td style="width:70px;"><input type="number" step="any" data-ind-field="target" value="${ind.target ?? ''}" placeholder="เป้าหมาย"></td>
-      <td style="width:70px;"><input type="number" step="any" data-ind-field="actual" value="${ind.actual ?? ''}" placeholder="ผลจริง"></td>
-      <td style="width:60px;"><input type="text" data-ind-field="unit" value="${escapeHtml(ind.unit||'')}" placeholder="หน่วย"></td>
-      <td style="width:90px;">
-        <div class="ach-bar-wrap"><div class="ach-bar-fill" style="width:${pct===null?0:Math.min(100,pct)}%;background:${color}"></div></div>
-        <div class="ach-pct">${pct===null?'ยังไม่มีข้อมูล':pct.toFixed(0)+'%'}</div>
-      </td>
-    </tr>`;
+    <div class="ind-card" data-item="${item.id}" data-index="${ind.index}">
+      <div class="ind-card-top">
+        <div class="ind-text">${escapeHtml(ind.text)}</div>
+        <span class="badge ${rk}">${pctLabel}</span>
+      </div>
+      <div class="ind-fields-row">
+        <div><div class="field-label">ฐาน (Baseline)</div><input type="number" step="any" data-ind-field="baseline" value="${ind.baseline ?? ''}"></div>
+        <div><div class="field-label">เป้าหมาย (ปี 2570)</div><input type="number" step="any" data-ind-field="target" value="${ind.target ?? ''}"></div>
+        <div><div class="field-label">หน่วย</div><input type="text" data-ind-field="unit" value="${escapeHtml(ind.unit||'')}"></div>
+      </div>
+      <div class="field-label" style="margin-top:2px;">ผลจริงรายปี</div>
+      <div class="ind-years-row">
+        ${YEARS.map(y=>`<div><div class="ind-year-label">${y}</div><input type="number" step="any" data-ind-year="${y}" value="${ind.yearly[y] ?? ''}"></div>`).join('')}
+      </div>
+      <div class="ind-chart-wrap">${trendChartSvg(ind)}</div>
+      <div style="margin-top:8px;">
+        <div class="field-label">หมายเหตุ</div>
+        <textarea class="reason-input" style="min-height:38px;" data-ind-field="note">${escapeHtml(ind.note||'')}</textarea>
+      </div>
+    </div>`;
   }).join('');
-  return `
-    <table class="ind-table">
-      <tr><th>ตัวชี้วัด</th><th>ฐาน (Baseline)</th><th>เป้าหมาย</th><th>ผลจริง</th><th>หน่วย</th><th>% บรรลุ</th></tr>
-      ${rows}
-    </table>
-    <p class="section-sub" style="margin:6px 0 0;">กรอกแล้วระบบบันทึกอัตโนมัติเมื่อออกจากช่อง (Tab/คลิกที่อื่น)</p>`;
+  return `${cards}<p class="section-sub" style="margin:6px 0 0;">กรอกแล้วระบบบันทึกอัตโนมัติเมื่อออกจากช่อง (Tab/คลิกที่อื่น) — % บรรลุเป้าหมายคำนวณจากปีล่าสุดที่มีข้อมูล</p>`;
 }
 
 function renderBudgetPanel(item, st){
@@ -992,12 +1058,14 @@ document.getElementById('evalContainer').addEventListener('click', async (e)=>{
 });
 
 document.getElementById('evalContainer').addEventListener('change', async (e)=>{
-  const ind = e.target.closest('[data-ind-field]');
-  if(ind){
-    const tr = ind.closest('tr');
-    const itemId = tr.dataset.item, index = Number(tr.dataset.index);
-    const payload = {};
-    tr.querySelectorAll('[data-ind-field]').forEach(inp=>{ payload[inp.dataset.indField] = inp.value; });
+  const indField = e.target.closest('[data-ind-field]');
+  const indYear = e.target.closest('[data-ind-year]');
+  if(indField || indYear){
+    const card = (indField || indYear).closest('.ind-card');
+    const itemId = card.dataset.item, index = Number(card.dataset.index);
+    const payload = {yearly: {}};
+    card.querySelectorAll('[data-ind-field]').forEach(inp=>{ payload[inp.dataset.indField] = inp.value; });
+    card.querySelectorAll('[data-ind-year]').forEach(inp=>{ payload.yearly[inp.dataset.indYear] = inp.value; });
     await syncIndicator(itemId, index, payload);
     return;
   }
@@ -1065,8 +1133,13 @@ async function syncIndicator(itemId, index, payload){
     if(ind){
       if(payload.baseline!==undefined) ind.baseline = payload.baseline===''?null:Number(payload.baseline);
       if(payload.target!==undefined) ind.target = payload.target===''?null:Number(payload.target);
-      if(payload.actual!==undefined) ind.actual = payload.actual===''?null:Number(payload.actual);
       if(payload.unit!==undefined) ind.unit = payload.unit;
+      if(payload.note!==undefined) ind.note = payload.note;
+      if(payload.yearly){
+        YEARS.forEach(y=>{
+          if(payload.yearly[y]!==undefined) ind.yearly[y] = payload.yearly[y]===''?null:Number(payload.yearly[y]);
+        });
+      }
     }
     await saveLocalFallback();
     showToast('บันทึกข้อมูลแล้ว (โหมดออฟไลน์)');

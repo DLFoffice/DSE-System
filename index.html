@@ -5,28 +5,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ระบบประเมินผลยุทธศาสตร์ดิจิทัล (DSES)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#EEF0F4; --surface:#FFFFFF; --ink:#1B2340; --ink-soft:#4A5170;
-  --primary:#1B2340; --primary-2:#2E3A66; --accent:#B8872B; --accent-soft:#F2E6C9;
-  --red:#B33F3F; --red-soft:#F6E3E1; --orange:#C97A31; --orange-soft:#F8E9D8;
-  --yellow:#AD8F2A; --yellow-soft:#F6EFD3; --green:#3F7A5C; --green-soft:#DEEDE5;
-  --grey:#8A8F98; --grey-soft:#EEEFF1; --border:#DEE1E8; --radius:10px;
-  --shadow: 0 1px 2px rgba(27,35,64,.06), 0 4px 14px rgba(27,35,64,.06);
+  --bg-grad:linear-gradient(160deg, #F6F3FF 0%, #EFFAF8 100%);
+  --surface:#FFFFFF; --surface-soft:#FBFAFF; --ink:#3F3A5C; --ink-soft:#847FA3;
+  --primary:#6C5CE0; --primary-2:#2E8FA3; --accent:#B85138; --accent-soft:#FBEAE3;
+  --red:#C15C5C; --red-soft:#FBE7E7; --orange:#C98A4A; --orange-soft:#FCEEDD;
+  --yellow:#B79A3E; --yellow-soft:#FBF3D3; --green:#4E9B79; --green-soft:#E1F3EA;
+  --grey:#9C97B8; --grey-soft:#F2EFFA; --border:#E6E1F5; --radius:14px;
+  --shadow: 0 1px 2px rgba(108,92,224,.06), 0 10px 26px rgba(108,92,224,.10);
 }
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;}
-body{background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans Thai','IBM Plex Sans',sans-serif;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+body{background:var(--bg-grad);background-attachment:fixed;color:var(--ink);font-family:'Sarabun',sans-serif;font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased;}
 a{color:inherit;}
 button{font-family:inherit;}
 ::selection{background:var(--accent-soft);}
 
 .topbar{background:linear-gradient(135deg,var(--primary) 0%, var(--primary-2) 100%);color:#fff;padding:22px 24px 18px;}
 .topbar-inner{max-width:1220px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;}
-.brand-eyebrow{font-size:12.5px;color:var(--accent-soft);letter-spacing:.02em;margin-bottom:6px;}
+.brand-eyebrow{font-size:12.5px;color:rgba(255,255,255,.78);letter-spacing:.04em;margin-bottom:6px;font-weight:600;}
 .brand-title{font-size:24px;font-weight:700;margin:0 0 4px;}
-.brand-sub{font-size:13.5px;color:#C7CCDE;margin:0;}
+.brand-sub{font-size:13.5px;color:rgba(255,255,255,.82);margin:0;}
 .topbar-actions{display:flex;gap:8px;flex-wrap:wrap;}
 .btn{border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.08);color:#fff;padding:9px 14px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;transition:background .15s ease;white-space:nowrap;}
 .btn:hover{background:rgba(255,255,255,.18);}
@@ -57,7 +58,8 @@ button{font-family:inherit;}
 .view.active{display:block;animation:fadein .25s ease;}
 @keyframes fadein{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
 
-h2.section-title{font-size:18px;font-weight:700;margin:0 0 4px;color:var(--primary);}
+h2.section-title{font-size:18px;font-weight:700;margin:0 0 4px;color:var(--primary);display:flex;align-items:center;gap:9px;}
+h2.section-title::before{content:'';width:5px;height:19px;border-radius:3px;background:linear-gradient(180deg,var(--primary),var(--accent));flex-shrink:0;}
 p.section-sub{font-size:13.5px;color:var(--ink-soft);margin:0 0 18px;}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);}
 .pad{padding:20px;}
@@ -65,8 +67,9 @@ p.section-sub{font-size:13.5px;color:var(--ink-soft);margin:0 0 18px;}
 .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:14px;}
 .stat-card{padding:16px 18px;}
 .stat-label{font-size:12.5px;color:var(--ink-soft);margin-bottom:6px;}
-.stat-value{font-size:24px;font-weight:700;color:var(--primary);}
-.stat-value.red{color:var(--red);} .stat-value.green{color:var(--green);}
+.stat-value{font-size:24px;font-weight:700;background:linear-gradient(90deg,var(--primary),var(--primary-2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:var(--primary);}
+.stat-value.red{background:none;-webkit-text-fill-color:initial;color:var(--red);}
+.stat-value.green{background:none;-webkit-text-fill-color:initial;color:var(--green);}
 .stat-note{font-size:12px;color:var(--ink-soft);margin-top:4px;}
 
 .dash-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:16px;margin-bottom:16px;align-items:stretch;}
@@ -479,7 +482,7 @@ const RECO = {
   green:  {label:'คงไว้และขยายผล (Retain & Scale-up)'},
   grey:   {label:'ยังไม่ได้ประเมิน'}
 };
-const RECO_COLOR_HEX = {red:'#B33F3F', orange:'#C97A31', yellow:'#AD8F2A', green:'#3F7A5C', grey:'#C7CAD1'};
+const RECO_COLOR_HEX = {red:'#C15C5C', orange:'#C98A4A', yellow:'#B79A3E', green:'#4E9B79', grey:'#B9B4D6'};
 const DEFAULT_WEIGHTS = {rel:1, coh:1, eff:1, effy:1, imp:1, sus:1};
 const STRATEGY_NAME_BY_ID = {};
 DATA.strategies.forEach(s => STRATEGY_NAME_BY_ID[s.id] = s.name);
@@ -582,20 +585,20 @@ function trendChartSvg(ind){
     if(v===null) return;
     const x=xFor(i), y=yScale(v);
     path += (path?'L':'M') + x.toFixed(1) + ',' + y.toFixed(1) + ' ';
-    points += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.2" fill="#1B2340"/><text x="${x.toFixed(1)}" y="${(y-7).toFixed(1)}" font-size="8.5" fill="#1B2340" text-anchor="middle">${v}</text>`;
+    points += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.2" fill="#6C5CE0"/><text x="${x.toFixed(1)}" y="${(y-7).toFixed(1)}" font-size="8.5" fill="#3F3A5C" text-anchor="middle">${v}</text>`;
   });
   let targetLine = '';
   if(ind.target!==null && ind.target!==undefined){
     const ty = yScale(Number(ind.target));
-    targetLine = `<line x1="${padL}" y1="${ty.toFixed(1)}" x2="${W-padR}" y2="${ty.toFixed(1)}" stroke="#3F7A5C" stroke-dasharray="4,3" stroke-width="1.3"/><text x="${W-padR}" y="${(ty-3).toFixed(1)}" font-size="8" fill="#3F7A5C" text-anchor="end">เป้าหมาย ${ind.target}</text>`;
+    targetLine = `<line x1="${padL}" y1="${ty.toFixed(1)}" x2="${W-padR}" y2="${ty.toFixed(1)}" stroke="#4E9B79" stroke-dasharray="4,3" stroke-width="1.3"/><text x="${W-padR}" y="${(ty-3).toFixed(1)}" font-size="8" fill="#4E9B79" text-anchor="end">เป้าหมาย ${ind.target}</text>`;
   }
   let baseLine = '';
   if(ind.baseline!==null && ind.baseline!==undefined){
     const by = yScale(Number(ind.baseline));
-    baseLine = `<line x1="${padL}" y1="${by.toFixed(1)}" x2="${W-padR}" y2="${by.toFixed(1)}" stroke="#9aa0ad" stroke-dasharray="2,2" stroke-width="1"/><text x="${padL}" y="${(by-3).toFixed(1)}" font-size="8" fill="#9aa0ad">ฐาน ${ind.baseline}</text>`;
+    baseLine = `<line x1="${padL}" y1="${by.toFixed(1)}" x2="${W-padR}" y2="${by.toFixed(1)}" stroke="#B4AED0" stroke-dasharray="2,2" stroke-width="1"/><text x="${padL}" y="${(by-3).toFixed(1)}" font-size="8" fill="#9C97B8">ฐาน ${ind.baseline}</text>`;
   }
-  const yearLabels = YEARS.map((y,i)=>`<text x="${xFor(i).toFixed(1)}" y="${H-4}" font-size="8.5" fill="#4A5170" text-anchor="middle">${y}</text>`).join('');
-  return `<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" style="max-width:280px;display:block;">${baseLine}${targetLine}<path d="${path}" fill="none" stroke="#1B2340" stroke-width="2"/>${points}${yearLabels}</svg>`;
+  const yearLabels = YEARS.map((y,i)=>`<text x="${xFor(i).toFixed(1)}" y="${H-4}" font-size="8.5" fill="#847FA3" text-anchor="middle">${y}</text>`).join('');
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" style="max-width:280px;display:block;">${baseLine}${targetLine}<path d="${path}" fill="none" stroke="#6C5CE0" stroke-width="2"/>${points}${yearLabels}</svg>`;
 }
 
 /* ---------------- Backend (GAS) ---------------- */
@@ -1298,8 +1301,8 @@ function renderDashboard(){
 function heatColor(v){
   const clamp = Math.max(1, Math.min(5, v));
   let c1, c2, t;
-  if(clamp <= 3){ c1=[248,105,107]; c2=[255,235,132]; t=(clamp-1)/2; }
-  else { c1=[255,235,132]; c2=[99,190,123]; t=(clamp-3)/2; }
+  if(clamp <= 3){ c1=[247,207,207]; c2=[250,232,190]; t=(clamp-1)/2; }
+  else { c1=[250,232,190]; c2=[201,229,213]; t=(clamp-3)/2; }
   const r = Math.round(c1[0]+(c2[0]-c1[0])*t), g = Math.round(c1[1]+(c2[1]-c1[1])*t), b = Math.round(c1[2]+(c2[2]-c1[2])*t);
   return `rgb(${r},${g},${b})`;
 }
@@ -1435,8 +1438,8 @@ function renderMaster(){
 function renderRubric(){
   document.getElementById('criteriaGrid').innerHTML = DATA.criteria.map(c=>`
     <div class="criteria-card"><div class="criteria-th">${escapeHtml(c.th)}</div><div class="criteria-en">${escapeHtml(c.en)}</div><div class="criteria-desc">${escapeHtml(c.desc)}</div></div>`).join('');
-  const scaleColors = {1:'var(--red-soft)',2:'var(--orange-soft)',3:'var(--yellow-soft)',4:'#dce6f1',5:'var(--green-soft)'};
-  const scaleTextColors = {1:'var(--red)',2:'var(--orange)',3:'var(--yellow)',4:'#2E3A66',5:'var(--green)'};
+  const scaleColors = {1:'var(--red-soft)',2:'var(--orange-soft)',3:'var(--yellow-soft)',4:'#DCEEF5',5:'var(--green-soft)'};
+  const scaleTextColors = {1:'var(--red)',2:'var(--orange)',3:'var(--yellow)',4:'var(--primary-2)',5:'var(--green)'};
   document.getElementById('scaleGrid').innerHTML = DATA.scale.map(s=>`
     <div class="scale-card" style="background:${scaleColors[s.score]}"><div class="scale-score" style="color:${scaleTextColors[s.score]}">${s.score}</div><div class="scale-level" style="color:${scaleTextColors[s.score]}">${escapeHtml(s.level)}</div><div class="scale-desc">${escapeHtml(s.desc)}</div></div>`).join('');
   renderWeightInputs();

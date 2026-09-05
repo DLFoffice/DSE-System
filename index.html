@@ -290,9 +290,44 @@ table.audit-table tr:nth-child(even) td{background:#fafbfc;}
 .success-popup-msg{font-size:16px;font-weight:700;color:var(--ink);text-align:center;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 footer.appfoot{text-align:center;font-size:12px;color:var(--ink-soft);padding:20px;}
+
+/* ---- รายงานสำหรับพิมพ์ / ส่งออก PDF ---- */
+.print-only{display:none;}
+@media print{
+  .topbar, .tabbar, .container, footer.appfoot, .toast, .success-popup{display:none !important;}
+  .print-only{display:block !important;}
+  body{background:#fff;font-family:'Sarabun',sans-serif;color:#1a1a2e;font-size:12px;}
+  .report-cover{text-align:center;padding:60px 20px 40px;border-bottom:3px solid #1B2340;margin-bottom:24px;}
+  .report-eyebrow{font-size:11px;letter-spacing:.06em;color:#8878c9;font-weight:700;margin-bottom:10px;}
+  .report-cover h1{font-size:26px;margin:0 0 10px;color:#1B2340;}
+  .report-sub{font-size:13px;color:#555;margin:2px 0;}
+  .report-date{font-size:12px;color:#888;margin-top:14px;}
+  .report-section, .report-strategy{padding:0 24px;margin-bottom:20px;page-break-inside:avoid;}
+  .report-section h2, .report-strategy h2{font-size:17px;color:#1B2340;border-bottom:2px solid #B8872B;padding-bottom:6px;margin:24px 0 10px;}
+  .report-goal{font-size:12px;color:#555;margin:0 0 14px;font-style:italic;}
+  .report-item{page-break-inside:avoid;margin-bottom:18px;padding:12px 14px;border:1px solid #ddd;border-radius:6px;}
+  .report-item h3{font-size:13.5px;margin:0 0 6px;color:#1B2340;}
+  .report-meta{font-size:11px;color:#444;margin:4px 0 8px;}
+  .report-subhead{font-size:11.5px;font-weight:700;color:#6C5CE0;margin:10px 0 4px;}
+  .report-empty{font-size:11px;color:#888;font-style:italic;}
+  table.report-table{width:100%;border-collapse:collapse;margin-bottom:6px;}
+  table.report-table td, table.report-table th{border:1px solid #ccc;padding:5px 7px;font-size:10.5px;text-align:left;}
+  table.report-table th{background:#f0f0f5;font-weight:700;}
+  table.report-table.small td, table.report-table.small th{padding:4px 5px;font-size:9.5px;text-align:center;}
+  table.report-table.small td:first-child, table.report-table.small th:first-child{text-align:left;}
+  .report-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px;}
+  .report-badge.red{background:#f6e3e1;color:#a33;}
+  .report-badge.orange{background:#f8e9d8;color:#a56;}
+  .report-badge.yellow{background:#f6efd3;color:#8a6;}
+  .report-badge.green{background:#deede5;color:#396;}
+  .report-badge.grey{background:#eee;color:#888;}
+  .report-list{font-size:11px;margin:4px 0;padding-left:18px;}
+  @page{size:A4;margin:14mm 10mm;}
+}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
 
@@ -306,7 +341,8 @@ footer.appfoot{text-align:center;font-size:12px;color:var(--ink-soft);padding:20
     <div class="topbar-actions">
       <button class="btn status-pill" id="statusPill" title="คลิกเพื่อตั้งค่าการเชื่อมต่อ Firebase"><span class="dot" id="statusDot"></span><span id="statusLabel">กำลังตรวจสอบ...</span></button>
       <button class="btn" id="btnRefreshGas" title="รีเฟรชข้อมูลล่าสุดจาก Firebase">⟳ รีเฟรช</button>
-      <button class="btn" id="btnExport">ส่งออก CSV</button>
+      <button class="btn" id="btnExportExcel">📊 ส่งออก Excel</button>
+      <button class="btn" id="btnExportPdf">📄 ส่งออก PDF (รายงาน)</button>
       <button class="btn btn-danger-outline" id="btnReset">ล้างข้อมูลทั้งหมด</button>
     </div>
   </div>
@@ -516,7 +552,7 @@ service cloud.firestore {
       <div class="about-step"><div class="about-step-num">4</div><div class="about-step-text">ระบบคำนวณคะแนนเฉลี่ย (ถ่วงน้ำหนักตามที่ตั้งค่า) และข้อเสนอแนะอัตโนมัติ พร้อมสีบ่งชี้ระดับ (แดง=ตัดออก, ส้ม=ปรับเปลี่ยน, เหลือง=ปรับปรุงเล็กน้อย, เขียว=คงไว้/ขยายผล)</div></div>
       <div class="about-step"><div class="about-step-num">5</div><div class="about-step-text">เปิดแท็บ &ldquo;แดชบอร์ด&rdquo; เพื่อดูภาพรวม รวมถึงงบประมาณและความคืบหน้าทั้งแผน</div></div>
       <div class="about-step"><div class="about-step-num">6</div><div class="about-step-text">ใช้แท็บ &ldquo;ข้อเสนอกลยุทธ์ใหม่&rdquo; รวบรวมไอเดียกลยุทธ์ใหม่สำหรับแผน พ.ศ. 2571-2575 และแท็บ &ldquo;ประวัติการเปลี่ยนแปลง&rdquo; ตรวจสอบว่าใครแก้ไขอะไรเมื่อไหร่</div></div>
-      <div class="about-step"><div class="about-step-num">7</div><div class="about-step-text">กดปุ่ม &ldquo;ส่งออก CSV&rdquo; ที่มุมขวาบนเพื่อดาวน์โหลดผลประเมินทั้งหมด แล้วนำเข้า Google Sheets เพิ่มเติมได้หากต้องการ</div></div>
+      <div class="about-step"><div class="about-step-num">7</div><div class="about-step-text">กดปุ่ม &ldquo;📊 ส่งออก Excel&rdquo; ที่มุมขวาบนเพื่อดาวน์โหลดผลประเมินทั้งหมดเป็นไฟล์ Excel (หลายชีต) หรือกด &ldquo;📄 ส่งออก PDF&rdquo; เพื่อสร้างรายงานสรุปแบบเต็มรูปแบบ (ระบบจะเปิดหน้าต่างพิมพ์ของเบราว์เซอร์ ให้เลือก &ldquo;บันทึกเป็น PDF&rdquo; เป็นเครื่องพิมพ์)</div></div>
     </div>
 
     <div class="card pad">
@@ -526,6 +562,8 @@ service cloud.firestore {
   </div>
 
 </div>
+
+<div id="printReportContainer" class="print-only"></div>
 
 <footer class="appfoot">Digital Strategic Evaluation System — ออกแบบสำหรับการทบทวนแผนยุทธศาสตร์ พ.ศ. 2566-2570 เพื่อจัดทำแผนฉบับใหม่ พ.ศ. 2571-2575</footer>
 <div class="toast" id="toast">บันทึกข้อมูลแล้ว</div>
@@ -2023,38 +2061,276 @@ document.getElementById('btnGasDisconnect').addEventListener('click', async ()=>
 /* ================================================================ */
 /* EXPORT / RESET                                                    */
 /* ================================================================ */
-function exportCsv(){
-  const headers = ['ยุทธศาสตร์ที่','ชื่อยุทธศาสตร์','กลยุทธ์ที่','กลยุทธ์','ผู้รับผิดชอบ','ผู้ประเมิน','วันที่ประเมิน',
+function buildReportHtml(){
+  const items = DATA.items;
+  const evaluated = items.filter(it=>computeItemAvg(it.id)!==null);
+  const counts = {red:0,orange:0,yellow:0,green:0,grey:0};
+  items.forEach(it=>{ counts[getRecoKey(computeItemAvg(it.id))]++; });
+  const overallAvg = evaluated.length ? evaluated.reduce((a,it)=>a+computeItemAvg(it.id),0)/evaluated.length : null;
+
+  let html = `
+    <div class="report-cover">
+      <div class="report-eyebrow">DIGITAL STRATEGIC EVALUATION SYSTEM</div>
+      <h1>รายงานผลการประเมินแผนยุทธศาสตร์</h1>
+      <p class="report-sub">มูลนิธิการศึกษาทางไกลผ่านดาวเทียม ในพระบรมราชูปถัมภ์ · กรอบประเมิน OECD-DAC</p>
+      <p class="report-sub">เพื่อจัดทำแผนยุทธศาสตร์ พ.ศ. 2571-2575</p>
+      <p class="report-date">จัดทำเมื่อ ${new Date().toLocaleString('th-TH')}</p>
+    </div>
+
+    <div class="report-section">
+      <h2>สรุปภาพรวม</h2>
+      <table class="report-table">
+        <tr><td>คะแนนเฉลี่ยรวมทั้งแผน</td><td>${overallAvg===null?'ยังไม่มีข้อมูล':overallAvg.toFixed(2)+' / 5.00'}</td></tr>
+        <tr><td>กลยุทธ์ที่ประเมินแล้ว</td><td>${evaluated.length} / ${items.length}</td></tr>
+        <tr><td>ควรตัดออก (Discontinue)</td><td>${counts.red}</td></tr>
+        <tr><td>ควรปรับเปลี่ยนสาระสำคัญ (Major Revision)</td><td>${counts.orange}</td></tr>
+        <tr><td>ควรปรับปรุงเล็กน้อย/คงไว้ (Minor Revision)</td><td>${counts.yellow}</td></tr>
+        <tr><td>ควรคงไว้และขยายผล (Retain &amp; Scale-up)</td><td>${counts.green}</td></tr>
+        <tr><td>ยังไม่ได้ประเมิน</td><td>${counts.grey}</td></tr>
+      </table>
+    </div>
+  `;
+
+  DATA.strategies.forEach(s=>{
+    const stratItems = items.filter(it=>it.strategyId===s.id);
+    html += `<div class="report-strategy">
+      <h2>ยุทธศาสตร์ที่ ${s.id}: ${escapeHtml(s.name)}</h2>
+      <p class="report-goal">เป้าหมาย: ${escapeHtml(s.goal)}</p>`;
+
+    stratItems.forEach(it=>{
+      const st = evalState[it.id] || {evaluations:[], indicators:[], budget:{planned:{},actual:{}}, progress:{status:'not_started',percent:0}, evidence:[]};
+      const avg = computeItemAvg(it.id);
+      const rk = getRecoKey(avg);
+      const evals = st.evaluations || [];
+      const inds = getIndicatorsForItem(it, st);
+      const b = st.budget || {planned:{}, actual:{}, note:''};
+      const p = st.progress || {status:'not_started', percent:0, note:''};
+      const totalPlanned = sumYearly(b.planned), totalActual = sumYearly(b.actual);
+      const variance = budgetVariancePct(b);
+
+      html += `<div class="report-item">
+        <h3>กลยุทธ์ที่ ${it.num}: ${escapeHtml(it.text)}</h3>
+        <p class="report-meta">ผู้รับผิดชอบ: ${escapeHtml(it.owner)} &nbsp;|&nbsp; คะแนนเฉลี่ย: <b>${fmt(avg)}</b> &nbsp;|&nbsp; ข้อเสนอแนะ: <span class="report-badge ${rk}">${RECO[rk].label}</span></p>`;
+
+      // Evaluations
+      html += `<div class="report-subhead">คะแนนประเมิน OECD-DAC (${evals.length} ผู้ประเมิน)</div>`;
+      if(evals.length){
+        html += `<table class="report-table small"><tr><th>ผู้ประเมิน</th><th>วันที่</th>` +
+          CRIT_LABELS.map(c=>`<th>${escapeHtml(c.th)}</th>`).join('') + `<th>เฉลี่ย</th><th>เหตุผล</th></tr>`;
+        evals.forEach(ev=>{
+          html += `<tr><td>${escapeHtml(ev.evaluator)}</td><td>${escapeHtml(ev.date)}</td>` +
+            CRIT_KEYS.map(k=>`<td>${ev.scores[k] ?? '—'}</td>`).join('') +
+            `<td>${fmt(avgOfScores(ev.scores))}</td><td>${escapeHtml(ev.reason||'')}</td></tr>`;
+        });
+        html += `</table>`;
+      } else {
+        html += `<p class="report-empty">ยังไม่มีการประเมิน</p>`;
+      }
+
+      // Indicators
+      html += `<div class="report-subhead">ตัวชี้วัดผลจริง</div>`;
+      if(inds.length){
+        html += `<table class="report-table small"><tr><th>ตัวชี้วัด</th><th>โครงการ/กิจกรรม</th>` +
+          YEARS.map(y=>`<th>เป้า ${y}</th>`).join('') + YEARS.map(y=>`<th>จริง ${y}</th>`).join('') + `<th>% บรรลุ</th></tr>`;
+        inds.forEach(ind=>{
+          const ach = indicatorAchievementPct(ind);
+          html += `<tr><td>${escapeHtml(ind.text)}</td><td>${escapeHtml(ind.project||'—')}</td>` +
+            YEARS.map(y=>`<td>${ind.targetYearly[y] ?? '—'}</td>`).join('') +
+            YEARS.map(y=>`<td>${ind.yearly[y] ?? '—'}</td>`).join('') +
+            `<td>${ach===null?'—':ach.pct.toFixed(0)+'% (ปี '+ach.year+')'}</td></tr>`;
+        });
+        html += `</table>`;
+      }
+
+      // Budget & Progress
+      html += `<div class="report-subhead">งบประมาณรายปี (บาท) และความคืบหน้า</div>`;
+      html += `<table class="report-table small"><tr><th></th>` + YEARS.map(y=>`<th>${y}</th>`).join('') + `<th>รวม</th></tr>` +
+        `<tr><td>ตามแผน</td>` + YEARS.map(y=>`<td>${b.planned[y]!=null?fmtMoney(b.planned[y]):'—'}</td>`).join('') + `<td>${totalPlanned!=null?fmtMoney(totalPlanned):'—'}</td></tr>` +
+        `<tr><td>ใช้จริง</td>` + YEARS.map(y=>`<td>${b.actual[y]!=null?fmtMoney(b.actual[y]):'—'}</td>`).join('') + `<td>${totalActual!=null?fmtMoney(totalActual):'—'}</td></tr>` +
+        `</table>`;
+      html += `<p class="report-meta">ส่วนต่างงบประมาณรวม: ${variance===null?'ยังไม่มีข้อมูลเพียงพอ':variance.toFixed(1)+'%'} &nbsp;|&nbsp; สถานะ: ${statusLabel(p.status)} (${p.percent||0}%)</p>`;
+
+      // Evidence
+      if((st.evidence||[]).length){
+        html += `<div class="report-subhead">หลักฐานอ้างอิง</div><ul class="report-list">` +
+          st.evidence.map(ev=>`<li>${escapeHtml(ev.label||'หลักฐาน')}${ev.url?': '+escapeHtml(ev.url):''}</li>`).join('') + `</ul>`;
+      }
+
+      html += `</div>`; // .report-item
+    });
+    html += `</div>`; // .report-strategy
+  });
+
+  if(proposals.length){
+    html += `<div class="report-section"><h2>ข้อเสนอกลยุทธ์ใหม่ สำหรับแผน พ.ศ. 2571-2575</h2>`;
+    proposals.forEach(p=>{
+      const stratLabel = p.relatedStrategy==='new' ? 'ยุทธศาสตร์ใหม่' : ('ยุทธศาสตร์ที่ '+p.relatedStrategy);
+      html += `<div class="report-item"><h3>${escapeHtml(p.title)}</h3>
+        <p class="report-meta">${escapeHtml(stratLabel)} | ความสำคัญ: ${escapeHtml(p.priority)} | เสนอโดย ${escapeHtml(p.submittedBy||'ไม่ระบุชื่อ')} | ${escapeHtml(p.date||'')}</p>
+        <p>${escapeHtml(p.description)}</p></div>`;
+    });
+    html += `</div>`;
+  }
+
+  return html;
+}
+function exportPdfReport(){
+  const container = document.getElementById('printReportContainer');
+  if(!container){ showToast('ไม่พบส่วนแสดงรายงาน', true); return; }
+  container.innerHTML = buildReportHtml();
+  window.print();
+}
+
+function exportExcel(){
+  const wb = XLSX.utils.book_new();
+  const items = DATA.items;
+  const evaluated = items.filter(it=>computeItemAvg(it.id)!==null);
+  const counts = {red:0,orange:0,yellow:0,green:0,grey:0};
+  items.forEach(it=>{ counts[getRecoKey(computeItemAvg(it.id))]++; });
+  const overallAvg = evaluated.length ? evaluated.reduce((a,it)=>a+computeItemAvg(it.id),0)/evaluated.length : null;
+
+  // --- Sheet 1: สรุปภาพรวม ---
+  let totalPlannedAll=0, totalActualAll=0, hasBudgetAll=0, progressSumAll=0, progressCountAll=0, evaluatorSetAll=new Set();
+  items.forEach(it=>{
+    const st = evalState[it.id]; if(!st) return;
+    const ip = sumYearly(st.budget && st.budget.planned), ia = sumYearly(st.budget && st.budget.actual);
+    if(ip!==null){ totalPlannedAll+=ip; totalActualAll+=(ia||0); hasBudgetAll++; }
+    if(st.progress){ progressSumAll += (st.progress.percent||0); progressCountAll++; }
+    (st.evaluations||[]).forEach(ev=>{ if(ev.evaluator) evaluatorSetAll.add(ev.evaluator); });
+  });
+  const overviewRows = [
+    ['ระบบประเมินผลยุทธศาสตร์ดิจิทัล (DSES) — สรุปภาพรวม'],
+    ['ส่งออกเมื่อ', new Date().toLocaleString('th-TH')],
+    [],
+    ['ตัวชี้วัดสรุป', 'ค่า'],
+    ['คะแนนเฉลี่ยรวมทั้งแผน (จาก 5.00)', overallAvg===null?'ยังไม่มีข้อมูล':overallAvg.toFixed(2)],
+    ['กลยุทธ์ที่ประเมินแล้ว', evaluated.length + ' / ' + items.length],
+    ['ควรตัดออก (Discontinue)', counts.red],
+    ['ควรปรับเปลี่ยนสาระสำคัญ (Major Revision)', counts.orange],
+    ['ควรปรับปรุงเล็กน้อย/คงไว้ (Minor Revision)', counts.yellow],
+    ['ควรคงไว้และขยายผล (Retain & Scale-up)', counts.green],
+    ['ยังไม่ได้ประเมิน', counts.grey],
+    ['งบประมาณรวมตามแผน (บาท)', totalPlannedAll],
+    ['งบประมาณรวมใช้จริง (บาท)', totalActualAll],
+    ['ความคืบหน้าเฉลี่ยทั้งแผน (%)', progressCountAll ? (progressSumAll/progressCountAll).toFixed(0) : '—'],
+    ['จำนวนผู้ประเมินทั้งหมด (ไม่ซ้ำ)', evaluatorSetAll.size]
+  ];
+  const wsOverview = XLSX.utils.aoa_to_sheet(overviewRows);
+  wsOverview['!cols'] = [{wch:42},{wch:24}];
+  XLSX.utils.book_append_sheet(wb, wsOverview, 'สรุปภาพรวม');
+
+  // --- Sheet 2: คะแนนประเมิน ---
+  const evalHeaders = ['ยุทธศาสตร์ที่','ชื่อยุทธศาสตร์','กลยุทธ์ที่','กลยุทธ์','ผู้รับผิดชอบ','ผู้ประเมิน','วันที่ประเมิน',
     'ความสอดคล้อง','ความสอดคล้องเชิงระบบ','ประสิทธิผล','ประสิทธิภาพ','ผลกระทบ','ความยั่งยืน','คะแนนเฉลี่ย(รายคน)','เหตุผล/หลักฐานประกอบ'];
-  const rows = [];
-  DATA.items.forEach(it=>{
+  const evalRows = [evalHeaders];
+  items.forEach(it=>{
     const s = DATA.strategies.find(x=>x.id===it.strategyId);
     const st = evalState[it.id];
     const evals = (st && st.evaluations) || [];
     if(!evals.length){
-      rows.push([it.strategyId, s.name, it.num, it.text, it.owner, '', '', '', '', '', '', '', '', '', '(ยังไม่มีการประเมิน)']);
+      evalRows.push([it.strategyId, s.name, it.num, it.text, it.owner, '', '', '', '', '', '', '', '', '', '(ยังไม่มีการประเมิน)']);
     } else {
       evals.forEach(ev=>{
-        rows.push([it.strategyId, s.name, it.num, it.text, it.owner, ev.evaluator, ev.date,
+        evalRows.push([it.strategyId, s.name, it.num, it.text, it.owner, ev.evaluator, ev.date,
           ev.scores.rel??'', ev.scores.coh??'', ev.scores.eff??'', ev.scores.effy??'', ev.scores.imp??'', ev.scores.sus??'',
-          fmt(avgOfScores(ev.scores)), ev.reason||'']);
+          avgOfScores(ev.scores)===null?'':Number(avgOfScores(ev.scores).toFixed(2)), ev.reason||'']);
       });
     }
   });
-  const csvLines = [headers, ...rows].map(r => r.map(csvEscape).join(',')).join('\r\n');
-  const blob = new Blob(['\uFEFF' + csvLines], {type:'text/csv;charset=utf-8;'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'DSES_ผลการประเมินยุทธศาสตร์.csv';
-  document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  const wsEval = XLSX.utils.aoa_to_sheet(evalRows);
+  wsEval['!cols'] = [{wch:8},{wch:22},{wch:8},{wch:40},{wch:18},{wch:16},{wch:12},{wch:10},{wch:10},{wch:10},{wch:10},{wch:10},{wch:10},{wch:10},{wch:40}];
+  XLSX.utils.book_append_sheet(wb, wsEval, 'คะแนนประเมิน');
+
+  // --- Sheet 3: ตัวชี้วัด ---
+  const indHeaders = ['ยุทธศาสตร์ที่','กลยุทธ์ที่','กลยุทธ์','ตัวชี้วัด','โครงการ/กิจกรรม','หน่วย',
+    ...YEARS.map(y=>'เป้าหมาย '+y), ...YEARS.map(y=>'ผลจริง '+y), '% บรรลุ (ปีล่าสุดที่มีคู่)','หมายเหตุ'];
+  const indRows = [indHeaders];
+  items.forEach(it=>{
+    const st = evalState[it.id];
+    const inds = getIndicatorsForItem(it, st || {});
+    inds.forEach(ind=>{
+      const ach = indicatorAchievementPct(ind);
+      indRows.push([it.strategyId, it.num, it.text, ind.text, ind.project||'', ind.unit||'',
+        ...YEARS.map(y=>ind.targetYearly[y] ?? ''), ...YEARS.map(y=>ind.yearly[y] ?? ''),
+        ach===null ? '' : ach.pct.toFixed(0)+'% (ปี '+ach.year+')', ind.note||'']);
+    });
+  });
+  const wsInd = XLSX.utils.aoa_to_sheet(indRows);
+  wsInd['!cols'] = [{wch:8},{wch:8},{wch:40},{wch:45},{wch:24},{wch:8},...YEARS.map(()=>({wch:10})),...YEARS.map(()=>({wch:10})),{wch:16},{wch:30}];
+  XLSX.utils.book_append_sheet(wb, wsInd, 'ตัวชี้วัด');
+
+  // --- Sheet 4: งบประมาณ ---
+  const budHeaders = ['ยุทธศาสตร์ที่','กลยุทธ์ที่','กลยุทธ์', ...YEARS.map(y=>'แผน '+y), ...YEARS.map(y=>'จริง '+y), 'รวมแผน','รวมจริง','ส่วนต่าง %','หมายเหตุ'];
+  const budRows = [budHeaders];
+  items.forEach(it=>{
+    const st = evalState[it.id];
+    const b = (st && st.budget) || {planned:{}, actual:{}, note:''};
+    const totalPlanned = sumYearly(b.planned), totalActual = sumYearly(b.actual);
+    const variance = budgetVariancePct(b);
+    budRows.push([it.strategyId, it.num, it.text,
+      ...YEARS.map(y=>b.planned[y] ?? ''), ...YEARS.map(y=>b.actual[y] ?? ''),
+      totalPlanned ?? '', totalActual ?? '', variance===null?'':variance.toFixed(1)+'%', b.note||'']);
+  });
+  const wsBud = XLSX.utils.aoa_to_sheet(budRows);
+  wsBud['!cols'] = [{wch:8},{wch:8},{wch:40},...YEARS.map(()=>({wch:12})),...YEARS.map(()=>({wch:12})),{wch:14},{wch:14},{wch:12},{wch:30}];
+  XLSX.utils.book_append_sheet(wb, wsBud, 'งบประมาณ');
+
+  // --- Sheet 5: ความคืบหน้า ---
+  const progHeaders = ['ยุทธศาสตร์ที่','กลยุทธ์ที่','กลยุทธ์','สถานะ','% ความคืบหน้า','หมายเหตุ'];
+  const progRows = [progHeaders];
+  items.forEach(it=>{
+    const st = evalState[it.id];
+    const p = (st && st.progress) || {status:'not_started', percent:0, note:''};
+    progRows.push([it.strategyId, it.num, it.text, statusLabel(p.status), p.percent||0, p.note||'']);
+  });
+  const wsProg = XLSX.utils.aoa_to_sheet(progRows);
+  wsProg['!cols'] = [{wch:8},{wch:8},{wch:40},{wch:16},{wch:14},{wch:30}];
+  XLSX.utils.book_append_sheet(wb, wsProg, 'ความคืบหน้า');
+
+  // --- Sheet 6: หลักฐาน ---
+  const evidHeaders = ['ยุทธศาสตร์ที่','กลยุทธ์ที่','กลยุทธ์','ชื่อหลักฐาน','ลิงก์'];
+  const evidRows = [evidHeaders];
+  items.forEach(it=>{
+    const st = evalState[it.id];
+    ((st && st.evidence) || []).forEach(ev=>{
+      evidRows.push([it.strategyId, it.num, it.text, ev.label||'', ev.url||'']);
+    });
+  });
+  const wsEvid = XLSX.utils.aoa_to_sheet(evidRows);
+  wsEvid['!cols'] = [{wch:8},{wch:8},{wch:40},{wch:30},{wch:40}];
+  XLSX.utils.book_append_sheet(wb, wsEvid, 'หลักฐาน');
+
+  // --- Sheet 7: ข้อเสนอกลยุทธ์ใหม่ ---
+  const propHeaders = ['หัวข้อ','รายละเอียด','ยุทธศาสตร์ที่เกี่ยวข้อง','ความสำคัญ','ผู้เสนอ','วันที่'];
+  const propRows = [propHeaders];
+  proposals.forEach(p=>{
+    propRows.push([p.title||'', p.description||'', p.relatedStrategy||'', p.priority||'', p.submittedBy||'', p.date||'']);
+  });
+  const wsProp = XLSX.utils.aoa_to_sheet(propRows);
+  wsProp['!cols'] = [{wch:30},{wch:50},{wch:18},{wch:12},{wch:18},{wch:12}];
+  XLSX.utils.book_append_sheet(wb, wsProp, 'ข้อเสนอกลยุทธ์ใหม่');
+
+  // --- Sheet 8: ประวัติการเปลี่ยนแปลง (ถ้ามี) ---
+  if(auditLog && auditLog.length){
+    const auditHeaders = ['วันที่-เวลา','กลยุทธ์','ประเภท','รายละเอียด','ผู้ดำเนินการ'];
+    const auditRows = [auditHeaders];
+    auditLog.forEach(a=>{
+      auditRows.push([formatTimestamp(a.timestamp), a.itemId||'—', FIELD_LABEL[a.field]||a.field, a.summary, a.actor||'ไม่ระบุชื่อ']);
+    });
+    const wsAudit = XLSX.utils.aoa_to_sheet(auditRows);
+    wsAudit['!cols'] = [{wch:20},{wch:10},{wch:16},{wch:50},{wch:18}];
+    XLSX.utils.book_append_sheet(wb, wsAudit, 'ประวัติการเปลี่ยนแปลง');
+  }
+
+  XLSX.writeFile(wb, 'DSES_รายงานผลการประเมิน.xlsx');
 }
 function csvEscape(v){
   const s = String(v ?? '');
   if(/[",\n\r]/.test(s)) return '"' + s.replace(/"/g,'""') + '"';
   return s;
 }
-document.getElementById('btnExport').addEventListener('click', exportCsv);
+document.getElementById('btnExportExcel').addEventListener('click', exportExcel);
+document.getElementById('btnExportPdf').addEventListener('click', exportPdfReport);
 
 document.getElementById('btnReset').addEventListener('click', async ()=>{
   const scope = connected ? 'ใน Firebase ที่เชื่อมต่ออยู่' : 'ในเบราว์เซอร์นี้';

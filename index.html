@@ -396,8 +396,6 @@ footer.appfoot{text-align:center;font-size:12px;color:var(--ink-soft);padding:20
         <option value="contributor">ผู้เสนอความเห็น (Contributor) — ดูข้อมูลและแสดงความคิดเห็นได้ ไม่แก้ไขคะแนน</option>
         <option value="executive">ผู้บริหาร (Executive/Approver) — ดูภาพรวม อนุมัติ/ล็อกผลประเมิน</option>
       </select>
-      <div class="field-label" style="margin-top:10px;">รหัสทีม (ขอจากผู้ดูแลระบบ)</div>
-      <input type="text" id="signupCode" class="meta-input" placeholder="รหัสทีมตามบทบาทที่เลือก">
       <button class="btn-light btn-light-solid" id="btnSignup" style="width:100%;margin-top:16px;">สมัครสมาชิก</button>
     </div>
 
@@ -629,7 +627,7 @@ service cloud.firestore {
           <div style="font-size:12px;color:var(--red);margin-top:6px;">⚠️ ต้องล็อกอินก่อนจึงจะเข้าถึงข้อมูลได้ (ต่างจากเดิมที่เปิดให้ใครก็ได้อ่าน/เขียน) — บทบาทจะถูกตรวจสอบจากเอกสารในคอลเลกชัน <code>users</code> ซึ่งกำหนดตอนสมัครสมาชิกครั้งแรกเท่านั้น ผู้ใช้แก้ไขบทบาทตัวเองภายหลังไม่ได้ (ต้องให้ผู้บริหารแก้ในคอนโซล Firebase โดยตรง)</div>
         </div></div>
         <div class="about-step"><div class="about-step-num">5</div><div class="about-step-text">กลับไปหน้าโปรเจกต์หลัก กดไอคอนเฟือง &ldquo;Project settings&rdquo; เลื่อนลงไปที่ &ldquo;Your apps&rdquo; กด &ldquo;Add app&rdquo; เลือกไอคอนเว็บ (&lt;/&gt;) ตั้งชื่อแอปแล้วกด &ldquo;Register app&rdquo; ระบบจะแสดงโค้ด <code>firebaseConfig</code> ให้คัดลอก</div></div>
-        <div class="about-step"><div class="about-step-num">6</div><div class="about-step-text">วางค่าที่คัดลอกมาทั้งหมด (ทั้งก้อน <code>{ apiKey: ..., ... }</code> ไม่ต้องแก้ไขรูปแบบ) ลงในช่องด้านล่าง แล้วกด &ldquo;บันทึกและเชื่อมต่อ&rdquo; จากนั้นจะต้องสมัครสมาชิก/เข้าสู่ระบบก่อนใช้งานจริง (ดูรหัสทีมของแต่ละบทบาทได้จากผู้ดูแลระบบ ซึ่งตั้งค่าไว้ที่ตัวแปร <code>ACCESS_CODES</code> ในซอร์สโค้ดของไฟล์นี้)</div></div>
+        <div class="about-step"><div class="about-step-num">6</div><div class="about-step-text">วางค่าที่คัดลอกมาทั้งหมด (ทั้งก้อน <code>{ apiKey: ..., ... }</code> ไม่ต้องแก้ไขรูปแบบ) ลงในช่องด้านล่าง แล้วกด &ldquo;บันทึกและเชื่อมต่อ&rdquo; จากนั้นจะต้องสมัครสมาชิก/เข้าสู่ระบบก่อนใช้งานจริง (เลือกบทบาทได้อิสระตอนสมัครสมาชิก — หากต้องการเปลี่ยนบทบาทของใครในภายหลัง ให้แก้ไขค่า <code>role</code> ในเอกสารคอลเลกชัน <code>users</code> โดยตรงผ่านหน้า Firebase Console)</div></div>
         <textarea id="firebaseConfigInput" class="reason-input" style="min-height:110px;font-family:monospace;font-size:12.5px;margin:6px 0 10px;" placeholder='{ apiKey: "AIzaSy...", authDomain: "xxx.firebaseapp.com", projectId: "xxx", storageBucket: "xxx.appspot.com", messagingSenderId: "...", appId: "..." }'></textarea>
         <div style="display:flex;gap:8px;flex-wrap:wrap;">
           <button class="btn-light btn-light-solid" id="btnGasSave">บันทึกและเชื่อมต่อ</button>
@@ -640,7 +638,7 @@ service cloud.firestore {
     </div>
 
     <div class="notice">
-      <b>ระบบนี้แบ่งสิทธิ์ตามบทบาท (Role-Based Access):</b> เมื่อเชื่อมต่อ Firebase แล้ว ทุกคนต้องสมัครสมาชิก/เข้าสู่ระบบก่อนใช้งาน มี 3 บทบาท — <b>ผู้ประเมิน</b> (ให้คะแนน กรอกตัวชี้วัด/งบประมาณ/ความคืบหน้าได้) <b>ผู้เสนอความเห็น</b> (ดูข้อมูลและแสดงความคิดเห็นได้ แก้ไขคะแนนไม่ได้) และ <b>ผู้บริหาร</b> (ทำได้ทุกอย่างของผู้ประเมิน บวกอนุมัติ/ล็อกผลประเมินเพื่อป้องกันการแก้ไขโดยไม่ตั้งใจ) ประวัติการเปลี่ยนแปลง (แท็บ &ldquo;ประวัติการเปลี่ยนแปลง&rdquo;) บันทึกไว้ว่าใครแก้ไขอะไรเมื่อไหร่
+      <b>ระบบนี้แบ่งสิทธิ์ตามบทบาท (Role-Based Access):</b> เมื่อเชื่อมต่อ Firebase แล้ว ทุกคนต้องสมัครสมาชิก/เข้าสู่ระบบก่อนใช้งาน มี 3 บทบาท — <b>ผู้ประเมิน</b> (ให้คะแนน กรอกตัวชี้วัด/งบประมาณ/ความคืบหน้าได้) <b>ผู้เสนอความเห็น</b> (ดูข้อมูลและแสดงความคิดเห็นได้ แก้ไขคะแนนไม่ได้) และ <b>ผู้บริหาร</b> (ทำได้ทุกอย่างของผู้ประเมิน บวกอนุมัติ/ล็อกผลประเมินเพื่อป้องกันการแก้ไขโดยไม่ตั้งใจ) <span style="color:var(--red);font-weight:600;">ผู้สมัครสมาชิกเลือกบทบาทของตัวเองได้อิสระโดยไม่มีรหัสยืนยัน</span> — หากต้องการควบคุมว่าใครเป็นผู้บริหารได้บ้าง ให้ตรวจสอบและปรับแก้บทบาทของผู้ใช้แต่ละคนในคอลเลกชัน <code>users</code> ผ่านหน้า Firebase Console เป็นระยะ ประวัติการเปลี่ยนแปลง (แท็บ &ldquo;ประวัติการเปลี่ยนแปลง&rdquo;) บันทึกไว้ว่าใครแก้ไขอะไรเมื่อไหร่
     </div>
 
     <div class="card pad" style="margin-bottom:20px;">
@@ -700,16 +698,6 @@ const EMBEDDED_FIREBASE_CONFIG = {
   measurementId: "G-031NF274V1"
 };
 
-/* ============================================================================
- * รหัสทีมสำหรับสมัครสมาชิกตามบทบาท (Role-Based Access Control)
- * เปลี่ยนรหัสเหล่านี้ได้ตามต้องการ แล้วแจ้งรหัสที่เกี่ยวข้องให้สมาชิกแต่ละบทบาททราบ
- * ผู้ที่ไม่มีรหัสที่ถูกต้องจะสมัครสมาชิกในบทบาทนั้นไม่ได้
- * ========================================================================= */
-const ACCESS_CODES = {
-  evaluator: 'EVAL2571',
-  contributor: 'CONTRIB2571',
-  executive: 'EXEC2571'
-};
 const ROLE_LABEL = {evaluator:'ผู้ประเมิน', contributor:'ผู้เสนอความเห็น', executive:'ผู้บริหาร'};
 
 const CRIT_KEYS = ['rel','coh','eff','effy','imp','sus'];
@@ -1127,10 +1115,7 @@ async function loadUserProfile(user){
   }
 }
 let suppressAuthListener = false; // ป้องกัน race: onAuthStateChanged อาจยิงก่อนที่ signUp() จะเขียนโปรไฟล์ผู้ใช้เสร็จ
-async function signUp(email, password, displayName, role, code){
-  if(ACCESS_CODES[role] !== code){
-    throw new Error('รหัสทีมไม่ถูกต้องสำหรับบทบาทที่เลือก');
-  }
+async function signUp(email, password, displayName, role){
   suppressAuthListener = true;
   try{
     const cred = await authInst.createUserWithEmailAndPassword(email, password);
@@ -2526,10 +2511,9 @@ document.getElementById('btnSignup').addEventListener('click', async ()=>{
   const email = document.getElementById('signupEmail').value.trim();
   const password = document.getElementById('signupPassword').value;
   const role = document.getElementById('signupRole').value;
-  const code = document.getElementById('signupCode').value.trim();
-  if(!name || !email || !password || !code){ showAuthError('กรุณากรอกข้อมูลให้ครบทุกช่อง'); return; }
+  if(!name || !email || !password){ showAuthError('กรุณากรอกข้อมูลให้ครบทุกช่อง'); return; }
   if(password.length < 6){ showAuthError('รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร'); return; }
-  try{ await signUp(email, password, name, role, code); }
+  try{ await signUp(email, password, name, role); }
   catch(e){ showAuthError('สมัครสมาชิกไม่สำเร็จ: ' + e.message); }
 });
 document.getElementById('btnLogout').addEventListener('click', async ()=>{

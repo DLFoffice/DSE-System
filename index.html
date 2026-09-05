@@ -14,6 +14,7 @@
   --red:#C15C5C; --red-soft:#FBE7E7; --orange:#C98A4A; --orange-soft:#FCEEDD;
   --yellow:#B79A3E; --yellow-soft:#FBF3D3; --green:#4E9B79; --green-soft:#E1F3EA;
   --grey:#9C97B8; --grey-soft:#F2EFFA; --border:#E6E1F5; --radius:14px;
+  --s4:#9C7A1F; --s4-soft:#F6EEDA;
   --shadow: 0 1px 2px rgba(108,92,224,.06), 0 10px 26px rgba(108,92,224,.10);
 }
 *{box-sizing:border-box;}
@@ -42,6 +43,8 @@ button{font-family:inherit;}
 .btn-tiny:hover{border-color:var(--accent);color:var(--primary);}
 .btn-tiny.danger{color:var(--red);border-color:#e7c7c2;}
 .btn-tiny.danger:hover{background:var(--red-soft);}
+.btn-tiny.success{background:var(--green);border-color:var(--green);color:#fff;font-size:12.5px;}
+.btn-tiny.success:hover{background:#437f66;border-color:#437f66;color:#fff;}
 .status-pill{display:inline-flex;align-items:center;gap:6px;}
 .dot{width:8px;height:8px;border-radius:50%;display:inline-block;background:#9aa0ad;}
 .dot.on{background:#5FCB8D;} .dot.off{background:#E3897A;}
@@ -119,6 +122,20 @@ table.heat tr.total-row td{font-weight:700;background:var(--grey-soft);}
 .progress-pill{font-size:12px;background:var(--grey-soft);color:var(--ink-soft);padding:5px 10px;border-radius:999px;font-weight:600;}
 .chev{transition:transform .2s ease;color:var(--ink-soft);}
 .strategy-group.open .chev{transform:rotate(180deg);}
+
+/* สีประจำแต่ละยุทธศาสตร์ เพื่อให้แยกแยะได้ชัดเจน */
+.strategy-group:nth-of-type(1) .strategy-head{box-shadow: inset 5px 0 0 0 var(--primary), var(--shadow);}
+.strategy-group:nth-of-type(1) .strategy-num{color:var(--primary);}
+.strategy-group:nth-of-type(1) .strategy-name{color:var(--primary);}
+.strategy-group:nth-of-type(2) .strategy-head{box-shadow: inset 5px 0 0 0 var(--primary-2), var(--shadow);}
+.strategy-group:nth-of-type(2) .strategy-num{color:var(--primary-2);}
+.strategy-group:nth-of-type(2) .strategy-name{color:var(--primary-2);}
+.strategy-group:nth-of-type(3) .strategy-head{box-shadow: inset 5px 0 0 0 var(--accent), var(--shadow);}
+.strategy-group:nth-of-type(3) .strategy-num{color:var(--accent);}
+.strategy-group:nth-of-type(3) .strategy-name{color:var(--accent);}
+.strategy-group:nth-of-type(4) .strategy-head{box-shadow: inset 5px 0 0 0 var(--s4), var(--shadow);}
+.strategy-group:nth-of-type(4) .strategy-num{color:var(--s4);}
+.strategy-group:nth-of-type(4) .strategy-name{color:var(--s4);}
 .strategy-body{display:none;padding-top:12px;}
 .strategy-group.open .strategy-body{display:block;}
 
@@ -253,6 +270,16 @@ table.audit-table tr:nth-child(even) td{background:#fafbfc;}
 .field-tag{font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:6px;background:var(--grey-soft);color:var(--ink-soft);}
 
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--primary);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;box-shadow:0 6px 24px rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:all .25s ease;z-index:100;}
+
+.success-popup{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:200;opacity:0;pointer-events:none;transition:opacity .2s ease;background:rgba(63,58,92,.12);}
+.success-popup.show{opacity:1;}
+.success-popup-card{background:#fff;border-radius:20px;padding:32px 40px;box-shadow:0 20px 60px rgba(63,58,92,.28);display:flex;flex-direction:column;align-items:center;gap:14px;transform:scale(.75);transition:transform .28s cubic-bezier(.34,1.56,.64,1);}
+.success-popup.show .success-popup-card{transform:scale(1);}
+.success-popup-check circle{stroke-dasharray:158;stroke-dashoffset:158;transition:stroke-dashoffset .5s ease .05s;}
+.success-popup-check path{stroke-dasharray:40;stroke-dashoffset:40;transition:stroke-dashoffset .35s ease .35s;}
+.success-popup.show .success-popup-check circle{stroke-dashoffset:0;}
+.success-popup.show .success-popup-check path{stroke-dashoffset:0;}
+.success-popup-msg{font-size:16px;font-weight:700;color:var(--ink);text-align:center;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 footer.appfoot{text-align:center;font-size:12px;color:var(--ink-soft);padding:20px;}
 </style>
@@ -480,6 +507,15 @@ footer.appfoot{text-align:center;font-size:12px;color:var(--ink-soft);padding:20
 
 <footer class="appfoot">Digital Strategic Evaluation System — ออกแบบสำหรับการทบทวนแผนยุทธศาสตร์ พ.ศ. 2566-2570 เพื่อจัดทำแผนฉบับใหม่ พ.ศ. 2571-2575</footer>
 <div class="toast" id="toast">บันทึกข้อมูลแล้ว</div>
+<div class="success-popup" id="successPopup">
+  <div class="success-popup-card">
+    <svg class="success-popup-check" viewBox="0 0 52 52" width="72" height="72">
+      <circle cx="26" cy="26" r="25" fill="none" stroke="#4E9B79" stroke-width="3"/>
+      <path fill="none" stroke="#4E9B79" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" d="M14 27l7 7 17-17"/>
+    </svg>
+    <div class="success-popup-msg" id="successPopupMsg">บันทึกข้อมูลสำเร็จ</div>
+  </div>
+</div>
 
 <script>
 const DATA = {"strategies": [{"id": 1, "name": "การพัฒนาการจัดการศึกษาทางไกล", "goal": "ลดความเหลื่อมล้ำและสร้างโอกาสในการเข้าถึงการศึกษาอย่างมีคุณภาพ และมีองค์ความรู้ตามหลักวิชาการสำหรับผู้เรียนกลุ่มเป้าหมายทั้งเด็ก เยาวชน และประชาชนทั่วไป"}, {"id": 2, "name": "การพัฒนาครูและโรงเรียนต้นทาง", "goal": "โรงเรียนและครูโรงเรียนต้นทางมีศักยภาพและความพร้อมในการจัดการศึกษาทางไกลได้อย่างมีประสิทธิภาพ และสามารถเป็นต้นแบบในการน้อมนำพระบรมราโชบายไปจัดการเรียนรู้อย่างเหมาะสม"}, {"id": 3, "name": "การพัฒนาครูและโรงเรียนปลายทาง", "goal": "โรงเรียนและครูโรงเรียนปลายทาง สามารถเข้าถึงการศึกษาทางไกล และสามารถใช้ชุดกิจกรรมและสื่อการเรียนรู้ในการจัดการเรียนการสอน และประยุกต์ใช้ได้เหมาะกับบริบทของผู้เรียน รวมถึงน้อมนำพระบรมราโชบายด้านการศึกษาไปจัดการเรียนรู้ได้อย่างเหมาะสม"}, {"id": 4, "name": "การพัฒนาระบบการบริหารจัดการ", "goal": "มูลนิธิฯ มีระบบการบริหารจัดการที่มีประสิทธิภาพเป็นองค์กรสมรรถนะสูง มุ่งสร้างธรรมาภิบาลและได้รับการยอมรับจากภาคส่วนต่าง ๆ"}], "items": [{"id": "1-1", "strategyId": 1, "num": 1, "text": "พัฒนาชุดกิจกรรมและสื่อการเรียนรู้ในการจัดการศึกษาทางไกลที่มีคุณภาพ", "indicators": ["ชุดกิจกรรมและสื่อการเรียนรู้ได้รับการพัฒนาและปรับปรุงให้สอดคล้องกับหลักสูตรการศึกษาปฐมวัย หลักสูตรแกนกลางการศึกษาขั้นพื้นฐาน", "โรงเรียนปลายทางหรือห้องเรียนปลายทางที่ใช้ระบบการจัดการเรียนการสอนทางไกลมีค่าผลสัมฤทธิ์ทางการศึกษาที่เพิ่มขึ้นจากฐานเดิม", "ห้องเรียนต้นทางมีค่าผลสัมฤทธิ์ทางการศึกษาที่เพิ่มขึ้นจากฐานเดิม"], "period": "2566-2570", "owner": "ฝ่ายวิชาการ"}, {"id": "1-2", "strategyId": 1, "num": 2, "text": "ส่งเสริมการผลิตรายการเพื่อการสอนเสริมและแนะแนวอาชีพสำหรับเด็กและเยาวชน ตลอดจนปรับปรุงผังรายการให้มีสัดส่วนที่เหมาะสมสำหรับการส่งเสริมการเรียนรู้ตลอดชีวิตให้กับประชาชนทุกช่วงวัย", "indicators": ["จำนวนรายการ/ตอน ออกอากาศเกี่ยวกับการสอนเสริม การแนะแนวอาชีพ สำหรับเด็กและเยาวชน", "จำนวนรายการ/ตอน ออกอากาศเกี่ยวกับสาระการเรียนรู้ตลอดชีวิตสำหรับประชาชน", "ความพึงพอใจของเด็ก เยาวชน ครูโรงเรียนปลายทาง และประชาชนที่รับชมรายการที่ออกอากาศ", "มีผังรายการออกอากาศที่เหมาะสมกับความต้องการการเรียนรู้ของแต่ละช่วงวัย"], "period": "2566-2570", "owner": "ฝ่ายแผน / ฝ่ายเทคนิค-สถานีฯ"}, {"id": "1-3", "strategyId": 1, "num": 3, "text": "พัฒนาคลังการศึกษาแบบเปิด เพื่อส่งเสริมการเรียนรู้ตลอดชีวิตสำหรับประชาชนทุกช่วงวัย", "indicators": ["มีคลังการศึกษาแบบเปิดสำหรับบุคลากรทางการศึกษา และประชาชนทุกช่วงวัย", "จำนวนผู้ใช้บริการคลังการศึกษาแบบเปิด และการใช้งานเพิ่มขึ้น"], "period": "2566-2568", "owner": "ฝ่ายเทคนิค-สถานีฯ / ฝ่ายวิชาการ"}, {"id": "1-4", "strategyId": 1, "num": 4, "text": "เสริมสร้างความร่วมมือกับทุกภาคส่วนเพื่อเพิ่มประสิทธิภาพในการจัดการศึกษา", "indicators": ["จำนวนภาคีเครือข่ายและรายการการสนับสนุน", "จำนวนระบบ รูปแบบเครือข่ายระหว่างโรงเรียนต้นทางกับโรงเรียนปลายทาง หรือระหว่างโรงเรียนปลายทางกับโรงเรียนปลายทาง"], "period": "2566-2570", "owner": "ฝ่ายวิชาการ / ฝ่ายแผน / ฝ่ายประชาสัมพันธ์"}, {"id": "1-5", "strategyId": 1, "num": 5, "text": "พัฒนาระบบการติดต่อสื่อสาร และช่องทางการเข้าถึงรายการของมูลนิธิฯ ให้มีประสิทธิภาพ", "indicators": ["มีระบบการติดต่อผ่านช่องทางการสื่อสารและการเข้าถึงการศึกษาทางไกลที่เพิ่มขึ้นและมีประสิทธิภาพในทุกกลุ่มเป้าหมาย"], "period": "2566-2570", "owner": "ฝ่ายแผน / ฝ่ายประชาสัมพันธ์ / ฝ่ายเทคนิค-สถานีฯ"}, {"id": "2-1", "strategyId": 2, "num": 1, "text": "ปรับปรุงโครงสร้างพื้นฐานสำหรับการผลิตรายการ", "indicators": ["มีโครงสร้างพื้นฐานสำหรับการจัดการเรียนการสอนออกอากาศที่มีประสิทธิภาพ"], "period": "2566-2570", "owner": "ฝ่ายเทคนิค-สถานีฯ"}, {"id": "2-2", "strategyId": 2, "num": 2, "text": "พัฒนาศักยภาพครูห้องเรียนต้นทาง", "indicators": ["ครูห้องเรียนต้นทางได้รับการพัฒนาศักยภาพในการจัดการเรียนการสอนในเรื่องต่าง ๆ", "มีการบูรณาการศาสตร์พระราชาและน้อมนำพระบรมราโชบายด้านการศึกษาสู่การจัดการเรียนการสอนในแต่ละวิชาและสามารถสอนออกอากาศได้อย่างหลากหลาย ถูกต้อง และน่าสนใจ"], "period": "2566-2570", "owner": "ฝ่ายวิชาการ"}, {"id": "2-3", "strategyId": 2, "num": 3, "text": "พัฒนารูปแบบการสอนออกอากาศให้มีความทันสมัย สอดคล้องกับบริบทการบริโภคสื่อของผู้เรียนในแต่ละช่วงวัยหรือระดับชั้น", "indicators": ["รายวิชาสอนออกอากาศที่ปรับปรุงรูปแบบการนำเสนอ และรูปแบบการจัดการเรียนการสอน ตามหลักสูตรการศึกษาปฐมวัยและการศึกษาขั้นพื้นฐานที่สอดคล้องกับแนวทางการเรียนรู้ที่เปลี่ยนแปลงไป"], "period": "2566-2567", "owner": "ฝ่ายวิชาการ"}, {"id": "2-4", "strategyId": 2, "num": 4, "text": "จัดทำระบบประเมินสมรรถนะครูห้องเรียนต้นทางตามสมรรถนะประจำตำแหน่ง โดยเชื่อมโยงกับระบบจูงใจอย่างเหมาะสม", "indicators": ["มีระบบประเมินสมรรถนะครูห้องเรียนต้นทาง ที่เป็นไปตามสมรรถนะประจำตำแหน่ง"], "period": "2567", "owner": "ฝ่ายวิชาการ"}, {"id": "3-1", "strategyId": 3, "num": 1, "text": "ส่งเสริมให้โรงเรียนขนาดเล็ก โรงเรียนในพื้นที่ห่างไกล ที่มีครูไม่ครบชั้น ได้รับการสนับสนุนให้สามารถเข้าถึงระบบการศึกษาทางไกลของมูลนิธิฯ ได้อย่างทั่วถึง", "indicators": ["โรงเรียนขนาดเล็ก โรงเรียนในพื้นที่ห่างไกล ที่มีครูไม่ครบชั้น สามารถเข้าถึงการศึกษาทางไกลได้อย่างมีคุณภาพ", "มีระบบลงทะเบียนสมาชิก DLTV ที่แบ่งตามประเภท หรือกลุ่มโรงเรียนปลายทาง"], "period": "2566-2570", "owner": "ฝ่ายแผน / ฝ่ายเทคนิค-สถานีฯ / ฝ่ายวิชาการ"}, {"id": "3-2", "strategyId": 3, "num": 2, "text": "สร้างความเข้าใจกับผู้บริหารการศึกษา ผู้บริหารสถานศึกษา ครูและศึกษานิเทศก์ในเรื่องการจัดการศึกษาทางไกลของมูลนิธิฯ", "indicators": ["ผู้บริหารการศึกษา ผู้บริหารสถานศึกษา ครู ศึกษานิเทศก์ โรงเรียนปลายทาง เข้าใจและสนับสนุนการดำเนินการจัดการศึกษาทางไกลของมูลนิธิฯ"], "period": "2566", "owner": "ฝ่ายวิชาการ"}, {"id": "3-3", "strategyId": 3, "num": 3, "text": "สนับสนุนชุดกิจกรรม สื่อการเรียนรู้ องค์ความรู้ และเครือข่ายด้านการศึกษา ให้กับโรงเรียนปลายทาง และพัฒนาศักยภาพการสอนของครูโรงเรียนปลายทาง", "indicators": ["โรงเรียนปลายทางมีชุดกิจกรรม สื่อการเรียนรู้ องค์ความรู้ และเครือข่ายด้านการศึกษา", "ครูโรงเรียนปลายทางสามารถใช้ชุดกิจกรรม สื่อการเรียนรู้ได้อย่างมีประสิทธิภาพ"], "period": "2566-2570", "owner": "ฝ่ายวิชาการ"}, {"id": "3-4", "strategyId": 3, "num": 4, "text": "โรงเรียนปลายทางสามารถบูรณาการศาสตร์พระราชาและน้อมนำพระบรมราโชบายด้านการศึกษาสู่การจัดการเรียนการสอน", "indicators": ["ครูโรงเรียนปลายทางสามารถบูรณาการศาสตร์พระราชาและน้อมนำพระบรมราโชบายด้านการศึกษาในการจัดการเรียนการสอนในแต่ละวิชาได้อย่างหลากหลาย ถูกต้อง และน่าสนใจ"], "period": "2566-2570", "owner": "ฝ่ายวิชาการ"}, {"id": "3-5", "strategyId": 3, "num": 5, "text": "พัฒนากลไกการวัดและประเมินผลการจัดการเรียนรู้ และส่งเสริมการนิเทศ กำกับ ติดตาม ประเมินผลการจัดการศึกษาทางไกล", "indicators": ["มีกลไกการวัดประเมินผล และการติดตามการใช้งาน DLTV", "โรงเรียนปลายทางมีการรายงานผลการจัดการเรียนการสอนทางไกล ตามระบบนิเทศ กำกับ ติดตามและประเมินผล"], "period": "2566-2570", "owner": "ฝ่ายวิชาการ / ฝ่ายแผน"}, {"id": "3-6", "strategyId": 3, "num": 6, "text": "ยกระดับคุณภาพการศึกษาของโรงเรียนปลายทาง โดยจัดทำเกณฑ์การประเมิน/พัฒนาเพื่อนำไปสู่โรงเรียนปลายทางที่มีวิธีการปฏิบัติที่เป็นเลิศ", "indicators": ["โรงเรียนปลายทางที่มีวิธีปฏิบัติที่เป็นเลิศ (Best Practice) จำแนกตามประเภทโรงเรียนปลายทาง", "โรงเรียนปลายทางที่ได้รับการพัฒนาและยกระดับศักยภาพให้มีความพร้อมในการจัดการศึกษาทางไกลตามแนวทางการจัดการเรียนการสอน"], "period": "2566-2570", "owner": "ฝ่ายวิชาการ"}, {"id": "4-1", "strategyId": 4, "num": 1, "text": "พัฒนาระบบการบริหารบุคลากร โครงสร้าง และอัตรากำลัง", "indicators": ["มีแผนโครงสร้าง และอัตรากำลัง", "มีอัตราการครองตำแหน่งของบุคลากรอย่างน้อยร้อยละ 95"], "period": "2566", "owner": "ฝ่ายอำนวยการ"}, {"id": "4-2", "strategyId": 4, "num": 2, "text": "พัฒนาความเชี่ยวชาญในการปฏิบัติงาน (Upskill Reskill)", "indicators": ["บุคลากรได้รับการพัฒนาศักยภาพที่ตรงกับความต้องการและบทบาทหน้าที่", "ร้อยละ 80 ของบุคลากรที่ผ่านการอบรมและสามารถนำไปใช้ปฏิบัติงานได้"], "period": "2566", "owner": "ฝ่ายอำนวยการ"}, {"id": "4-3", "strategyId": 4, "num": 3, "text": "พัฒนาระบบบริหารจัดการ สร้างกลไกการกำกับดูแลเพื่อมุ่งสู่การเป็นองค์กรสมรรถนะสูง โปร่งใส และมีธรรมาภิบาล", "indicators": ["มีคู่มือแนวทางการพัฒนาองค์กรเพื่อเป็นองค์กรสมรรถนะสูง มีความโปร่งใส และมีธรรมาภิบาล", "มีแบบประเมินการส่งเสริมจริยธรรมและการต่อต้านการทุจริตของมูลนิธิฯ"], "period": "2567-2570", "owner": "ฝ่ายแผน / ฝ่ายอำนวยการ"}, {"id": "4-4", "strategyId": 4, "num": 4, "text": "ทบทวนมาตรฐานและจัดทำแผน/วางระบบการปฏิบัติงานในเรื่องคุณภาพ การติดตามประเมินผล ระบบบริหารความเสี่ยง และระบบการบริหารงานในภาวะวิกฤต", "indicators": ["มีแผนการบริหารความเสี่ยง และระบบการบริหารงานในภาวะวิกฤต", "มีแนวทางการกำกับ ติดตาม ประเมินผลโครงการของมูลนิธิฯ"], "period": "2567", "owner": "ฝ่ายแผน"}, {"id": "4-5", "strategyId": 4, "num": 5, "text": "พัฒนาโครงสร้างพื้นฐานด้านเทคโนโลยีดิจิทัล และการใช้เทคโนโลยีดิจิทัล เพื่อเพิ่มประสิทธิภาพในการปฏิบัติงาน", "indicators": ["มีแผนพัฒนาโครงสร้างพื้นฐานด้านเทคโนโลยีดิจิทัล และการใช้เทคโนโลยีดิจิทัล ตลอดจนระบบความมั่นคงปลอดภัยทางไซเบอร์", "ความสำเร็จในการดำเนินการตามแผนฯ", "มีการปรับเทคโนโลยีให้มีความทันสมัยตลอดเวลา"], "period": "2566-2570", "owner": "ฝ่ายเทคนิค-สถานีฯ"}, {"id": "4-6", "strategyId": 4, "num": 6, "text": "บริหารจัดการระบบฐานข้อมูล เพื่อสนับสนุนกระบวนงานและการกำหนดนโยบาย", "indicators": ["มีระบบฐานข้อมูลที่ทันสมัย ถูกต้อง เชื่อมโยงกันทั้งระบบ และสามารถสืบค้นได้อย่างรวดเร็ว"], "period": "2567", "owner": "ฝ่ายแผน / ฝ่ายเทคนิค-สถานีฯ"}, {"id": "4-7", "strategyId": 4, "num": 7, "text": "มุ่งเน้นการสื่อสารกับกลุ่มเป้าหมาย เพื่อสร้างการรับรู้กับสาธารณะที่เป็นการสื่อสารเชิงกลยุทธ์", "indicators": ["มีช่องทางการสื่อสารที่เข้าถึงแต่ละกลุ่มเป้าหมาย", "มีสื่อประชาสัมพันธ์ที่ตรงกับกลุ่มเป้าหมาย", "กลุ่มเป้าหมายมีความพึงพอใจการดำเนินงานของมูลนิธิฯ"], "period": "2567-2570", "owner": "ฝ่ายประชาสัมพันธ์"}, {"id": "4-8", "strategyId": 4, "num": 8, "text": "พัฒนาระบบการจัดการความรู้และนำไปสู่การสร้างนวัตกรรม", "indicators": ["มีระบบการจัดการความรู้", "มีองค์ความรู้ นวัตกรรมจากกระบวนการมีส่วนร่วมกับบุคลากรหรือหน่วยงานทั้งภายในและภายนอกองค์กรที่สามารถนำไปใช้ได้จริง"], "period": "2567-2570", "owner": "ฝ่ายแผน"}], "criteria": [{"th": "ความสอดคล้อง", "en": "Relevance", "desc": "แผน/กลยุทธ์นี้ตอบสนองความต้องการของกลุ่มเป้าหมาย นโยบายรัฐ พระบรมราโชบายด้านการศึกษา และบริบทที่เปลี่ยนแปลงไป (Disruption, New Normal) มากน้อยเพียงใด"}, {"th": "ความสอดคล้องเชิงระบบ", "en": "Coherence", "desc": "กลยุทธ์นี้เชื่อมโยง ไม่ซ้ำซ้อน และเสริมพลังกับยุทธศาสตร์อื่นภายในมูลนิธิฯ และสอดคล้อง/บูรณาการกับหน่วยงานภายนอก (สพฐ. สช. กศน. กระทรวงศึกษาธิการ) ได้ดีเพียงใด"}, {"th": "ประสิทธิผล", "en": "Effectiveness", "desc": "การดำเนินงานบรรลุตัวชี้วัดและเป้าหมายที่กำหนดไว้มากน้อยเพียงใด (ผลสัมฤทธิ์ทางการศึกษา ความครอบคลุมกลุ่มเป้าหมาย ฯลฯ)"}, {"th": "ประสิทธิภาพ", "en": "Efficiency", "desc": "ผลลัพธ์ที่ได้คุ้มค่ากับทรัพยากร (คน งบประมาณ เวลา อุปกรณ์) ที่ใช้ไปหรือไม่ เมื่อเทียบกับทางเลือกอื่น"}, {"th": "ผลกระทบ", "en": "Impact", "desc": "ก่อให้เกิดการเปลี่ยนแปลงเชิงบวก (หรือลบ) ในระดับกว้างต่อผู้เรียน ครู โรงเรียน และระบบการศึกษาไทย ทั้งที่ตั้งใจและไม่ตั้งใจ มากน้อยเพียงใด"}, {"th": "ความยั่งยืน", "en": "Sustainability", "desc": "ผลลัพธ์และประโยชน์ของกลยุทธ์นี้มีแนวโน้มจะดำรงอยู่ต่อเนื่องได้หลังสิ้นสุดแผน (ด้านงบประมาณ บุคลากร เทคโนโลยี ความร่วมมือ) มากน้อยเพียงใด"}], "scale": [{"score": 1, "level": "น้อยที่สุด/ไม่พบหลักฐาน", "desc": "ไม่สอดคล้อง ไม่บรรลุผล หรือไม่มีความคุ้มค่าอย่างชัดเจน ควรพิจารณายกเลิก"}, {"score": 2, "level": "น้อย", "desc": "มีความสอดคล้อง/ผลลัพธ์บางส่วน แต่มีปัญหาเชิงโครงสร้างหรือช่องว่างสำคัญ"}, {"score": 3, "level": "ปานกลาง", "desc": "ดำเนินการได้ตามเกณฑ์ขั้นต่ำ แต่ยังต้องปรับปรุงสาระสำคัญหรือวิธีการดำเนินงาน"}, {"score": 4, "level": "ดี", "desc": "ดำเนินการได้ดี บรรลุผลตามเป้าหมายเป็นส่วนใหญ่ อาจต้องปรับปรุงในรายละเอียดปลีกย่อย"}, {"score": 5, "level": "ดีมาก/เป็นเลิศ", "desc": "บรรลุผลสูงกว่าเป้าหมาย มีหลักฐานเชิงประจักษ์ชัดเจน ควรคงไว้และขยายผลเป็นแนวปฏิบัติที่ดี"}]};
@@ -492,7 +528,7 @@ const DATA = {"strategies": [{"id": 1, "name": "การพัฒนากา�
  * หากยังไม่ต้องการฝัง ให้เว้นว่างไว้ ("") ระบบจะกลับไปให้กรอก URL เองในแท็บ
  * "คำแนะนำการใช้งาน" ตามปกติ
  * ========================================================================= */
-const EMBEDDED_GAS_URL = "";
+const EMBEDDED_GAS_URL = "https://script.google.com/macros/s/AKfycbwi0tET17bGUHYmISevOGeLYw3OJM598dcF22Ep-ChwEr99FWpjBX4LwUjMxp9yOA-h/exec";
 
 const CRIT_KEYS = ['rel','coh','eff','effy','imp','sus'];
 const YEARS = ['2566','2567','2568','2569','2570'];
@@ -535,6 +571,15 @@ function showToast(msg, isError){
   t.classList.add('show');
   clearTimeout(window.__toastTimer);
   window.__toastTimer = setTimeout(()=>t.classList.remove('show'), 2000);
+}
+function showSuccessPopup(msg){
+  const popup = document.getElementById('successPopup');
+  const msgEl = document.getElementById('successPopupMsg');
+  if(!popup || !msgEl) { showToast(msg); return; }
+  msgEl.textContent = msg || 'บันทึกข้อมูลสำเร็จ';
+  popup.classList.add('show');
+  clearTimeout(window.__successPopupTimer);
+  window.__successPopupTimer = setTimeout(()=>popup.classList.remove('show'), 1500);
 }
 
 /* ---------------- Computation ---------------- */
@@ -867,7 +912,7 @@ function renderScorePanel(item, st){
   return `
     <div class="eval-list">${list}</div>
     <div class="addeval-toggle-wrap">
-      <button class="btn-tiny" data-addeval-toggle="${item.id}" style="padding:8px 14px;">+ เพิ่มการประเมินใหม่</button>
+      <button class="btn-tiny success" data-addeval-toggle="${item.id}" style="padding:8px 14px;">+ เพิ่มการประเมินใหม่</button>
     </div>
     <div class="addeval-form" id="addeval-${item.id}">
       <div class="addeval-header">เพิ่มการประเมินใหม่ — กรุณาให้คะแนนครบทั้ง 6 ด้าน</div>
@@ -1128,7 +1173,7 @@ document.getElementById('evalContainer').addEventListener('click', async (e)=>{
     card.querySelectorAll('[data-progress-field]').forEach(inp=>{ progressPayload[inp.dataset.progressField] = inp.value; });
     const okBudget = await syncBudget(itemId, budgetPayload, true);
     const okProgress = await syncProgress(itemId, progressPayload, true);
-    if(okBudget && okProgress) showToast(connected ? 'บันทึกงบประมาณและความคืบหน้าลง Google Sheets แล้ว' : 'บันทึกงบประมาณและความคืบหน้าแล้ว (โหมดออฟไลน์)');
+    if(okBudget && okProgress) showSuccessPopup(connected ? 'บันทึกงบประมาณและความคืบหน้าสำเร็จ' : 'บันทึกงบประมาณและความคืบหน้าสำเร็จ (โหมดออฟไลน์)');
     renderEvalTab();
     return;
   }
@@ -1161,13 +1206,13 @@ document.getElementById('evalContainer').addEventListener('input', (e)=>{
 /* ---- Sync functions ---- */
 async function submitEvaluation(itemId, payload){
   if(connected){
-    try{ applyData(await gasPost('addEvaluation', {itemId, payload})); showToast('บันทึกการประเมินลง Google Sheets แล้ว'); }
+    try{ applyData(await gasPost('addEvaluation', {itemId, payload})); showSuccessPopup('บันทึกการประเมินสำเร็จ'); }
     catch(e){ showToast('บันทึกไม่สำเร็จ: ' + e.message, true); return; }
   } else {
     const st = evalState[itemId];
     st.evaluations.push({evalId: itemId+'_'+Date.now()+'_'+Math.random().toString(36).slice(2), evaluator:payload.evaluator, date:payload.date, scores:payload.scores, reason:payload.reason});
     await saveLocalFallback();
-    showToast('บันทึกข้อมูลแล้ว (โหมดออฟไลน์)');
+    showSuccessPopup('บันทึกการประเมินสำเร็จ (โหมดออฟไลน์)');
   }
   openSubtabs[itemId] = 'score';
   renderEvalTab();
@@ -1186,7 +1231,7 @@ async function deleteEvaluationEntry(itemId, evalId){
 }
 async function syncIndicator(itemId, index, payload){
   if(connected){
-    try{ applyData(await gasPost('updateIndicator', {itemId, index, payload})); showToast('บันทึกลง Google Sheets แล้ว'); }
+    try{ applyData(await gasPost('updateIndicator', {itemId, index, payload})); showSuccessPopup('บันทึกตัวชี้วัดสำเร็จ'); }
     catch(e){ showToast('บันทึกไม่สำเร็จ: ' + e.message, true); return; }
   } else {
     const st = evalState[itemId];
@@ -1203,7 +1248,7 @@ async function syncIndicator(itemId, index, payload){
       }
     }
     await saveLocalFallback();
-    showToast('บันทึกข้อมูลแล้ว (โหมดออฟไลน์)');
+    showSuccessPopup('บันทึกตัวชี้วัดสำเร็จ (โหมดออฟไลน์)');
   }
   renderEvalTab();
 }
@@ -1239,12 +1284,12 @@ async function syncProgress(itemId, payload, silent){
 }
 async function addEvidenceEntry(itemId, payload){
   if(connected){
-    try{ applyData(await gasPost('addEvidence', {itemId, payload})); showToast('เพิ่มหลักฐานลง Google Sheets แล้ว'); }
+    try{ applyData(await gasPost('addEvidence', {itemId, payload})); showSuccessPopup('เพิ่มหลักฐานสำเร็จ'); }
     catch(e){ showToast('เพิ่มไม่สำเร็จ: ' + e.message, true); return; }
   } else {
     evalState[itemId].evidence.push({evidenceId: itemId+'_'+Date.now(), label:payload.label, url:payload.url});
     await saveLocalFallback();
-    showToast('เพิ่มหลักฐานแล้ว (โหมดออฟไลน์)');
+    showSuccessPopup('เพิ่มหลักฐานสำเร็จ (โหมดออฟไลน์)');
   }
   renderEvalTab();
 }
@@ -1373,11 +1418,11 @@ document.getElementById('teamNotes').addEventListener('input', ()=>{
 document.getElementById('btnSaveNotes').addEventListener('click', async ()=>{
   teamNotes = document.getElementById('teamNotes').value;
   if(connected){
-    try{ await gasPost('updateNotes', {notes: teamNotes}); showToast('บันทึกลง Google Sheets แล้ว'); }
+    try{ await gasPost('updateNotes', {notes: teamNotes}); showSuccessPopup('บันทึกบันทึกทีมสำเร็จ'); }
     catch(err){ showToast('บันทึกไม่สำเร็จ: ' + err.message, true); return; }
   } else {
     await saveLocalFallback();
-    showToast('บันทึกข้อมูลแล้ว (โหมดออฟไลน์)');
+    showSuccessPopup('บันทึกบันทึกทีมสำเร็จ (โหมดออฟไลน์)');
   }
   document.getElementById('notesUnsaved').style.display = 'none';
 });
@@ -1413,12 +1458,12 @@ document.getElementById('btnAddProposal').addEventListener('click', async ()=>{
   if(!title){ showToast('กรุณาระบุหัวข้อข้อเสนอ', true); return; }
   const payload = {title, description, relatedStrategy, priority, submittedBy, date};
   if(connected){
-    try{ applyData(await gasPost('addProposal', {payload})); showToast('เพิ่มข้อเสนอลง Google Sheets แล้ว'); }
+    try{ applyData(await gasPost('addProposal', {payload})); showSuccessPopup('เพิ่มข้อเสนอสำเร็จ'); }
     catch(e){ showToast('เพิ่มไม่สำเร็จ: ' + e.message, true); return; }
   } else {
     proposals.push(Object.assign({proposalId: 'P_' + Date.now()}, payload));
     await saveLocalFallback();
-    showToast('เพิ่มข้อเสนอแล้ว (โหมดออฟไลน์)');
+    showSuccessPopup('เพิ่มข้อเสนอสำเร็จ (โหมดออฟไลน์)');
   }
   document.getElementById('propTitle').value = '';
   document.getElementById('propDesc').value = '';

@@ -105,6 +105,7 @@ table.heat tr.total-row td{font-weight:700;background:var(--grey-soft);}
 .summary-box{background:var(--accent-soft);border:1px solid #e5cf98;border-radius:var(--radius);padding:18px 20px;font-size:14px;line-height:1.7;color:#3a2f0f;margin-bottom:16px;}
 .summary-box b{color:var(--primary);}
 .notes-area{width:100%;min-height:90px;border:1px solid var(--border);border-radius:8px;padding:12px;font-family:inherit;font-size:13.5px;resize:vertical;}
+.unsaved-note{font-size:11.5px;color:var(--orange);font-weight:600;}
 .notes-area:focus-visible{outline:2px solid var(--accent);}
 
 /* ---- Eval tab ---- */
@@ -322,8 +323,12 @@ footer.appfoot{text-align:center;font-size:12px;color:var(--ink-soft);padding:20
 
     <div class="card pad">
       <h2 class="section-title" style="font-size:15px;">บันทึกมติ/ข้อสรุปเชิงคุณภาพของทีมวางแผน</h2>
-      <p class="section-sub">ใช้บันทึกข้อสรุปจากการประชุมทบทวนแผน ก่อนยกร่างแผนยุทธศาสตร์ฉบับใหม่ พ.ศ. 2571-2575 (บันทึกอัตโนมัติ)</p>
+      <p class="section-sub">ใช้บันทึกข้อสรุปจากการประชุมทบทวนแผน ก่อนยกร่างแผนยุทธศาสตร์ฉบับใหม่ พ.ศ. 2571-2575</p>
       <textarea class="notes-area" id="teamNotes" placeholder="เช่น มติที่ประชุม แนวทางกลยุทธ์ใหม่ที่ควรเพิ่ม ฯลฯ"></textarea>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:10px;">
+        <button class="btn-light btn-light-solid" id="btnSaveNotes">บันทึกบันทึกทีม</button>
+        <span class="unsaved-note" id="notesUnsaved" style="display:none;">มีการเปลี่ยนแปลงที่ยังไม่บันทึก</span>
+      </div>
     </div>
   </div>
 
@@ -432,16 +437,23 @@ footer.appfoot{text-align:center;font-size:12px;color:var(--ink-soft);padding:20
     <div class="card pad" id="gasSettings" style="margin-bottom:20px;">
       <h2 class="section-title" style="font-size:15px;">เชื่อมต่อ Google Sheets (เก็บข้อมูลจริงในสเปรดชีต)</h2>
       <p class="section-sub">ทำตามขั้นตอนนี้เพื่อให้ข้อมูลทุกส่วน (คะแนนประเมิน ตัวชี้วัด งบประมาณ ความคืบหน้า หลักฐาน ข้อเสนอ และประวัติการเปลี่ยนแปลง) ถูกบันทึกลง Google Sheets โดยตรง</p>
-      <div class="about-step"><div class="about-step-num">1</div><div class="about-step-text">เปิดไฟล์ <b>Code.gs</b> ที่แนบมาพร้อมกัน สร้าง Google Sheet เปล่า 1 ไฟล์ แล้วไปที่เมนู &ldquo;ส่วนขยาย (Extensions) &gt; Apps Script&rdquo;</div></div>
-      <div class="about-step"><div class="about-step-num">2</div><div class="about-step-text">ลบโค้ดเดิมทั้งหมด วางโค้ดจาก Code.gs แทน แล้วกดบันทึก</div></div>
-      <div class="about-step"><div class="about-step-num">3</div><div class="about-step-text">กด &ldquo;ปรับใช้ (Deploy) &gt; การปรับใช้ใหม่&rdquo; เลือกประเภท &ldquo;เว็บแอป (Web app)&rdquo; ตั้งค่า Execute as = Me และ Who has access = <b>Anyone</b> แล้วกดปรับใช้ พร้อมกดอนุญาต (Allow) เมื่อระบบขอสิทธิ์</div></div>
-      <div class="about-step"><div class="about-step-num">4</div><div class="about-step-text">คัดลอก Web app URL (ลงท้ายด้วย /exec) มาวางในช่องด้านล่าง แล้วกด &ldquo;บันทึกและเชื่อมต่อ&rdquo;</div></div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 10px;">
-        <input type="text" id="gasUrlInput" class="meta-input" style="flex:1;min-width:260px;" placeholder="https://script.google.com/macros/s/XXXXXXXXXXXX/exec">
-        <button class="btn-light btn-light-solid" id="btnGasSave">บันทึกและเชื่อมต่อ</button>
-        <button class="btn-light" id="btnGasDisconnect">ยกเลิกการเชื่อมต่อ</button>
+
+      <div id="gasEmbeddedNotice" style="display:none;background:var(--green-soft);border:1px solid #bfe0cf;border-radius:10px;padding:14px 16px;font-size:13.5px;color:#2f5f47;margin-bottom:6px;">
+        <b>ไฟล์นี้ตั้งค่าให้เชื่อมต่อ Google Sheets ที่กำหนดไว้ล่วงหน้าโดยอัตโนมัติแล้ว</b> ทุกคนที่เปิดไฟล์นี้จะเชื่อมต่อกับสเปรดชีตเดียวกันทันทีโดยไม่ต้องกรอก URL เอง หากต้องการเปลี่ยนไปใช้สเปรดชีตอื่น ต้องแก้ไขค่า <code>EMBEDDED_GAS_URL</code> ในซอร์สโค้ดของไฟล์นี้โดยตรง
       </div>
-      <div id="gasStatusText" style="font-size:13px;color:var(--ink-soft);"></div>
+
+      <div id="gasManualForm">
+        <div class="about-step"><div class="about-step-num">1</div><div class="about-step-text">เปิดไฟล์ <b>Code.gs</b> ที่แนบมาพร้อมกัน สร้าง Google Sheet เปล่า 1 ไฟล์ แล้วไปที่เมนู &ldquo;ส่วนขยาย (Extensions) &gt; Apps Script&rdquo;</div></div>
+        <div class="about-step"><div class="about-step-num">2</div><div class="about-step-text">ลบโค้ดเดิมทั้งหมด วางโค้ดจาก Code.gs แทน แล้วกดบันทึก</div></div>
+        <div class="about-step"><div class="about-step-num">3</div><div class="about-step-text">กด &ldquo;ปรับใช้ (Deploy) &gt; การปรับใช้ใหม่&rdquo; เลือกประเภท &ldquo;เว็บแอป (Web app)&rdquo; ตั้งค่า Execute as = Me และ Who has access = <b>Anyone</b> แล้วกดปรับใช้ พร้อมกดอนุญาต (Allow) เมื่อระบบขอสิทธิ์</div></div>
+        <div class="about-step"><div class="about-step-num">4</div><div class="about-step-text">คัดลอก Web app URL (ลงท้ายด้วย /exec) มาวางในช่องด้านล่าง แล้วกด &ldquo;บันทึกและเชื่อมต่อ&rdquo;</div></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 10px;">
+          <input type="text" id="gasUrlInput" class="meta-input" style="flex:1;min-width:260px;" placeholder="https://script.google.com/macros/s/XXXXXXXXXXXX/exec">
+          <button class="btn-light btn-light-solid" id="btnGasSave">บันทึกและเชื่อมต่อ</button>
+          <button class="btn-light" id="btnGasDisconnect">ยกเลิกการเชื่อมต่อ</button>
+        </div>
+      </div>
+      <div id="gasStatusText" style="font-size:13px;color:var(--ink-soft);margin-top:6px;"></div>
     </div>
 
     <div class="notice">
@@ -471,6 +483,16 @@ footer.appfoot{text-align:center;font-size:12px;color:var(--ink-soft);padding:20
 
 <script>
 const DATA = {"strategies": [{"id": 1, "name": "การพัฒนาการจัดการศึกษาทางไกล", "goal": "ลดความเหลื่อมล้ำและสร้างโอกาสในการเข้าถึงการศึกษาอย่างมีคุณภาพ และมีองค์ความรู้ตามหลักวิชาการสำหรับผู้เรียนกลุ่มเป้าหมายทั้งเด็ก เยาวชน และประชาชนทั่วไป"}, {"id": 2, "name": "การพัฒนาครูและโรงเรียนต้นทาง", "goal": "โรงเรียนและครูโรงเรียนต้นทางมีศักยภาพและความพร้อมในการจัดการศึกษาทางไกลได้อย่างมีประสิทธิภาพ และสามารถเป็นต้นแบบในการน้อมนำพระบรมราโชบายไปจัดการเรียนรู้อย่างเหมาะสม"}, {"id": 3, "name": "การพัฒนาครูและโรงเรียนปลายทาง", "goal": "โรงเรียนและครูโรงเรียนปลายทาง สามารถเข้าถึงการศึกษาทางไกล และสามารถใช้ชุดกิจกรรมและสื่อการเรียนรู้ในการจัดการเรียนการสอน และประยุกต์ใช้ได้เหมาะกับบริบทของผู้เรียน รวมถึงน้อมนำพระบรมราโชบายด้านการศึกษาไปจัดการเรียนรู้ได้อย่างเหมาะสม"}, {"id": 4, "name": "การพัฒนาระบบการบริหารจัดการ", "goal": "มูลนิธิฯ มีระบบการบริหารจัดการที่มีประสิทธิภาพเป็นองค์กรสมรรถนะสูง มุ่งสร้างธรรมาภิบาลและได้รับการยอมรับจากภาคส่วนต่าง ๆ"}], "items": [{"id": "1-1", "strategyId": 1, "num": 1, "text": "พัฒนาชุดกิจกรรมและสื่อการเรียนรู้ในการจัดการศึกษาทางไกลที่มีคุณภาพ", "indicators": ["ชุดกิจกรรมและสื่อการเรียนรู้ได้รับการพัฒนาและปรับปรุงให้สอดคล้องกับหลักสูตรการศึกษาปฐมวัย หลักสูตรแกนกลางการศึกษาขั้นพื้นฐาน", "โรงเรียนปลายทางหรือห้องเรียนปลายทางที่ใช้ระบบการจัดการเรียนการสอนทางไกลมีค่าผลสัมฤทธิ์ทางการศึกษาที่เพิ่มขึ้นจากฐานเดิม", "ห้องเรียนต้นทางมีค่าผลสัมฤทธิ์ทางการศึกษาที่เพิ่มขึ้นจากฐานเดิม"], "period": "2566-2570", "owner": "ฝ่ายวิชาการ"}, {"id": "1-2", "strategyId": 1, "num": 2, "text": "ส่งเสริมการผลิตรายการเพื่อการสอนเสริมและแนะแนวอาชีพสำหรับเด็กและเยาวชน ตลอดจนปรับปรุงผังรายการให้มีสัดส่วนที่เหมาะสมสำหรับการส่งเสริมการเรียนรู้ตลอดชีวิตให้กับประชาชนทุกช่วงวัย", "indicators": ["จำนวนรายการ/ตอน ออกอากาศเกี่ยวกับการสอนเสริม การแนะแนวอาชีพ สำหรับเด็กและเยาวชน", "จำนวนรายการ/ตอน ออกอากาศเกี่ยวกับสาระการเรียนรู้ตลอดชีวิตสำหรับประชาชน", "ความพึงพอใจของเด็ก เยาวชน ครูโรงเรียนปลายทาง และประชาชนที่รับชมรายการที่ออกอากาศ", "มีผังรายการออกอากาศที่เหมาะสมกับความต้องการการเรียนรู้ของแต่ละช่วงวัย"], "period": "2566-2570", "owner": "ฝ่ายแผน / ฝ่ายเทคนิค-สถานีฯ"}, {"id": "1-3", "strategyId": 1, "num": 3, "text": "พัฒนาคลังการศึกษาแบบเปิด เพื่อส่งเสริมการเรียนรู้ตลอดชีวิตสำหรับประชาชนทุกช่วงวัย", "indicators": ["มีคลังการศึกษาแบบเปิดสำหรับบุคลากรทางการศึกษา และประชาชนทุกช่วงวัย", "จำนวนผู้ใช้บริการคลังการศึกษาแบบเปิด และการใช้งานเพิ่มขึ้น"], "period": "2566-2568", "owner": "ฝ่ายเทคนิค-สถานีฯ / ฝ่ายวิชาการ"}, {"id": "1-4", "strategyId": 1, "num": 4, "text": "เสริมสร้างความร่วมมือกับทุกภาคส่วนเพื่อเพิ่มประสิทธิภาพในการจัดการศึกษา", "indicators": ["จำนวนภาคีเครือข่ายและรายการการสนับสนุน", "จำนวนระบบ รูปแบบเครือข่ายระหว่างโรงเรียนต้นทางกับโรงเรียนปลายทาง หรือระหว่างโรงเรียนปลายทางกับโรงเรียนปลายทาง"], "period": "2566-2570", "owner": "ฝ่ายวิชาการ / ฝ่ายแผน / ฝ่ายประชาสัมพันธ์"}, {"id": "1-5", "strategyId": 1, "num": 5, "text": "พัฒนาระบบการติดต่อสื่อสาร และช่องทางการเข้าถึงรายการของมูลนิธิฯ ให้มีประสิทธิภาพ", "indicators": ["มีระบบการติดต่อผ่านช่องทางการสื่อสารและการเข้าถึงการศึกษาทางไกลที่เพิ่มขึ้นและมีประสิทธิภาพในทุกกลุ่มเป้าหมาย"], "period": "2566-2570", "owner": "ฝ่ายแผน / ฝ่ายประชาสัมพันธ์ / ฝ่ายเทคนิค-สถานีฯ"}, {"id": "2-1", "strategyId": 2, "num": 1, "text": "ปรับปรุงโครงสร้างพื้นฐานสำหรับการผลิตรายการ", "indicators": ["มีโครงสร้างพื้นฐานสำหรับการจัดการเรียนการสอนออกอากาศที่มีประสิทธิภาพ"], "period": "2566-2570", "owner": "ฝ่ายเทคนิค-สถานีฯ"}, {"id": "2-2", "strategyId": 2, "num": 2, "text": "พัฒนาศักยภาพครูห้องเรียนต้นทาง", "indicators": ["ครูห้องเรียนต้นทางได้รับการพัฒนาศักยภาพในการจัดการเรียนการสอนในเรื่องต่าง ๆ", "มีการบูรณาการศาสตร์พระราชาและน้อมนำพระบรมราโชบายด้านการศึกษาสู่การจัดการเรียนการสอนในแต่ละวิชาและสามารถสอนออกอากาศได้อย่างหลากหลาย ถูกต้อง และน่าสนใจ"], "period": "2566-2570", "owner": "ฝ่ายวิชาการ"}, {"id": "2-3", "strategyId": 2, "num": 3, "text": "พัฒนารูปแบบการสอนออกอากาศให้มีความทันสมัย สอดคล้องกับบริบทการบริโภคสื่อของผู้เรียนในแต่ละช่วงวัยหรือระดับชั้น", "indicators": ["รายวิชาสอนออกอากาศที่ปรับปรุงรูปแบบการนำเสนอ และรูปแบบการจัดการเรียนการสอน ตามหลักสูตรการศึกษาปฐมวัยและการศึกษาขั้นพื้นฐานที่สอดคล้องกับแนวทางการเรียนรู้ที่เปลี่ยนแปลงไป"], "period": "2566-2567", "owner": "ฝ่ายวิชาการ"}, {"id": "2-4", "strategyId": 2, "num": 4, "text": "จัดทำระบบประเมินสมรรถนะครูห้องเรียนต้นทางตามสมรรถนะประจำตำแหน่ง โดยเชื่อมโยงกับระบบจูงใจอย่างเหมาะสม", "indicators": ["มีระบบประเมินสมรรถนะครูห้องเรียนต้นทาง ที่เป็นไปตามสมรรถนะประจำตำแหน่ง"], "period": "2567", "owner": "ฝ่ายวิชาการ"}, {"id": "3-1", "strategyId": 3, "num": 1, "text": "ส่งเสริมให้โรงเรียนขนาดเล็ก โรงเรียนในพื้นที่ห่างไกล ที่มีครูไม่ครบชั้น ได้รับการสนับสนุนให้สามารถเข้าถึงระบบการศึกษาทางไกลของมูลนิธิฯ ได้อย่างทั่วถึง", "indicators": ["โรงเรียนขนาดเล็ก โรงเรียนในพื้นที่ห่างไกล ที่มีครูไม่ครบชั้น สามารถเข้าถึงการศึกษาทางไกลได้อย่างมีคุณภาพ", "มีระบบลงทะเบียนสมาชิก DLTV ที่แบ่งตามประเภท หรือกลุ่มโรงเรียนปลายทาง"], "period": "2566-2570", "owner": "ฝ่ายแผน / ฝ่ายเทคนิค-สถานีฯ / ฝ่ายวิชาการ"}, {"id": "3-2", "strategyId": 3, "num": 2, "text": "สร้างความเข้าใจกับผู้บริหารการศึกษา ผู้บริหารสถานศึกษา ครูและศึกษานิเทศก์ในเรื่องการจัดการศึกษาทางไกลของมูลนิธิฯ", "indicators": ["ผู้บริหารการศึกษา ผู้บริหารสถานศึกษา ครู ศึกษานิเทศก์ โรงเรียนปลายทาง เข้าใจและสนับสนุนการดำเนินการจัดการศึกษาทางไกลของมูลนิธิฯ"], "period": "2566", "owner": "ฝ่ายวิชาการ"}, {"id": "3-3", "strategyId": 3, "num": 3, "text": "สนับสนุนชุดกิจกรรม สื่อการเรียนรู้ องค์ความรู้ และเครือข่ายด้านการศึกษา ให้กับโรงเรียนปลายทาง และพัฒนาศักยภาพการสอนของครูโรงเรียนปลายทาง", "indicators": ["โรงเรียนปลายทางมีชุดกิจกรรม สื่อการเรียนรู้ องค์ความรู้ และเครือข่ายด้านการศึกษา", "ครูโรงเรียนปลายทางสามารถใช้ชุดกิจกรรม สื่อการเรียนรู้ได้อย่างมีประสิทธิภาพ"], "period": "2566-2570", "owner": "ฝ่ายวิชาการ"}, {"id": "3-4", "strategyId": 3, "num": 4, "text": "โรงเรียนปลายทางสามารถบูรณาการศาสตร์พระราชาและน้อมนำพระบรมราโชบายด้านการศึกษาสู่การจัดการเรียนการสอน", "indicators": ["ครูโรงเรียนปลายทางสามารถบูรณาการศาสตร์พระราชาและน้อมนำพระบรมราโชบายด้านการศึกษาในการจัดการเรียนการสอนในแต่ละวิชาได้อย่างหลากหลาย ถูกต้อง และน่าสนใจ"], "period": "2566-2570", "owner": "ฝ่ายวิชาการ"}, {"id": "3-5", "strategyId": 3, "num": 5, "text": "พัฒนากลไกการวัดและประเมินผลการจัดการเรียนรู้ และส่งเสริมการนิเทศ กำกับ ติดตาม ประเมินผลการจัดการศึกษาทางไกล", "indicators": ["มีกลไกการวัดประเมินผล และการติดตามการใช้งาน DLTV", "โรงเรียนปลายทางมีการรายงานผลการจัดการเรียนการสอนทางไกล ตามระบบนิเทศ กำกับ ติดตามและประเมินผล"], "period": "2566-2570", "owner": "ฝ่ายวิชาการ / ฝ่ายแผน"}, {"id": "3-6", "strategyId": 3, "num": 6, "text": "ยกระดับคุณภาพการศึกษาของโรงเรียนปลายทาง โดยจัดทำเกณฑ์การประเมิน/พัฒนาเพื่อนำไปสู่โรงเรียนปลายทางที่มีวิธีการปฏิบัติที่เป็นเลิศ", "indicators": ["โรงเรียนปลายทางที่มีวิธีปฏิบัติที่เป็นเลิศ (Best Practice) จำแนกตามประเภทโรงเรียนปลายทาง", "โรงเรียนปลายทางที่ได้รับการพัฒนาและยกระดับศักยภาพให้มีความพร้อมในการจัดการศึกษาทางไกลตามแนวทางการจัดการเรียนการสอน"], "period": "2566-2570", "owner": "ฝ่ายวิชาการ"}, {"id": "4-1", "strategyId": 4, "num": 1, "text": "พัฒนาระบบการบริหารบุคลากร โครงสร้าง และอัตรากำลัง", "indicators": ["มีแผนโครงสร้าง และอัตรากำลัง", "มีอัตราการครองตำแหน่งของบุคลากรอย่างน้อยร้อยละ 95"], "period": "2566", "owner": "ฝ่ายอำนวยการ"}, {"id": "4-2", "strategyId": 4, "num": 2, "text": "พัฒนาความเชี่ยวชาญในการปฏิบัติงาน (Upskill Reskill)", "indicators": ["บุคลากรได้รับการพัฒนาศักยภาพที่ตรงกับความต้องการและบทบาทหน้าที่", "ร้อยละ 80 ของบุคลากรที่ผ่านการอบรมและสามารถนำไปใช้ปฏิบัติงานได้"], "period": "2566", "owner": "ฝ่ายอำนวยการ"}, {"id": "4-3", "strategyId": 4, "num": 3, "text": "พัฒนาระบบบริหารจัดการ สร้างกลไกการกำกับดูแลเพื่อมุ่งสู่การเป็นองค์กรสมรรถนะสูง โปร่งใส และมีธรรมาภิบาล", "indicators": ["มีคู่มือแนวทางการพัฒนาองค์กรเพื่อเป็นองค์กรสมรรถนะสูง มีความโปร่งใส และมีธรรมาภิบาล", "มีแบบประเมินการส่งเสริมจริยธรรมและการต่อต้านการทุจริตของมูลนิธิฯ"], "period": "2567-2570", "owner": "ฝ่ายแผน / ฝ่ายอำนวยการ"}, {"id": "4-4", "strategyId": 4, "num": 4, "text": "ทบทวนมาตรฐานและจัดทำแผน/วางระบบการปฏิบัติงานในเรื่องคุณภาพ การติดตามประเมินผล ระบบบริหารความเสี่ยง และระบบการบริหารงานในภาวะวิกฤต", "indicators": ["มีแผนการบริหารความเสี่ยง และระบบการบริหารงานในภาวะวิกฤต", "มีแนวทางการกำกับ ติดตาม ประเมินผลโครงการของมูลนิธิฯ"], "period": "2567", "owner": "ฝ่ายแผน"}, {"id": "4-5", "strategyId": 4, "num": 5, "text": "พัฒนาโครงสร้างพื้นฐานด้านเทคโนโลยีดิจิทัล และการใช้เทคโนโลยีดิจิทัล เพื่อเพิ่มประสิทธิภาพในการปฏิบัติงาน", "indicators": ["มีแผนพัฒนาโครงสร้างพื้นฐานด้านเทคโนโลยีดิจิทัล และการใช้เทคโนโลยีดิจิทัล ตลอดจนระบบความมั่นคงปลอดภัยทางไซเบอร์", "ความสำเร็จในการดำเนินการตามแผนฯ", "มีการปรับเทคโนโลยีให้มีความทันสมัยตลอดเวลา"], "period": "2566-2570", "owner": "ฝ่ายเทคนิค-สถานีฯ"}, {"id": "4-6", "strategyId": 4, "num": 6, "text": "บริหารจัดการระบบฐานข้อมูล เพื่อสนับสนุนกระบวนงานและการกำหนดนโยบาย", "indicators": ["มีระบบฐานข้อมูลที่ทันสมัย ถูกต้อง เชื่อมโยงกันทั้งระบบ และสามารถสืบค้นได้อย่างรวดเร็ว"], "period": "2567", "owner": "ฝ่ายแผน / ฝ่ายเทคนิค-สถานีฯ"}, {"id": "4-7", "strategyId": 4, "num": 7, "text": "มุ่งเน้นการสื่อสารกับกลุ่มเป้าหมาย เพื่อสร้างการรับรู้กับสาธารณะที่เป็นการสื่อสารเชิงกลยุทธ์", "indicators": ["มีช่องทางการสื่อสารที่เข้าถึงแต่ละกลุ่มเป้าหมาย", "มีสื่อประชาสัมพันธ์ที่ตรงกับกลุ่มเป้าหมาย", "กลุ่มเป้าหมายมีความพึงพอใจการดำเนินงานของมูลนิธิฯ"], "period": "2567-2570", "owner": "ฝ่ายประชาสัมพันธ์"}, {"id": "4-8", "strategyId": 4, "num": 8, "text": "พัฒนาระบบการจัดการความรู้และนำไปสู่การสร้างนวัตกรรม", "indicators": ["มีระบบการจัดการความรู้", "มีองค์ความรู้ นวัตกรรมจากกระบวนการมีส่วนร่วมกับบุคลากรหรือหน่วยงานทั้งภายในและภายนอกองค์กรที่สามารถนำไปใช้ได้จริง"], "period": "2567-2570", "owner": "ฝ่ายแผน"}], "criteria": [{"th": "ความสอดคล้อง", "en": "Relevance", "desc": "แผน/กลยุทธ์นี้ตอบสนองความต้องการของกลุ่มเป้าหมาย นโยบายรัฐ พระบรมราโชบายด้านการศึกษา และบริบทที่เปลี่ยนแปลงไป (Disruption, New Normal) มากน้อยเพียงใด"}, {"th": "ความสอดคล้องเชิงระบบ", "en": "Coherence", "desc": "กลยุทธ์นี้เชื่อมโยง ไม่ซ้ำซ้อน และเสริมพลังกับยุทธศาสตร์อื่นภายในมูลนิธิฯ และสอดคล้อง/บูรณาการกับหน่วยงานภายนอก (สพฐ. สช. กศน. กระทรวงศึกษาธิการ) ได้ดีเพียงใด"}, {"th": "ประสิทธิผล", "en": "Effectiveness", "desc": "การดำเนินงานบรรลุตัวชี้วัดและเป้าหมายที่กำหนดไว้มากน้อยเพียงใด (ผลสัมฤทธิ์ทางการศึกษา ความครอบคลุมกลุ่มเป้าหมาย ฯลฯ)"}, {"th": "ประสิทธิภาพ", "en": "Efficiency", "desc": "ผลลัพธ์ที่ได้คุ้มค่ากับทรัพยากร (คน งบประมาณ เวลา อุปกรณ์) ที่ใช้ไปหรือไม่ เมื่อเทียบกับทางเลือกอื่น"}, {"th": "ผลกระทบ", "en": "Impact", "desc": "ก่อให้เกิดการเปลี่ยนแปลงเชิงบวก (หรือลบ) ในระดับกว้างต่อผู้เรียน ครู โรงเรียน และระบบการศึกษาไทย ทั้งที่ตั้งใจและไม่ตั้งใจ มากน้อยเพียงใด"}, {"th": "ความยั่งยืน", "en": "Sustainability", "desc": "ผลลัพธ์และประโยชน์ของกลยุทธ์นี้มีแนวโน้มจะดำรงอยู่ต่อเนื่องได้หลังสิ้นสุดแผน (ด้านงบประมาณ บุคลากร เทคโนโลยี ความร่วมมือ) มากน้อยเพียงใด"}], "scale": [{"score": 1, "level": "น้อยที่สุด/ไม่พบหลักฐาน", "desc": "ไม่สอดคล้อง ไม่บรรลุผล หรือไม่มีความคุ้มค่าอย่างชัดเจน ควรพิจารณายกเลิก"}, {"score": 2, "level": "น้อย", "desc": "มีความสอดคล้อง/ผลลัพธ์บางส่วน แต่มีปัญหาเชิงโครงสร้างหรือช่องว่างสำคัญ"}, {"score": 3, "level": "ปานกลาง", "desc": "ดำเนินการได้ตามเกณฑ์ขั้นต่ำ แต่ยังต้องปรับปรุงสาระสำคัญหรือวิธีการดำเนินงาน"}, {"score": 4, "level": "ดี", "desc": "ดำเนินการได้ดี บรรลุผลตามเป้าหมายเป็นส่วนใหญ่ อาจต้องปรับปรุงในรายละเอียดปลีกย่อย"}, {"score": 5, "level": "ดีมาก/เป็นเลิศ", "desc": "บรรลุผลสูงกว่าเป้าหมาย มีหลักฐานเชิงประจักษ์ชัดเจน ควรคงไว้และขยายผลเป็นแนวปฏิบัติที่ดี"}]};
+
+/* ============================================================================
+ * ตั้งค่าลิงก์ Google Apps Script แบบถาวร (ฝังไว้ในไฟล์นี้ครั้งเดียว ใช้ได้ตลอด)
+ * วาง Web App URL (ลงท้ายด้วย /exec) ไว้ในเครื่องหมายคำพูดด้านล่าง แล้วบันทึกไฟล์
+ * เมื่อฝังแล้ว ทุกคนที่เปิดไฟล์นี้จะเชื่อมต่อ Google Sheets นี้โดยอัตโนมัติทันที
+ * ไม่ต้องกรอก/กดเชื่อมต่อเองอีก และจะเชื่อมต่อเหมือนเดิมทุกครั้งที่เปิดไฟล์
+ * หากยังไม่ต้องการฝัง ให้เว้นว่างไว้ ("") ระบบจะกลับไปให้กรอก URL เองในแท็บ
+ * "คำแนะนำการใช้งาน" ตามปกติ
+ * ========================================================================= */
+const EMBEDDED_GAS_URL = "";
 
 const CRIT_KEYS = ['rel','coh','eff','effy','imp','sus'];
 const YEARS = ['2566','2567','2568','2569','2570'];
@@ -674,24 +696,39 @@ function updateConnectionUI(){
   const label = document.getElementById('statusLabel');
   const statusText = document.getElementById('gasStatusText');
   const urlInput = document.getElementById('gasUrlInput');
+  const manualForm = document.getElementById('gasManualForm');
+  const embeddedNotice = document.getElementById('gasEmbeddedNotice');
   if(urlInput && gasUrl) urlInput.value = gasUrl;
+
+  if(EMBEDDED_GAS_URL){
+    if(manualForm) manualForm.style.display = 'none';
+    if(embeddedNotice) embeddedNotice.style.display = 'block';
+  } else {
+    if(manualForm) manualForm.style.display = '';
+    if(embeddedNotice) embeddedNotice.style.display = 'none';
+  }
+
   if(connected){
     dot.className = 'dot on';
     label.textContent = 'เชื่อมต่อ Google Sheets แล้ว';
-    if(statusText) statusText.innerHTML = '<span style="color:var(--green);font-weight:600;">✓ เชื่อมต่อสำเร็จ</span> ข้อมูลทุกส่วนจะถูกบันทึกลง Google Sheets โดยตรง';
+    if(statusText) statusText.innerHTML = '<span style="color:var(--green);font-weight:600;">✓ เชื่อมต่อสำเร็จ</span> ข้อมูลทุกส่วนจะถูกบันทึกลง Google Sheets โดยตรง' + (EMBEDDED_GAS_URL ? ' (เชื่อมต่ออัตโนมัติจาก URL ที่ฝังไว้ในไฟล์)' : '');
   } else {
     dot.className = 'dot off';
     label.textContent = gasUrl ? 'เชื่อมต่อไม่สำเร็จ (โหมดออฟไลน์)' : 'ยังไม่เชื่อมต่อ Google Sheets';
     if(statusText) statusText.innerHTML = gasUrl
-      ? '<span style="color:var(--red);font-weight:600;">✗ เชื่อมต่อไม่สำเร็จ</span> กำลังใช้งานแบบออฟไลน์ชั่วคราว'
+      ? '<span style="color:var(--red);font-weight:600;">✗ เชื่อมต่อไม่สำเร็จ</span> กำลังใช้งานแบบออฟไลน์ชั่วคราว' + (EMBEDDED_GAS_URL ? ' — ตรวจสอบ URL ที่ฝังไว้ในไฟล์และการตั้งค่า Deploy' : '')
       : 'ยังไม่ได้ตั้งค่า — ระบบทำงานแบบออฟไลน์ (บันทึกไว้ในเบราว์เซอร์นี้เท่านั้น) ดูขั้นตอนเชื่อมต่อด้านบน';
   }
 }
 async function loadState(){
-  try{
-    const res = await window.storage.get(GAS_URL_KEY, true);
-    gasUrl = res && res.value ? res.value : '';
-  }catch(e){ gasUrl = ''; }
+  if(EMBEDDED_GAS_URL){
+    gasUrl = EMBEDDED_GAS_URL;
+  } else {
+    try{
+      const res = await window.storage.get(GAS_URL_KEY, true);
+      gasUrl = res && res.value ? res.value : '';
+    }catch(e){ gasUrl = ''; }
+  }
   if(gasUrl){
     try{ applyData(await gasGet()); connected = true; }
     catch(e){ connected = false; await loadLocalFallback(); }
@@ -711,6 +748,8 @@ async function refreshFromGas(){
 function renderAllTabs(){
   renderDashboard(); renderEvalTab(); renderProposals(); renderAudit();
   document.getElementById('teamNotes').value = teamNotes;
+  const notesUnsaved = document.getElementById('notesUnsaved');
+  if(notesUnsaved) notesUnsaved.style.display = 'none';
   renderWeightInputs();
 }
 
@@ -901,9 +940,13 @@ function renderIndicatorsPanel(item, st){
         <div class="field-label">หมายเหตุ</div>
         <textarea class="reason-input" style="min-height:38px;" data-ind-field="note">${escapeHtml(ind.note||'')}</textarea>
       </div>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:10px;">
+        <button class="btn-light btn-light-solid" data-save-indicator="${item.id}" data-index="${ind.index}">บันทึกตัวชี้วัดนี้</button>
+        <span class="unsaved-note" data-unsaved-for="${item.id}-${ind.index}" style="display:none;">มีการเปลี่ยนแปลงที่ยังไม่บันทึก</span>
+      </div>
     </div>`;
   }).join('');
-  return `${cards}<p class="section-sub" style="margin:6px 0 0;">กรอกแล้วระบบบันทึกอัตโนมัติเมื่อออกจากช่อง (Tab/คลิกที่อื่น) — % บรรลุเป้าหมายคำนวณจากปีล่าสุดที่มีข้อมูล</p>`;
+  return `${cards}<p class="section-sub" style="margin:6px 0 0;">กรอกข้อมูลให้ครบแล้วกด &ldquo;บันทึกตัวชี้วัดนี้&rdquo; ระบบจะไม่บันทึกอัตโนมัติระหว่างพิมพ์ — % บรรลุเป้าหมายคำนวณจากปีล่าสุดที่มีข้อมูล</p>`;
 }
 
 function renderBudgetPanel(item, st){
@@ -945,6 +988,10 @@ function renderBudgetPanel(item, st){
         <div class="field-label" style="margin-top:10px;">หมายเหตุความคืบหน้า</div>
         <textarea class="reason-input" style="min-height:44px;" data-progress-field="note" data-item="${item.id}">${escapeHtml(p.note||'')}</textarea>
       </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button class="btn-light btn-light-solid" data-save-budgetprogress="${item.id}">บันทึกงบประมาณ &amp; ความคืบหน้า</button>
+      <span class="unsaved-note" data-unsaved-for="bp-${item.id}" style="display:none;">มีการเปลี่ยนแปลงที่ยังไม่บันทึก</span>
     </div>`;
 }
 
@@ -1058,45 +1105,56 @@ document.getElementById('evalContainer').addEventListener('click', async (e)=>{
     await deleteEvidenceEntry(delEvid.dataset.item, delEvid.dataset.delEvidence);
     return;
   }
-});
-
-document.getElementById('evalContainer').addEventListener('change', async (e)=>{
-  const indField = e.target.closest('[data-ind-field]');
-  const indYear = e.target.closest('[data-ind-year]');
-  if(indField || indYear){
-    const card = (indField || indYear).closest('.ind-card');
-    const itemId = card.dataset.item, index = Number(card.dataset.index);
+  // save indicator (explicit button, replaces auto-save-on-blur)
+  const saveInd = e.target.closest('[data-save-indicator]');
+  if(saveInd){
+    const itemId = saveInd.dataset.saveIndicator;
+    const index = Number(saveInd.dataset.index);
+    const card = saveInd.closest('.ind-card');
     const payload = {yearly: {}};
     card.querySelectorAll('[data-ind-field]').forEach(inp=>{ payload[inp.dataset.indField] = inp.value; });
     card.querySelectorAll('[data-ind-year]').forEach(inp=>{ payload.yearly[inp.dataset.indYear] = inp.value; });
     await syncIndicator(itemId, index, payload);
     return;
   }
-  const bud = e.target.closest('[data-budget-field]');
-  if(bud){
-    const itemId = bud.dataset.item;
-    const card = bud.closest('.item-card');
-    const payload = {};
-    card.querySelectorAll('[data-budget-field]').forEach(inp=>{ payload[inp.dataset.budgetField] = inp.value; });
-    await syncBudget(itemId, payload);
-    return;
-  }
-  const prog = e.target.closest('[data-progress-field]');
-  if(prog){
-    const itemId = prog.dataset.item;
-    const card = prog.closest('.item-card');
-    const payload = {};
-    card.querySelectorAll('[data-progress-field]').forEach(inp=>{ payload[inp.dataset.progressField] = inp.value; });
-    await syncProgress(itemId, payload);
+  // save budget + progress together (explicit button, replaces auto-save-on-blur)
+  const saveBP = e.target.closest('[data-save-budgetprogress]');
+  if(saveBP){
+    const itemId = saveBP.dataset.saveBudgetprogress;
+    const card = saveBP.closest('.item-card');
+    const budgetPayload = {};
+    card.querySelectorAll('[data-budget-field]').forEach(inp=>{ budgetPayload[inp.dataset.budgetField] = inp.value; });
+    const progressPayload = {};
+    card.querySelectorAll('[data-progress-field]').forEach(inp=>{ progressPayload[inp.dataset.progressField] = inp.value; });
+    const okBudget = await syncBudget(itemId, budgetPayload, true);
+    const okProgress = await syncProgress(itemId, progressPayload, true);
+    if(okBudget && okProgress) showToast(connected ? 'บันทึกงบประมาณและความคืบหน้าลง Google Sheets แล้ว' : 'บันทึกงบประมาณและความคืบหน้าแล้ว (โหมดออฟไลน์)');
+    renderEvalTab();
     return;
   }
 });
+
 document.getElementById('evalContainer').addEventListener('input', (e)=>{
-  const prog = e.target.closest('[data-progress-field="percent"]');
-  if(prog){
-    const card = prog.closest('.item-card');
+  const indField = e.target.closest('[data-ind-field]');
+  const indYear = e.target.closest('[data-ind-year]');
+  if(indField || indYear){
+    const card = (indField || indYear).closest('.ind-card');
+    const note = card.querySelector(`[data-unsaved-for="${card.dataset.item}-${card.dataset.index}"]`);
+    if(note) note.style.display = 'inline';
+    return;
+  }
+  const bud = e.target.closest('[data-budget-field]');
+  const prog = e.target.closest('[data-progress-field]');
+  if(bud || prog){
+    const itemCard = (bud || prog).closest('.item-card');
+    const note = itemCard.querySelector(`[data-unsaved-for="bp-${itemCard.dataset.item}"]`);
+    if(note) note.style.display = 'inline';
+  }
+  const progPercent = e.target.closest('[data-progress-field="percent"]');
+  if(progPercent){
+    const card = progPercent.closest('.item-card');
     const bar = card.querySelector('.progress-bar-fill');
-    if(bar) bar.style.width = Math.max(0, Math.min(100, Number(prog.value)||0)) + '%';
+    if(bar) bar.style.width = Math.max(0, Math.min(100, Number(progPercent.value)||0)) + '%';
   }
 });
 
@@ -1149,33 +1207,35 @@ async function syncIndicator(itemId, index, payload){
   }
   renderEvalTab();
 }
-async function syncBudget(itemId, payload){
+async function syncBudget(itemId, payload, silent){
   if(connected){
-    try{ applyData(await gasPost('updateBudget', {itemId, payload})); showToast('บันทึกลง Google Sheets แล้ว'); }
-    catch(e){ showToast('บันทึกไม่สำเร็จ: ' + e.message, true); return; }
+    try{ applyData(await gasPost('updateBudget', {itemId, payload})); if(!silent) showToast('บันทึกลง Google Sheets แล้ว'); }
+    catch(e){ showToast('บันทึกงบประมาณไม่สำเร็จ: ' + e.message, true); return false; }
   } else {
     const st = evalState[itemId];
     st.budget.planned = payload.planned===''?null:Number(payload.planned);
     st.budget.actual = payload.actual===''?null:Number(payload.actual);
     if(payload.note!==undefined) st.budget.note = payload.note;
     await saveLocalFallback();
-    showToast('บันทึกข้อมูลแล้ว (โหมดออฟไลน์)');
+    if(!silent) showToast('บันทึกข้อมูลแล้ว (โหมดออฟไลน์)');
   }
-  renderEvalTab();
+  if(!silent) renderEvalTab();
+  return true;
 }
-async function syncProgress(itemId, payload){
+async function syncProgress(itemId, payload, silent){
   if(connected){
-    try{ applyData(await gasPost('updateProgress', {itemId, payload})); showToast('บันทึกลง Google Sheets แล้ว'); }
-    catch(e){ showToast('บันทึกไม่สำเร็จ: ' + e.message, true); return; }
+    try{ applyData(await gasPost('updateProgress', {itemId, payload})); if(!silent) showToast('บันทึกลง Google Sheets แล้ว'); }
+    catch(e){ showToast('บันทึกความคืบหน้าไม่สำเร็จ: ' + e.message, true); return false; }
   } else {
     const st = evalState[itemId];
     if(payload.status!==undefined) st.progress.status = payload.status;
     if(payload.percent!==undefined) st.progress.percent = Number(payload.percent)||0;
     if(payload.note!==undefined) st.progress.note = payload.note;
     await saveLocalFallback();
-    showToast('บันทึกข้อมูลแล้ว (โหมดออฟไลน์)');
+    if(!silent) showToast('บันทึกข้อมูลแล้ว (โหมดออฟไลน์)');
   }
-  renderEvalTab();
+  if(!silent) renderEvalTab();
+  return true;
 }
 async function addEvidenceEntry(itemId, payload){
   if(connected){
@@ -1307,15 +1367,19 @@ function heatColor(v){
   return `rgb(${r},${g},${b})`;
 }
 
-document.getElementById('teamNotes').addEventListener('change', async (e)=>{
-  teamNotes = e.target.value;
+document.getElementById('teamNotes').addEventListener('input', ()=>{
+  document.getElementById('notesUnsaved').style.display = 'inline';
+});
+document.getElementById('btnSaveNotes').addEventListener('click', async ()=>{
+  teamNotes = document.getElementById('teamNotes').value;
   if(connected){
     try{ await gasPost('updateNotes', {notes: teamNotes}); showToast('บันทึกลง Google Sheets แล้ว'); }
-    catch(err){ showToast('บันทึกไม่สำเร็จ: ' + err.message, true); }
+    catch(err){ showToast('บันทึกไม่สำเร็จ: ' + err.message, true); return; }
   } else {
     await saveLocalFallback();
     showToast('บันทึกข้อมูลแล้ว (โหมดออฟไลน์)');
   }
+  document.getElementById('notesUnsaved').style.display = 'none';
 });
 
 /* ================================================================ */

@@ -1976,8 +1976,12 @@ document.getElementById('statusPill').addEventListener('click', ()=>{
   setTimeout(()=>document.getElementById('gasSettings').scrollIntoView({behavior:'smooth', block:'start'}), 60);
 });
 function parseFirebaseConfigInput(text){
-  const trimmed = text.trim();
+  let trimmed = text.trim();
   if(!trimmed) return null;
+  // ตัดส่วนหัวแบบ "const firebaseConfig = " / "export default " ถ้ามี (เผื่อคัดลอกมาทั้งบรรทัดจาก Firebase Console)
+  trimmed = trimmed.replace(/^\s*(?:export\s+default\s+|export\s+const\s+\w+\s*=\s*|const\s+\w+\s*=\s*|let\s+\w+\s*=\s*|var\s+\w+\s*=\s*)/, '');
+  // ตัด ; ท้ายสุด (เผื่อคัดลอกมาทั้งบรรทัดรวม semicolon ปิดท้าย)
+  trimmed = trimmed.replace(/;\s*$/, '').trim();
   try{ return JSON.parse(trimmed); }
   catch(e){}
   // รองรับการวางแบบ JS object literal ตรง ๆ จาก Firebase Console (คีย์ไม่มีเครื่องหมายคำพูด)
@@ -1985,7 +1989,7 @@ function parseFirebaseConfigInput(text){
     const obj = Function('"use strict"; return (' + trimmed + ');')();
     if(obj && typeof obj === 'object') return obj;
   }catch(e){}
-  throw new Error('รูปแบบ config ไม่ถูกต้อง กรุณาคัดลอกมาจาก Firebase Console โดยตรง');
+  throw new Error('รูปแบบ config ไม่ถูกต้อง กรุณาคัดลอกมาจาก Firebase Console โดยตรง (วางเฉพาะก้อน { ... } หรือทั้งบรรทัด const firebaseConfig = {...}; ก็ได้)');
 }
 document.getElementById('btnGasSave').addEventListener('click', async ()=>{
   const raw = document.getElementById('firebaseConfigInput').value;

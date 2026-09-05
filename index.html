@@ -148,7 +148,9 @@ table.heat tr.total-row td{font-weight:700;background:var(--grey-soft);}
 .tag.status-not_started{background:var(--grey-soft);color:var(--grey);}
 .tag.status-in_progress{background:var(--orange-soft);color:var(--orange);}
 .tag.status-done{background:var(--green-soft);color:var(--green);}
-.item-badge-wrap{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;}
+.item-badge-wrap{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;}
+.btn-save-all{background:var(--green);border-color:var(--green);margin-top:4px;font-size:12.5px;padding:9px 16px;}
+.btn-save-all:hover{background:#437f66;border-color:#437f66;}
 .avg-num{font-size:20px;font-weight:700;}
 .badge{font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:999px;white-space:nowrap;}
 .badge.red{background:var(--red-soft);color:var(--red);} .badge.orange{background:var(--orange-soft);color:var(--orange);}
@@ -212,6 +214,12 @@ textarea.reason-input:focus-visible, input.meta-input:focus-visible, select.meta
 
 .budget-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
 @media (max-width:700px){.budget-grid{grid-template-columns:1fr;}}
+table.budget-year-table{border-collapse:collapse;font-size:12.5px;min-width:560px;}
+table.budget-year-table th{background:var(--grey-soft);padding:7px 8px;font-size:11px;text-align:center;font-weight:600;}
+table.budget-year-table td{padding:6px 8px;border-bottom:1px solid var(--border);text-align:center;white-space:nowrap;}
+table.budget-year-table td:first-child{text-align:left;font-weight:600;color:var(--ink-soft);white-space:nowrap;}
+table.budget-year-table input{width:88px;border:1px solid var(--border);border-radius:5px;padding:5px 6px;font-size:12px;font-family:inherit;text-align:right;}
+table.budget-year-table td.budget-total{font-weight:700;background:#fafbfc;}
 .progress-bar-wrap{width:100%;height:10px;background:var(--grey-soft);border-radius:6px;overflow:hidden;margin-top:6px;}
 .progress-bar-fill{height:100%;background:var(--primary);border-radius:6px;transition:width .2s ease;}
 
@@ -283,6 +291,8 @@ table.audit-table tr:nth-child(even) td{background:#fafbfc;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 footer.appfoot{text-align:center;font-size:12px;color:var(--ink-soft);padding:20px;}
 </style>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
 
@@ -294,8 +304,8 @@ footer.appfoot{text-align:center;font-size:12px;color:var(--ink-soft);padding:20
       <p class="brand-sub">มูลนิธิการศึกษาทางไกลผ่านดาวเทียม ในพระบรมราชูปถัมภ์ · กรอบประเมิน OECD-DAC · เพื่อจัดทำแผนยุทธศาสตร์ พ.ศ. 2571-2575</p>
     </div>
     <div class="topbar-actions">
-      <button class="btn status-pill" id="statusPill" title="คลิกเพื่อตั้งค่าการเชื่อมต่อ Google Sheets"><span class="dot" id="statusDot"></span><span id="statusLabel">กำลังตรวจสอบ...</span></button>
-      <button class="btn" id="btnRefreshGas" title="รีเฟรชข้อมูลล่าสุดจาก Google Sheets">⟳ รีเฟรช</button>
+      <button class="btn status-pill" id="statusPill" title="คลิกเพื่อตั้งค่าการเชื่อมต่อ Firebase"><span class="dot" id="statusDot"></span><span id="statusLabel">กำลังตรวจสอบ...</span></button>
+      <button class="btn" id="btnRefreshGas" title="รีเฟรชข้อมูลล่าสุดจาก Firebase">⟳ รีเฟรช</button>
       <button class="btn" id="btnExport">ส่งออก CSV</button>
       <button class="btn btn-danger-outline" id="btnReset">ล้างข้อมูลทั้งหมด</button>
     </div>
@@ -420,7 +430,7 @@ footer.appfoot{text-align:center;font-size:12px;color:var(--ink-soft);padding:20
   <!-- ============ AUDIT LOG ============ -->
   <div class="view" id="view-audit">
     <h2 class="section-title">ประวัติการเปลี่ยนแปลงข้อมูล</h2>
-    <p class="section-sub">บันทึกการแก้ไขข้อมูลทั้งหมดโดยอัตโนมัติ (แสดงผลได้เมื่อเชื่อมต่อ Google Sheets เท่านั้น)</p>
+    <p class="section-sub">บันทึกการแก้ไขข้อมูลทั้งหมดโดยอัตโนมัติ (แสดงผลได้เมื่อเชื่อมต่อ Firebase เท่านั้น)</p>
     <div id="auditContainer"></div>
   </div>
 
@@ -462,20 +472,31 @@ footer.appfoot{text-align:center;font-size:12px;color:var(--ink-soft);padding:20
     <p class="section-sub">Digital Strategic Evaluation System (DSES) — เครื่องมือทบทวนแผนยุทธศาสตร์ก่อนจัดทำแผนฉบับใหม่ พ.ศ. 2571-2575</p>
 
     <div class="card pad" id="gasSettings" style="margin-bottom:20px;">
-      <h2 class="section-title" style="font-size:15px;">เชื่อมต่อ Google Sheets (เก็บข้อมูลจริงในสเปรดชีต)</h2>
-      <p class="section-sub">ทำตามขั้นตอนนี้เพื่อให้ข้อมูลทุกส่วน (คะแนนประเมิน ตัวชี้วัด งบประมาณ ความคืบหน้า หลักฐาน ข้อเสนอ และประวัติการเปลี่ยนแปลง) ถูกบันทึกลง Google Sheets โดยตรง</p>
+      <h2 class="section-title" style="font-size:15px;">เชื่อมต่อ Firebase (เก็บข้อมูลจริงบน Firestore)</h2>
+      <p class="section-sub">ทำตามขั้นตอนนี้เพื่อให้ข้อมูลทุกส่วน (คะแนนประเมิน ตัวชี้วัด งบประมาณ ความคืบหน้า หลักฐาน ข้อเสนอ และประวัติการเปลี่ยนแปลง) ถูกบันทึกลง Firebase Firestore โดยตรง — เร็วกว่า Google Sheets/Apps Script มาก และดูแลง่ายกว่าเพราะไม่มีโค้ดฝั่งเซิร์ฟเวอร์ให้ deploy</p>
 
       <div id="gasEmbeddedNotice" style="display:none;background:var(--green-soft);border:1px solid #bfe0cf;border-radius:10px;padding:14px 16px;font-size:13.5px;color:#2f5f47;margin-bottom:6px;">
-        <b>ไฟล์นี้ตั้งค่าให้เชื่อมต่อ Google Sheets ที่กำหนดไว้ล่วงหน้าโดยอัตโนมัติแล้ว</b> ทุกคนที่เปิดไฟล์นี้จะเชื่อมต่อกับสเปรดชีตเดียวกันทันทีโดยไม่ต้องกรอก URL เอง หากต้องการเปลี่ยนไปใช้สเปรดชีตอื่น ต้องแก้ไขค่า <code>EMBEDDED_GAS_URL</code> ในซอร์สโค้ดของไฟล์นี้โดยตรง
+        <b>ไฟล์นี้ตั้งค่าให้เชื่อมต่อ Firebase ที่กำหนดไว้ล่วงหน้าโดยอัตโนมัติแล้ว</b> ทุกคนที่เปิดไฟล์นี้จะเชื่อมต่อกับฐานข้อมูลเดียวกันทันทีโดยไม่ต้องวาง config เอง หากต้องการเปลี่ยนไปใช้โปรเจกต์ Firebase อื่น ต้องแก้ไขค่า <code>EMBEDDED_FIREBASE_CONFIG</code> ในซอร์สโค้ดของไฟล์นี้โดยตรง
       </div>
 
       <div id="gasManualForm">
-        <div class="about-step"><div class="about-step-num">1</div><div class="about-step-text">เปิดไฟล์ <b>Code.gs</b> ที่แนบมาพร้อมกัน สร้าง Google Sheet เปล่า 1 ไฟล์ แล้วไปที่เมนู &ldquo;ส่วนขยาย (Extensions) &gt; Apps Script&rdquo;</div></div>
-        <div class="about-step"><div class="about-step-num">2</div><div class="about-step-text">ลบโค้ดเดิมทั้งหมด วางโค้ดจาก Code.gs แทน แล้วกดบันทึก</div></div>
-        <div class="about-step"><div class="about-step-num">3</div><div class="about-step-text">กด &ldquo;ปรับใช้ (Deploy) &gt; การปรับใช้ใหม่&rdquo; เลือกประเภท &ldquo;เว็บแอป (Web app)&rdquo; ตั้งค่า Execute as = Me และ Who has access = <b>Anyone</b> แล้วกดปรับใช้ พร้อมกดอนุญาต (Allow) เมื่อระบบขอสิทธิ์</div></div>
-        <div class="about-step"><div class="about-step-num">4</div><div class="about-step-text">คัดลอก Web app URL (ลงท้ายด้วย /exec) มาวางในช่องด้านล่าง แล้วกด &ldquo;บันทึกและเชื่อมต่อ&rdquo;</div></div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 10px;">
-          <input type="text" id="gasUrlInput" class="meta-input" style="flex:1;min-width:260px;" placeholder="https://script.google.com/macros/s/XXXXXXXXXXXX/exec">
+        <div class="about-step"><div class="about-step-num">1</div><div class="about-step-text">ไปที่ <a href="https://console.firebase.google.com" target="_blank" rel="noopener">console.firebase.google.com</a> แล้วกด &ldquo;Add project / สร้างโปรเจกต์&rdquo; ตั้งชื่อโปรเจกต์ตามต้องการ (ปิด Google Analytics ได้ ไม่จำเป็น)</div></div>
+        <div class="about-step"><div class="about-step-num">2</div><div class="about-step-text">ในเมนูซ้าย เลือก &ldquo;Build &gt; Firestore Database&rdquo; แล้วกด &ldquo;Create database&rdquo; เลือกโหมด <b>Production mode</b> (จะตั้งค่า Security Rules เองในขั้นตอนถัดไป) เลือก location ที่ใกล้ที่สุด (เช่น asia-southeast1)</div></div>
+        <div class="about-step"><div class="about-step-num">3</div><div class="about-step-text">ไปที่แท็บ &ldquo;Rules&rdquo; ของ Firestore แล้ววางกฎด้านล่างนี้แทนของเดิม แล้วกด &ldquo;Publish&rdquo;:
+          <div style="background:#1e1e2e;color:#d4d4e8;font-family:monospace;font-size:11.5px;padding:12px 14px;border-radius:8px;margin-top:8px;white-space:pre-wrap;">rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}</div>
+          <div style="font-size:12px;color:var(--red);margin-top:6px;">⚠️ กฎนี้เปิดให้ทุกคนที่มี config อ่าน/เขียนข้อมูลได้ (เหมือนกับโหมด &ldquo;Anyone&rdquo; ของ Apps Script เดิม) เหมาะกับเครื่องมือใช้งานภายในทีมที่ไว้ใจกันเท่านั้น</div>
+        </div></div>
+        <div class="about-step"><div class="about-step-num">4</div><div class="about-step-text">กลับไปหน้าโปรเจกต์หลัก กดไอคอนเฟือง &ldquo;Project settings&rdquo; เลื่อนลงไปที่ &ldquo;Your apps&rdquo; กด &ldquo;Add app&rdquo; เลือกไอคอนเว็บ (&lt;/&gt;) ตั้งชื่อแอปแล้วกด &ldquo;Register app&rdquo; ระบบจะแสดงโค้ด <code>firebaseConfig</code> ให้คัดลอก</div></div>
+        <div class="about-step"><div class="about-step-num">5</div><div class="about-step-text">วางค่าที่คัดลอกมาทั้งหมด (ทั้งก้อน <code>{ apiKey: ..., ... }</code> ไม่ต้องแก้ไขรูปแบบ) ลงในช่องด้านล่าง แล้วกด &ldquo;บันทึกและเชื่อมต่อ&rdquo;</div></div>
+        <textarea id="firebaseConfigInput" class="reason-input" style="min-height:110px;font-family:monospace;font-size:12.5px;margin:6px 0 10px;" placeholder='{ apiKey: "AIzaSy...", authDomain: "xxx.firebaseapp.com", projectId: "xxx", storageBucket: "xxx.appspot.com", messagingSenderId: "...", appId: "..." }'></textarea>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
           <button class="btn-light btn-light-solid" id="btnGasSave">บันทึกและเชื่อมต่อ</button>
           <button class="btn-light" id="btnGasDisconnect">ยกเลิกการเชื่อมต่อ</button>
         </div>
@@ -484,17 +505,18 @@ footer.appfoot{text-align:center;font-size:12px;color:var(--ink-soft);padding:20
     </div>
 
     <div class="notice">
-      <b>ข้อมูลที่กรอกในระบบนี้เป็นข้อมูลที่ใช้ร่วมกัน (Shared):</b> ทุกคนที่เปิดหน้านี้จะเห็นและแก้ไขข้อมูลเดียวกันได้ เหมาะสำหรับให้ทีมประเมิน/ผู้บริหารช่วยกันกรอกข้อมูล ประวัติการเปลี่ยนแปลง (แท็บ &ldquo;ประวัติการเปลี่ยนแปลง&rdquo;) จะช่วยตรวจสอบว่าใครแก้ไขอะไรเมื่อไหร่เมื่อเชื่อมต่อ Google Sheets แล้ว
+      <b>ข้อมูลที่กรอกในระบบนี้เป็นข้อมูลที่ใช้ร่วมกัน (Shared):</b> ทุกคนที่เปิดหน้านี้จะเห็นและแก้ไขข้อมูลเดียวกันได้ เหมาะสำหรับให้ทีมประเมิน/ผู้บริหารช่วยกันกรอกข้อมูล ประวัติการเปลี่ยนแปลง (แท็บ &ldquo;ประวัติการเปลี่ยนแปลง&rdquo;) จะช่วยตรวจสอบว่าใครแก้ไขอะไรเมื่อไหร่เมื่อเชื่อมต่อ Firebase แล้ว
     </div>
 
     <div class="card pad" style="margin-bottom:20px;">
       <h2 class="section-title" style="font-size:15px;">ขั้นตอนการใช้งาน</h2>
       <div class="about-step"><div class="about-step-num">1</div><div class="about-step-text">ศึกษาหลักเกณฑ์ในแท็บ &ldquo;เกณฑ์การให้คะแนน&rdquo; ให้ทีมประเมินเข้าใจตรงกันก่อนเริ่มให้คะแนน และปรับน้ำหนักเกณฑ์หากต้องการ</div></div>
       <div class="about-step"><div class="about-step-num">2</div><div class="about-step-text">ไปที่แท็บ &ldquo;แบบประเมิน OECD-DAC&rdquo; แต่ละกลยุทธ์มี 4 ส่วนย่อย: (1) กด &ldquo;เพิ่มการประเมินใหม่&rdquo; เพื่อให้คะแนน 1-5 ทั้ง 6 ด้าน — ทำได้หลายคนต่อหนึ่งกลยุทธ์ ระบบจะเฉลี่ยให้อัตโนมัติ (2) กรอกผลตัวชี้วัดจริง (Baseline/เป้าหมาย/ผลจริง) (3) กรอกงบประมาณและความคืบหน้า (4) แนบลิงก์หลักฐาน</div></div>
-      <div class="about-step"><div class="about-step-num">3</div><div class="about-step-text">ระบบคำนวณคะแนนเฉลี่ย (ถ่วงน้ำหนักตามที่ตั้งค่า) และข้อเสนอแนะอัตโนมัติ พร้อมสีบ่งชี้ระดับ (แดง=ตัดออก, ส้ม=ปรับเปลี่ยน, เหลือง=ปรับปรุงเล็กน้อย, เขียว=คงไว้/ขยายผล)</div></div>
-      <div class="about-step"><div class="about-step-num">4</div><div class="about-step-text">เปิดแท็บ &ldquo;แดชบอร์ด&rdquo; เพื่อดูภาพรวม รวมถึงงบประมาณและความคืบหน้าทั้งแผน</div></div>
-      <div class="about-step"><div class="about-step-num">5</div><div class="about-step-text">ใช้แท็บ &ldquo;ข้อเสนอกลยุทธ์ใหม่&rdquo; รวบรวมไอเดียกลยุทธ์ใหม่สำหรับแผน พ.ศ. 2571-2575 และแท็บ &ldquo;ประวัติการเปลี่ยนแปลง&rdquo; ตรวจสอบว่าใครแก้ไขอะไรเมื่อไหร่</div></div>
-      <div class="about-step"><div class="about-step-num">6</div><div class="about-step-text">กดปุ่ม &ldquo;ส่งออก CSV&rdquo; ที่มุมขวาบนเพื่อดาวน์โหลดผลประเมินทั้งหมด แล้วนำเข้า Google Sheets เพิ่มเติมได้หากต้องการ</div></div>
+      <div class="about-step"><div class="about-step-num">3</div><div class="about-step-text">กรอกข้อมูลให้ครบทุกส่วนที่ต้องการ (ข้ามไปมาระหว่างแท็บย่อยได้ตามสบาย) แล้วกดปุ่ม &ldquo;💾 บันทึกทั้งหมด&rdquo; ที่มุมขวาบนของกลยุทธ์นั้นเพียงครั้งเดียว ระบบจะบันทึกทุกส่วนพร้อมกันในการเขียนครั้งเดียว (atomic batch)</div></div>
+      <div class="about-step"><div class="about-step-num">4</div><div class="about-step-text">ระบบคำนวณคะแนนเฉลี่ย (ถ่วงน้ำหนักตามที่ตั้งค่า) และข้อเสนอแนะอัตโนมัติ พร้อมสีบ่งชี้ระดับ (แดง=ตัดออก, ส้ม=ปรับเปลี่ยน, เหลือง=ปรับปรุงเล็กน้อย, เขียว=คงไว้/ขยายผล)</div></div>
+      <div class="about-step"><div class="about-step-num">5</div><div class="about-step-text">เปิดแท็บ &ldquo;แดชบอร์ด&rdquo; เพื่อดูภาพรวม รวมถึงงบประมาณและความคืบหน้าทั้งแผน</div></div>
+      <div class="about-step"><div class="about-step-num">6</div><div class="about-step-text">ใช้แท็บ &ldquo;ข้อเสนอกลยุทธ์ใหม่&rdquo; รวบรวมไอเดียกลยุทธ์ใหม่สำหรับแผน พ.ศ. 2571-2575 และแท็บ &ldquo;ประวัติการเปลี่ยนแปลง&rdquo; ตรวจสอบว่าใครแก้ไขอะไรเมื่อไหร่</div></div>
+      <div class="about-step"><div class="about-step-num">7</div><div class="about-step-text">กดปุ่ม &ldquo;ส่งออก CSV&rdquo; ที่มุมขวาบนเพื่อดาวน์โหลดผลประเมินทั้งหมด แล้วนำเข้า Google Sheets เพิ่มเติมได้หากต้องการ</div></div>
     </div>
 
     <div class="card pad">
@@ -521,14 +543,15 @@ footer.appfoot{text-align:center;font-size:12px;color:var(--ink-soft);padding:20
 const DATA = {"strategies": [{"id": 1, "name": "การพัฒนาการจัดการศึกษาทางไกล", "goal": "ลดความเหลื่อมล้ำและสร้างโอกาสในการเข้าถึงการศึกษาอย่างมีคุณภาพ และมีองค์ความรู้ตามหลักวิชาการสำหรับผู้เรียนกลุ่มเป้าหมายทั้งเด็ก เยาวชน และประชาชนทั่วไป"}, {"id": 2, "name": "การพัฒนาครูและโรงเรียนต้นทาง", "goal": "โรงเรียนและครูโรงเรียนต้นทางมีศักยภาพและความพร้อมในการจัดการศึกษาทางไกลได้อย่างมีประสิทธิภาพ และสามารถเป็นต้นแบบในการน้อมนำพระบรมราโชบายไปจัดการเรียนรู้อย่างเหมาะสม"}, {"id": 3, "name": "การพัฒนาครูและโรงเรียนปลายทาง", "goal": "โรงเรียนและครูโรงเรียนปลายทาง สามารถเข้าถึงการศึกษาทางไกล และสามารถใช้ชุดกิจกรรมและสื่อการเรียนรู้ในการจัดการเรียนการสอน และประยุกต์ใช้ได้เหมาะกับบริบทของผู้เรียน รวมถึงน้อมนำพระบรมราโชบายด้านการศึกษาไปจัดการเรียนรู้ได้อย่างเหมาะสม"}, {"id": 4, "name": "การพัฒนาระบบการบริหารจัดการ", "goal": "มูลนิธิฯ มีระบบการบริหารจัดการที่มีประสิทธิภาพเป็นองค์กรสมรรถนะสูง มุ่งสร้างธรรมาภิบาลและได้รับการยอมรับจากภาคส่วนต่าง ๆ"}], "items": [{"id": "1-1", "strategyId": 1, "num": 1, "text": "พัฒนาชุดกิจกรรมและสื่อการเรียนรู้ในการจัดการศึกษาทางไกลที่มีคุณภาพ", "indicators": ["ชุดกิจกรรมและสื่อการเรียนรู้ได้รับการพัฒนาและปรับปรุงให้สอดคล้องกับหลักสูตรการศึกษาปฐมวัย หลักสูตรแกนกลางการศึกษาขั้นพื้นฐาน", "โรงเรียนปลายทางหรือห้องเรียนปลายทางที่ใช้ระบบการจัดการเรียนการสอนทางไกลมีค่าผลสัมฤทธิ์ทางการศึกษาที่เพิ่มขึ้นจากฐานเดิม", "ห้องเรียนต้นทางมีค่าผลสัมฤทธิ์ทางการศึกษาที่เพิ่มขึ้นจากฐานเดิม"], "period": "2566-2570", "owner": "ฝ่ายวิชาการ"}, {"id": "1-2", "strategyId": 1, "num": 2, "text": "ส่งเสริมการผลิตรายการเพื่อการสอนเสริมและแนะแนวอาชีพสำหรับเด็กและเยาวชน ตลอดจนปรับปรุงผังรายการให้มีสัดส่วนที่เหมาะสมสำหรับการส่งเสริมการเรียนรู้ตลอดชีวิตให้กับประชาชนทุกช่วงวัย", "indicators": ["จำนวนรายการ/ตอน ออกอากาศเกี่ยวกับการสอนเสริม การแนะแนวอาชีพ สำหรับเด็กและเยาวชน", "จำนวนรายการ/ตอน ออกอากาศเกี่ยวกับสาระการเรียนรู้ตลอดชีวิตสำหรับประชาชน", "ความพึงพอใจของเด็ก เยาวชน ครูโรงเรียนปลายทาง และประชาชนที่รับชมรายการที่ออกอากาศ", "มีผังรายการออกอากาศที่เหมาะสมกับความต้องการการเรียนรู้ของแต่ละช่วงวัย"], "period": "2566-2570", "owner": "ฝ่ายแผน / ฝ่ายเทคนิค-สถานีฯ"}, {"id": "1-3", "strategyId": 1, "num": 3, "text": "พัฒนาคลังการศึกษาแบบเปิด เพื่อส่งเสริมการเรียนรู้ตลอดชีวิตสำหรับประชาชนทุกช่วงวัย", "indicators": ["มีคลังการศึกษาแบบเปิดสำหรับบุคลากรทางการศึกษา และประชาชนทุกช่วงวัย", "จำนวนผู้ใช้บริการคลังการศึกษาแบบเปิด และการใช้งานเพิ่มขึ้น"], "period": "2566-2568", "owner": "ฝ่ายเทคนิค-สถานีฯ / ฝ่ายวิชาการ"}, {"id": "1-4", "strategyId": 1, "num": 4, "text": "เสริมสร้างความร่วมมือกับทุกภาคส่วนเพื่อเพิ่มประสิทธิภาพในการจัดการศึกษา", "indicators": ["จำนวนภาคีเครือข่ายและรายการการสนับสนุน", "จำนวนระบบ รูปแบบเครือข่ายระหว่างโรงเรียนต้นทางกับโรงเรียนปลายทาง หรือระหว่างโรงเรียนปลายทางกับโรงเรียนปลายทาง"], "period": "2566-2570", "owner": "ฝ่ายวิชาการ / ฝ่ายแผน / ฝ่ายประชาสัมพันธ์"}, {"id": "1-5", "strategyId": 1, "num": 5, "text": "พัฒนาระบบการติดต่อสื่อสาร และช่องทางการเข้าถึงรายการของมูลนิธิฯ ให้มีประสิทธิภาพ", "indicators": ["มีระบบการติดต่อผ่านช่องทางการสื่อสารและการเข้าถึงการศึกษาทางไกลที่เพิ่มขึ้นและมีประสิทธิภาพในทุกกลุ่มเป้าหมาย"], "period": "2566-2570", "owner": "ฝ่ายแผน / ฝ่ายประชาสัมพันธ์ / ฝ่ายเทคนิค-สถานีฯ"}, {"id": "2-1", "strategyId": 2, "num": 1, "text": "ปรับปรุงโครงสร้างพื้นฐานสำหรับการผลิตรายการ", "indicators": ["มีโครงสร้างพื้นฐานสำหรับการจัดการเรียนการสอนออกอากาศที่มีประสิทธิภาพ"], "period": "2566-2570", "owner": "ฝ่ายเทคนิค-สถานีฯ"}, {"id": "2-2", "strategyId": 2, "num": 2, "text": "พัฒนาศักยภาพครูห้องเรียนต้นทาง", "indicators": ["ครูห้องเรียนต้นทางได้รับการพัฒนาศักยภาพในการจัดการเรียนการสอนในเรื่องต่าง ๆ", "มีการบูรณาการศาสตร์พระราชาและน้อมนำพระบรมราโชบายด้านการศึกษาสู่การจัดการเรียนการสอนในแต่ละวิชาและสามารถสอนออกอากาศได้อย่างหลากหลาย ถูกต้อง และน่าสนใจ"], "period": "2566-2570", "owner": "ฝ่ายวิชาการ"}, {"id": "2-3", "strategyId": 2, "num": 3, "text": "พัฒนารูปแบบการสอนออกอากาศให้มีความทันสมัย สอดคล้องกับบริบทการบริโภคสื่อของผู้เรียนในแต่ละช่วงวัยหรือระดับชั้น", "indicators": ["รายวิชาสอนออกอากาศที่ปรับปรุงรูปแบบการนำเสนอ และรูปแบบการจัดการเรียนการสอน ตามหลักสูตรการศึกษาปฐมวัยและการศึกษาขั้นพื้นฐานที่สอดคล้องกับแนวทางการเรียนรู้ที่เปลี่ยนแปลงไป"], "period": "2566-2567", "owner": "ฝ่ายวิชาการ"}, {"id": "2-4", "strategyId": 2, "num": 4, "text": "จัดทำระบบประเมินสมรรถนะครูห้องเรียนต้นทางตามสมรรถนะประจำตำแหน่ง โดยเชื่อมโยงกับระบบจูงใจอย่างเหมาะสม", "indicators": ["มีระบบประเมินสมรรถนะครูห้องเรียนต้นทาง ที่เป็นไปตามสมรรถนะประจำตำแหน่ง"], "period": "2567", "owner": "ฝ่ายวิชาการ"}, {"id": "3-1", "strategyId": 3, "num": 1, "text": "ส่งเสริมให้โรงเรียนขนาดเล็ก โรงเรียนในพื้นที่ห่างไกล ที่มีครูไม่ครบชั้น ได้รับการสนับสนุนให้สามารถเข้าถึงระบบการศึกษาทางไกลของมูลนิธิฯ ได้อย่างทั่วถึง", "indicators": ["โรงเรียนขนาดเล็ก โรงเรียนในพื้นที่ห่างไกล ที่มีครูไม่ครบชั้น สามารถเข้าถึงการศึกษาทางไกลได้อย่างมีคุณภาพ", "มีระบบลงทะเบียนสมาชิก DLTV ที่แบ่งตามประเภท หรือกลุ่มโรงเรียนปลายทาง"], "period": "2566-2570", "owner": "ฝ่ายแผน / ฝ่ายเทคนิค-สถานีฯ / ฝ่ายวิชาการ"}, {"id": "3-2", "strategyId": 3, "num": 2, "text": "สร้างความเข้าใจกับผู้บริหารการศึกษา ผู้บริหารสถานศึกษา ครูและศึกษานิเทศก์ในเรื่องการจัดการศึกษาทางไกลของมูลนิธิฯ", "indicators": ["ผู้บริหารการศึกษา ผู้บริหารสถานศึกษา ครู ศึกษานิเทศก์ โรงเรียนปลายทาง เข้าใจและสนับสนุนการดำเนินการจัดการศึกษาทางไกลของมูลนิธิฯ"], "period": "2566", "owner": "ฝ่ายวิชาการ"}, {"id": "3-3", "strategyId": 3, "num": 3, "text": "สนับสนุนชุดกิจกรรม สื่อการเรียนรู้ องค์ความรู้ และเครือข่ายด้านการศึกษา ให้กับโรงเรียนปลายทาง และพัฒนาศักยภาพการสอนของครูโรงเรียนปลายทาง", "indicators": ["โรงเรียนปลายทางมีชุดกิจกรรม สื่อการเรียนรู้ องค์ความรู้ และเครือข่ายด้านการศึกษา", "ครูโรงเรียนปลายทางสามารถใช้ชุดกิจกรรม สื่อการเรียนรู้ได้อย่างมีประสิทธิภาพ"], "period": "2566-2570", "owner": "ฝ่ายวิชาการ"}, {"id": "3-4", "strategyId": 3, "num": 4, "text": "โรงเรียนปลายทางสามารถบูรณาการศาสตร์พระราชาและน้อมนำพระบรมราโชบายด้านการศึกษาสู่การจัดการเรียนการสอน", "indicators": ["ครูโรงเรียนปลายทางสามารถบูรณาการศาสตร์พระราชาและน้อมนำพระบรมราโชบายด้านการศึกษาในการจัดการเรียนการสอนในแต่ละวิชาได้อย่างหลากหลาย ถูกต้อง และน่าสนใจ"], "period": "2566-2570", "owner": "ฝ่ายวิชาการ"}, {"id": "3-5", "strategyId": 3, "num": 5, "text": "พัฒนากลไกการวัดและประเมินผลการจัดการเรียนรู้ และส่งเสริมการนิเทศ กำกับ ติดตาม ประเมินผลการจัดการศึกษาทางไกล", "indicators": ["มีกลไกการวัดประเมินผล และการติดตามการใช้งาน DLTV", "โรงเรียนปลายทางมีการรายงานผลการจัดการเรียนการสอนทางไกล ตามระบบนิเทศ กำกับ ติดตามและประเมินผล"], "period": "2566-2570", "owner": "ฝ่ายวิชาการ / ฝ่ายแผน"}, {"id": "3-6", "strategyId": 3, "num": 6, "text": "ยกระดับคุณภาพการศึกษาของโรงเรียนปลายทาง โดยจัดทำเกณฑ์การประเมิน/พัฒนาเพื่อนำไปสู่โรงเรียนปลายทางที่มีวิธีการปฏิบัติที่เป็นเลิศ", "indicators": ["โรงเรียนปลายทางที่มีวิธีปฏิบัติที่เป็นเลิศ (Best Practice) จำแนกตามประเภทโรงเรียนปลายทาง", "โรงเรียนปลายทางที่ได้รับการพัฒนาและยกระดับศักยภาพให้มีความพร้อมในการจัดการศึกษาทางไกลตามแนวทางการจัดการเรียนการสอน"], "period": "2566-2570", "owner": "ฝ่ายวิชาการ"}, {"id": "4-1", "strategyId": 4, "num": 1, "text": "พัฒนาระบบการบริหารบุคลากร โครงสร้าง และอัตรากำลัง", "indicators": ["มีแผนโครงสร้าง และอัตรากำลัง", "มีอัตราการครองตำแหน่งของบุคลากรอย่างน้อยร้อยละ 95"], "period": "2566", "owner": "ฝ่ายอำนวยการ"}, {"id": "4-2", "strategyId": 4, "num": 2, "text": "พัฒนาความเชี่ยวชาญในการปฏิบัติงาน (Upskill Reskill)", "indicators": ["บุคลากรได้รับการพัฒนาศักยภาพที่ตรงกับความต้องการและบทบาทหน้าที่", "ร้อยละ 80 ของบุคลากรที่ผ่านการอบรมและสามารถนำไปใช้ปฏิบัติงานได้"], "period": "2566", "owner": "ฝ่ายอำนวยการ"}, {"id": "4-3", "strategyId": 4, "num": 3, "text": "พัฒนาระบบบริหารจัดการ สร้างกลไกการกำกับดูแลเพื่อมุ่งสู่การเป็นองค์กรสมรรถนะสูง โปร่งใส และมีธรรมาภิบาล", "indicators": ["มีคู่มือแนวทางการพัฒนาองค์กรเพื่อเป็นองค์กรสมรรถนะสูง มีความโปร่งใส และมีธรรมาภิบาล", "มีแบบประเมินการส่งเสริมจริยธรรมและการต่อต้านการทุจริตของมูลนิธิฯ"], "period": "2567-2570", "owner": "ฝ่ายแผน / ฝ่ายอำนวยการ"}, {"id": "4-4", "strategyId": 4, "num": 4, "text": "ทบทวนมาตรฐานและจัดทำแผน/วางระบบการปฏิบัติงานในเรื่องคุณภาพ การติดตามประเมินผล ระบบบริหารความเสี่ยง และระบบการบริหารงานในภาวะวิกฤต", "indicators": ["มีแผนการบริหารความเสี่ยง และระบบการบริหารงานในภาวะวิกฤต", "มีแนวทางการกำกับ ติดตาม ประเมินผลโครงการของมูลนิธิฯ"], "period": "2567", "owner": "ฝ่ายแผน"}, {"id": "4-5", "strategyId": 4, "num": 5, "text": "พัฒนาโครงสร้างพื้นฐานด้านเทคโนโลยีดิจิทัล และการใช้เทคโนโลยีดิจิทัล เพื่อเพิ่มประสิทธิภาพในการปฏิบัติงาน", "indicators": ["มีแผนพัฒนาโครงสร้างพื้นฐานด้านเทคโนโลยีดิจิทัล และการใช้เทคโนโลยีดิจิทัล ตลอดจนระบบความมั่นคงปลอดภัยทางไซเบอร์", "ความสำเร็จในการดำเนินการตามแผนฯ", "มีการปรับเทคโนโลยีให้มีความทันสมัยตลอดเวลา"], "period": "2566-2570", "owner": "ฝ่ายเทคนิค-สถานีฯ"}, {"id": "4-6", "strategyId": 4, "num": 6, "text": "บริหารจัดการระบบฐานข้อมูล เพื่อสนับสนุนกระบวนงานและการกำหนดนโยบาย", "indicators": ["มีระบบฐานข้อมูลที่ทันสมัย ถูกต้อง เชื่อมโยงกันทั้งระบบ และสามารถสืบค้นได้อย่างรวดเร็ว"], "period": "2567", "owner": "ฝ่ายแผน / ฝ่ายเทคนิค-สถานีฯ"}, {"id": "4-7", "strategyId": 4, "num": 7, "text": "มุ่งเน้นการสื่อสารกับกลุ่มเป้าหมาย เพื่อสร้างการรับรู้กับสาธารณะที่เป็นการสื่อสารเชิงกลยุทธ์", "indicators": ["มีช่องทางการสื่อสารที่เข้าถึงแต่ละกลุ่มเป้าหมาย", "มีสื่อประชาสัมพันธ์ที่ตรงกับกลุ่มเป้าหมาย", "กลุ่มเป้าหมายมีความพึงพอใจการดำเนินงานของมูลนิธิฯ"], "period": "2567-2570", "owner": "ฝ่ายประชาสัมพันธ์"}, {"id": "4-8", "strategyId": 4, "num": 8, "text": "พัฒนาระบบการจัดการความรู้และนำไปสู่การสร้างนวัตกรรม", "indicators": ["มีระบบการจัดการความรู้", "มีองค์ความรู้ นวัตกรรมจากกระบวนการมีส่วนร่วมกับบุคลากรหรือหน่วยงานทั้งภายในและภายนอกองค์กรที่สามารถนำไปใช้ได้จริง"], "period": "2567-2570", "owner": "ฝ่ายแผน"}], "criteria": [{"th": "ความสอดคล้อง", "en": "Relevance", "desc": "แผน/กลยุทธ์นี้ตอบสนองความต้องการของกลุ่มเป้าหมาย นโยบายรัฐ พระบรมราโชบายด้านการศึกษา และบริบทที่เปลี่ยนแปลงไป (Disruption, New Normal) มากน้อยเพียงใด"}, {"th": "ความสอดคล้องเชิงระบบ", "en": "Coherence", "desc": "กลยุทธ์นี้เชื่อมโยง ไม่ซ้ำซ้อน และเสริมพลังกับยุทธศาสตร์อื่นภายในมูลนิธิฯ และสอดคล้อง/บูรณาการกับหน่วยงานภายนอก (สพฐ. สช. กศน. กระทรวงศึกษาธิการ) ได้ดีเพียงใด"}, {"th": "ประสิทธิผล", "en": "Effectiveness", "desc": "การดำเนินงานบรรลุตัวชี้วัดและเป้าหมายที่กำหนดไว้มากน้อยเพียงใด (ผลสัมฤทธิ์ทางการศึกษา ความครอบคลุมกลุ่มเป้าหมาย ฯลฯ)"}, {"th": "ประสิทธิภาพ", "en": "Efficiency", "desc": "ผลลัพธ์ที่ได้คุ้มค่ากับทรัพยากร (คน งบประมาณ เวลา อุปกรณ์) ที่ใช้ไปหรือไม่ เมื่อเทียบกับทางเลือกอื่น"}, {"th": "ผลกระทบ", "en": "Impact", "desc": "ก่อให้เกิดการเปลี่ยนแปลงเชิงบวก (หรือลบ) ในระดับกว้างต่อผู้เรียน ครู โรงเรียน และระบบการศึกษาไทย ทั้งที่ตั้งใจและไม่ตั้งใจ มากน้อยเพียงใด"}, {"th": "ความยั่งยืน", "en": "Sustainability", "desc": "ผลลัพธ์และประโยชน์ของกลยุทธ์นี้มีแนวโน้มจะดำรงอยู่ต่อเนื่องได้หลังสิ้นสุดแผน (ด้านงบประมาณ บุคลากร เทคโนโลยี ความร่วมมือ) มากน้อยเพียงใด"}], "scale": [{"score": 1, "level": "น้อยที่สุด/ไม่พบหลักฐาน", "desc": "ไม่สอดคล้อง ไม่บรรลุผล หรือไม่มีความคุ้มค่าอย่างชัดเจน ควรพิจารณายกเลิก"}, {"score": 2, "level": "น้อย", "desc": "มีความสอดคล้อง/ผลลัพธ์บางส่วน แต่มีปัญหาเชิงโครงสร้างหรือช่องว่างสำคัญ"}, {"score": 3, "level": "ปานกลาง", "desc": "ดำเนินการได้ตามเกณฑ์ขั้นต่ำ แต่ยังต้องปรับปรุงสาระสำคัญหรือวิธีการดำเนินงาน"}, {"score": 4, "level": "ดี", "desc": "ดำเนินการได้ดี บรรลุผลตามเป้าหมายเป็นส่วนใหญ่ อาจต้องปรับปรุงในรายละเอียดปลีกย่อย"}, {"score": 5, "level": "ดีมาก/เป็นเลิศ", "desc": "บรรลุผลสูงกว่าเป้าหมาย มีหลักฐานเชิงประจักษ์ชัดเจน ควรคงไว้และขยายผลเป็นแนวปฏิบัติที่ดี"}]};
 
 /* ============================================================================
- * ตั้งค่าลิงก์ Google Apps Script แบบถาวร (ฝังไว้ในไฟล์นี้ครั้งเดียว ใช้ได้ตลอด)
- * วาง Web App URL (ลงท้ายด้วย /exec) ไว้ในเครื่องหมายคำพูดด้านล่าง แล้วบันทึกไฟล์
- * เมื่อฝังแล้ว ทุกคนที่เปิดไฟล์นี้จะเชื่อมต่อ Google Sheets นี้โดยอัตโนมัติทันที
- * ไม่ต้องกรอก/กดเชื่อมต่อเองอีก และจะเชื่อมต่อเหมือนเดิมทุกครั้งที่เปิดไฟล์
- * หากยังไม่ต้องการฝัง ให้เว้นว่างไว้ ("") ระบบจะกลับไปให้กรอก URL เองในแท็บ
- * "คำแนะนำการใช้งาน" ตามปกติ
+ * ตั้งค่า Firebase แบบถาวร (ฝังไว้ในไฟล์นี้ครั้งเดียว ใช้ได้ตลอด)
+ * วางค่า Firebase config (คัดลอกมาจาก Firebase Console โดยตรง ไม่ต้องแก้ไขรูปแบบ)
+ * แทนที่ null ด้านล่างนี้ เช่น:
+ * const EMBEDDED_FIREBASE_CONFIG = { apiKey: "AIza...", authDomain: "xxx.firebaseapp.com",
+ *   projectId: "xxx", storageBucket: "xxx.appspot.com", messagingSenderId: "...", appId: "..." };
+ * เมื่อฝังแล้ว ทุกคนที่เปิดไฟล์นี้จะเชื่อมต่อ Firebase นี้โดยอัตโนมัติทันที
+ * หากยังไม่ต้องการฝัง ให้คงเป็น null ไว้ ระบบจะให้วางค่าเองในแท็บ "คำแนะนำการใช้งาน"
  * ========================================================================= */
-const EMBEDDED_GAS_URL = "https://script.google.com/macros/s/AKfycbwi0tET17bGUHYmISevOGeLYw3OJM598dcF22Ep-ChwEr99FWpjBX4LwUjMxp9yOA-h/exec";
+const EMBEDDED_FIREBASE_CONFIG = null;
 
 const CRIT_KEYS = ['rel','coh','eff','effy','imp','sus'];
 const YEARS = ['2566','2567','2568','2569','2570'];
@@ -551,8 +574,9 @@ let auditLog = [];
 let weights = Object.assign({}, DEFAULT_WEIGHTS);
 let teamNotes = "";
 const LOCAL_KEY = 'dses_v2_local_state';
-const GAS_URL_KEY = 'dses_gas_url';
-let gasUrl = '';
+const FIREBASE_CONFIG_KEY = 'dses_firebase_config';
+let firebaseConfig = null;
+let db = null;
 let connected = false;
 let openSubtabs = {}; // itemId -> current subtab name (default 'score')
 
@@ -610,9 +634,22 @@ function getRecoKey(avg){
   if(avg<4.2) return 'yellow';
   return 'green';
 }
+function sumYearly(obj){
+  if(!obj) return null;
+  let sum = 0, any = false;
+  YEARS.forEach(y=>{ const v = obj[y]; if(v!==null && v!==undefined && v!=='') { sum += Number(v); any = true; } });
+  return any ? sum : null;
+}
 function budgetVariancePct(budget){
-  if(!budget || budget.planned===null || budget.planned===undefined || budget.planned===0 || budget.actual===null || budget.actual===undefined) return null;
-  return (budget.actual - budget.planned) / budget.planned * 100;
+  if(!budget) return null;
+  const totalPlanned = sumYearly(budget.planned);
+  const totalActual = sumYearly(budget.actual);
+  if(totalPlanned===null || totalPlanned===0 || totalActual===null) return null;
+  return (totalActual - totalPlanned) / totalPlanned * 100;
+}
+function yearVariancePct(planned, actual){
+  if(planned===null || planned===undefined || planned==='' || Number(planned)===0 || actual===null || actual===undefined || actual==='') return null;
+  return (Number(actual) - Number(planned)) / Number(planned) * 100;
 }
 function latestActualOf(ind){
   if(!ind || !ind.yearly) return null;
@@ -623,75 +660,353 @@ function latestActualOf(ind){
   return null;
 }
 function indicatorAchievementPct(ind){
-  const latest = latestActualOf(ind);
-  if(ind.baseline===null || ind.target===null || ind.baseline===undefined || ind.target===undefined || !latest) return null;
-  const denom = ind.target - ind.baseline;
-  if(denom === 0) return latest.value >= ind.target ? 100 : 0;
-  const pct = (latest.value - ind.baseline) / denom * 100;
-  return Math.max(0, Math.min(150, pct));
+  if(!ind || !ind.targetYearly) return null;
+  // หาปีล่าสุดที่มีทั้งเป้าหมายและผลจริงคู่กัน แล้วคำนวณ % จากปีนั้นโดยตรง
+  for(let i=YEARS.length-1;i>=0;i--){
+    const y = YEARS[i];
+    const t = ind.targetYearly[y], a = ind.yearly ? ind.yearly[y] : null;
+    if(t!==null && t!==undefined && t!=='' && Number(t)!==0 && a!==null && a!==undefined && a!==''){
+      return {pct: Math.max(0, Math.min(150, (Number(a)/Number(t))*100)), year: y};
+    }
+  }
+  return null;
 }
 function trendChartSvg(ind){
   const W=260, H=84, padL=30, padR=12, padT=10, padB=20;
-  const vals = YEARS.map(y => (ind.yearly && ind.yearly[y]!==null && ind.yearly[y]!==undefined && ind.yearly[y]!=='') ? Number(ind.yearly[y]) : null);
-  const known = vals.filter(v=>v!==null);
+  const actualVals = YEARS.map(y => (ind.yearly && ind.yearly[y]!==null && ind.yearly[y]!==undefined && ind.yearly[y]!=='') ? Number(ind.yearly[y]) : null);
+  const targetVals = YEARS.map(y => (ind.targetYearly && ind.targetYearly[y]!==null && ind.targetYearly[y]!==undefined && ind.targetYearly[y]!=='') ? Number(ind.targetYearly[y]) : null);
+  const known = actualVals.concat(targetVals).filter(v=>v!==null);
   if(known.length===0){
-    return '<div style="font-size:11.5px;color:var(--ink-soft);padding:10px 0;">ยังไม่มีข้อมูลผลจริงรายปี — กรอกอย่างน้อย 1 ปีเพื่อแสดงกราฟแนวโน้ม</div>';
+    return '<div style="font-size:11.5px;color:var(--ink-soft);padding:10px 0;">ยังไม่มีข้อมูลเป้าหมายหรือผลจริงรายปี — กรอกอย่างน้อย 1 ปีเพื่อแสดงกราฟแนวโน้ม</div>';
   }
-  let allNums = known.slice();
-  if(ind.baseline!==null && ind.baseline!==undefined) allNums.push(Number(ind.baseline));
-  if(ind.target!==null && ind.target!==undefined) allNums.push(Number(ind.target));
-  let min = Math.min(...allNums), max = Math.max(...allNums);
+  let min = Math.min(...known), max = Math.max(...known);
   if(min === max){ min -= 1; max += 1; }
   const pad = (max-min)*0.15;
   min -= pad; max += pad;
   const xStep = (W-padL-padR)/(YEARS.length-1);
   const yScale = v => H-padB - (v-min)/(max-min)*(H-padT-padB);
   const xFor = i => padL + i*xStep;
-  let path = '', points = '';
-  vals.forEach((v,i)=>{
-    if(v===null) return;
-    const x=xFor(i), y=yScale(v);
-    path += (path?'L':'M') + x.toFixed(1) + ',' + y.toFixed(1) + ' ';
-    points += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.2" fill="#6C5CE0"/><text x="${x.toFixed(1)}" y="${(y-7).toFixed(1)}" font-size="8.5" fill="#3F3A5C" text-anchor="middle">${v}</text>`;
-  });
-  let targetLine = '';
-  if(ind.target!==null && ind.target!==undefined){
-    const ty = yScale(Number(ind.target));
-    targetLine = `<line x1="${padL}" y1="${ty.toFixed(1)}" x2="${W-padR}" y2="${ty.toFixed(1)}" stroke="#4E9B79" stroke-dasharray="4,3" stroke-width="1.3"/><text x="${W-padR}" y="${(ty-3).toFixed(1)}" font-size="8" fill="#4E9B79" text-anchor="end">เป้าหมาย ${ind.target}</text>`;
+
+  function buildSeries(vals, color, dashed){
+    let path = '', points = '';
+    vals.forEach((v,i)=>{
+      if(v===null) return;
+      const x=xFor(i), y=yScale(v);
+      path += (path?'L':'M') + x.toFixed(1) + ',' + y.toFixed(1) + ' ';
+      points += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="${color}"/>`;
+    });
+    const dash = dashed ? ' stroke-dasharray="5,3"' : '';
+    return `<path d="${path}" fill="none" stroke="${color}" stroke-width="2"${dash}/>${points}`;
   }
-  let baseLine = '';
-  if(ind.baseline!==null && ind.baseline!==undefined){
-    const by = yScale(Number(ind.baseline));
-    baseLine = `<line x1="${padL}" y1="${by.toFixed(1)}" x2="${W-padR}" y2="${by.toFixed(1)}" stroke="#B4AED0" stroke-dasharray="2,2" stroke-width="1"/><text x="${padL}" y="${(by-3).toFixed(1)}" font-size="8" fill="#9C97B8">ฐาน ${ind.baseline}</text>`;
-  }
+  const targetSeries = buildSeries(targetVals, '#4E9B79', true);
+  const actualSeries = buildSeries(actualVals, '#6C5CE0', false);
   const yearLabels = YEARS.map((y,i)=>`<text x="${xFor(i).toFixed(1)}" y="${H-4}" font-size="8.5" fill="#847FA3" text-anchor="middle">${y}</text>`).join('');
-  return `<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" style="max-width:280px;display:block;">${baseLine}${targetLine}<path d="${path}" fill="none" stroke="#6C5CE0" stroke-width="2"/>${points}${yearLabels}</svg>`;
+  const legend = `<circle cx="${padL}" cy="8" r="3" fill="#6C5CE0"/><text x="${padL+7}" y="11" font-size="8" fill="#3F3A5C">ผลจริง</text>
+    <line x1="${padL+55}" y1="8" x2="${padL+68}" y2="8" stroke="#4E9B79" stroke-width="2" stroke-dasharray="4,2"/><text x="${padL+72}" y="11" font-size="8" fill="#3F3A5C">เป้าหมาย</text>`;
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" style="max-width:280px;display:block;">${legend}${targetSeries}${actualSeries}${yearLabels}</svg>`;
 }
 
-/* ---------------- Backend (GAS) ---------------- */
-async function gasGet(){
-  const res = await fetch(gasUrl, {method:'GET'});
-  const j = await res.json();
-  if(j.status !== 'ok') throw new Error(j.message || 'เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ');
-  return j.data;
+/* ---------------- Backend (Firebase Firestore) ---------------- */
+function fsInit(config){
+  try{
+    if(firebase.apps && firebase.apps.length) firebase.app().delete().catch(()=>{});
+  }catch(e){}
+  const app = firebase.initializeApp(config);
+  db = firebase.firestore(app);
 }
-async function gasPost(action, extra){
-  const res = await fetch(gasUrl, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(Object.assign({action}, extra))});
-  const j = await res.json();
-  if(j.status !== 'ok') throw new Error(j.message || 'เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ');
-  return j.data;
+function fsTimestamp(){ return firebase.firestore.FieldValue.serverTimestamp(); }
+
+async function firestoreLoadAll(){
+  const [evalSnap, indSnap, budgetSnap, progressSnap, evidenceSnap, proposalsSnap, auditSnap, metaSnap] = await Promise.all([
+    db.collection('evaluations').get(),
+    db.collection('indicators').get(),
+    db.collection('budgets').get(),
+    db.collection('progress').get(),
+    db.collection('evidence').get(),
+    db.collection('proposals').get(),
+    db.collection('auditLog').orderBy('timestamp', 'desc').limit(200).get(),
+    db.collection('meta').doc('settings').get()
+  ]);
+
+  const evalsByItem = {};
+  evalSnap.forEach(doc=>{
+    const d = doc.data();
+    if(!evalsByItem[d.itemId]) evalsByItem[d.itemId] = [];
+    evalsByItem[d.itemId].push({evalId: doc.id, evaluator: d.evaluator||'', date: d.date||'', scores: d.scores||{}, reason: d.reason||''});
+  });
+
+  const indByItem = {};
+  indSnap.forEach(doc=>{
+    const d = doc.data();
+    if(!indByItem[d.itemId]) indByItem[d.itemId] = [];
+    const yearly = Object.fromEntries(YEARS.map(y => [y, numOrNull(d.yearly ? d.yearly[y] : null)]));
+    const targetYearly = Object.fromEntries(YEARS.map(y => [y, numOrNull(d.targetYearly ? d.targetYearly[y] : null)]));
+    indByItem[d.itemId][d.index] = {index: d.index, text: d.text, yearly, targetYearly, unit: d.unit||'', project: d.project||'', note: d.note||''};
+  });
+
+  const budgetByItem = {};
+  budgetSnap.forEach(doc=>{
+    const d = doc.data();
+    budgetByItem[doc.id] = {
+      planned: Object.fromEntries(YEARS.map(y => [y, numOrNull(d.planned ? d.planned[y] : null)])),
+      actual: Object.fromEntries(YEARS.map(y => [y, numOrNull(d.actual ? d.actual[y] : null)])),
+      note: d.note||''
+    };
+  });
+
+  const progressByItem = {};
+  progressSnap.forEach(doc=>{ progressByItem[doc.id] = doc.data(); });
+
+  const evidByItem = {};
+  evidenceSnap.forEach(doc=>{
+    const d = doc.data();
+    if(!evidByItem[d.itemId]) evidByItem[d.itemId] = [];
+    evidByItem[d.itemId].push({evidenceId: doc.id, label: d.label||'', url: d.url||''});
+  });
+
+  const proposalsList = [];
+  proposalsSnap.forEach(doc=>{ proposalsList.push(Object.assign({proposalId: doc.id}, doc.data())); });
+
+  const auditList = [];
+  auditSnap.forEach(doc=>{
+    const d = doc.data();
+    const ts = d.timestamp && d.timestamp.toDate ? d.timestamp.toDate().toISOString() : (d.timestamp || '');
+    auditList.push({timestamp: ts, itemId: d.itemId||'', field: d.field, summary: d.summary, actor: d.actor});
+  });
+
+  const metaData = metaSnap.exists ? metaSnap.data() : {};
+
+  const items = DATA.items.map(it=>({
+    itemId: it.id, strategyId: it.strategyId, strategyName: STRATEGY_NAME_BY_ID[it.strategyId],
+    num: it.num, text: it.text, owner: it.owner,
+    evaluations: evalsByItem[it.id] || [],
+    indicators: indByItem[it.id] || it.indicators.map((t,idx)=>{
+      const yearly = {}, targetYearly = {}; YEARS.forEach(y=>{ yearly[y]=null; targetYearly[y]=null; });
+      return {index: idx, text: t, yearly, targetYearly, unit: '', project: '', note: ''};
+    }),
+    budget: budgetByItem[it.id] || {planned: Object.fromEntries(YEARS.map(y=>[y,null])), actual: Object.fromEntries(YEARS.map(y=>[y,null])), note: ''},
+    progress: progressByItem[it.id] || {status: 'not_started', percent: 0, note: ''},
+    evidence: evidByItem[it.id] || []
+  }));
+
+  return {items, proposals: proposalsList, auditLog: auditList, notes: metaData.teamNotes || '', weights: metaData.weights || DEFAULT_WEIGHTS, strategies: DATA.strategies};
 }
+
+async function firestoreLogAudit(itemId, field, summary, actor){
+  try{
+    await db.collection('auditLog').add({timestamp: fsTimestamp(), itemId: itemId||'', field, summary, actor: actor || 'ไม่ระบุชื่อ'});
+  }catch(e){ /* ประวัติบันทึกไม่สำเร็จไม่ควรทำให้การบันทึกหลักล้มเหลว */ }
+}
+
+async function firestoreAddEvaluation(itemId, payload){
+  const item = DATA.items.find(it=>it.id===itemId);
+  await db.collection('evaluations').add({
+    itemId, strategyId: item.strategyId, strategyName: STRATEGY_NAME_BY_ID[item.strategyId], num: item.num, text: item.text, owner: item.owner,
+    evaluator: payload.evaluator||'', date: payload.date||'', scores: payload.scores||{}, reason: payload.reason||'', submittedAt: fsTimestamp()
+  });
+  const vals = CRIT_KEYS.map(k=>payload.scores[k]).filter(v=>v!==undefined && v!==null && v!=='');
+  const avgTxt = vals.length===6 ? (vals.reduce((a,b)=>a+Number(b),0)/6).toFixed(2) : 'ไม่ครบ';
+  await firestoreLogAudit(itemId, 'evaluation', 'เพิ่มคะแนนประเมินโดย ' + (payload.evaluator||'ไม่ระบุชื่อ') + ' (เฉลี่ย ' + avgTxt + ')', payload.evaluator);
+}
+async function firestoreDeleteEvaluation(itemId, evalId){
+  const snap = await db.collection('evaluations').doc(evalId).get();
+  const evaluator = snap.exists ? snap.data().evaluator : '';
+  await db.collection('evaluations').doc(evalId).delete();
+  await firestoreLogAudit(itemId, 'evaluation', 'ลบคะแนนประเมินของ ' + (evaluator||'ไม่ระบุชื่อ'), evaluator);
+}
+
+function indicatorDocId(itemId, index){ return itemId + '_' + index; }
+
+async function firestoreSaveIndicator(itemId, index, payload){
+  const item = DATA.items.find(it=>it.id===itemId);
+  const docId = indicatorDocId(itemId, index);
+  const data = {itemId, index: Number(index), text: item.indicators[index] || '', updatedAt: fsTimestamp()};
+  if(payload.unit !== undefined) data.unit = payload.unit;
+  if(payload.project !== undefined) data.project = payload.project;
+  if(payload.note !== undefined) data.note = payload.note;
+  const existing = (payload.yearly || payload.targetYearly) ? await db.collection('indicators').doc(docId).get() : null;
+  if(payload.yearly){
+    const yearly = existing.exists && existing.data().yearly ? Object.assign({}, existing.data().yearly) : {};
+    YEARS.forEach(y=>{ if(payload.yearly[y]!==undefined) yearly[y] = payload.yearly[y]===''?null:Number(payload.yearly[y]); });
+    data.yearly = yearly;
+  }
+  if(payload.targetYearly){
+    const targetYearly = existing.exists && existing.data().targetYearly ? Object.assign({}, existing.data().targetYearly) : {};
+    YEARS.forEach(y=>{ if(payload.targetYearly[y]!==undefined) targetYearly[y] = payload.targetYearly[y]===''?null:Number(payload.targetYearly[y]); });
+    data.targetYearly = targetYearly;
+  }
+  await db.collection('indicators').doc(docId).set(data, {merge:true});
+  await firestoreLogAudit(itemId, 'indicator', 'อัปเดตผลตัวชี้วัดที่ ' + (Number(index)+1), payload.actor||'');
+}
+
+async function firestoreSaveBudget(itemId, payload){
+  const data = {updatedAt: fsTimestamp()};
+  if(payload.note !== undefined) data.note = payload.note;
+  const existing = (payload.planned || payload.actual) ? await db.collection('budgets').doc(itemId).get() : null;
+  if(payload.planned){
+    const planned = existing && existing.exists && existing.data().planned ? Object.assign({}, existing.data().planned) : {};
+    YEARS.forEach(y=>{ if(payload.planned[y]!==undefined) planned[y] = payload.planned[y]===''?null:Number(payload.planned[y]); });
+    data.planned = planned;
+  }
+  if(payload.actual){
+    const actual = existing && existing.exists && existing.data().actual ? Object.assign({}, existing.data().actual) : {};
+    YEARS.forEach(y=>{ if(payload.actual[y]!==undefined) actual[y] = payload.actual[y]===''?null:Number(payload.actual[y]); });
+    data.actual = actual;
+  }
+  await db.collection('budgets').doc(itemId).set(data, {merge:true});
+  await firestoreLogAudit(itemId, 'budget', 'อัปเดตงบประมาณรายปี', payload.actor||'');
+}
+async function firestoreSaveProgress(itemId, payload){
+  const data = {updatedAt: fsTimestamp()};
+  if(payload.status !== undefined) data.status = payload.status;
+  if(payload.percent !== undefined) data.percent = Number(payload.percent) || 0;
+  if(payload.note !== undefined) data.note = payload.note;
+  await db.collection('progress').doc(itemId).set(data, {merge:true});
+  await firestoreLogAudit(itemId, 'progress', 'อัปเดตความคืบหน้าเป็น ' + (payload.percent!==undefined ? payload.percent+'%' : '') + ' (' + statusLabel(payload.status) + ')', payload.actor||'');
+}
+
+async function firestoreAddEvidence(itemId, payload){
+  const ref = await db.collection('evidence').add({itemId, label: payload.label||'', url: payload.url||'', addedAt: fsTimestamp()});
+  await firestoreLogAudit(itemId, 'evidence', 'เพิ่มหลักฐาน: ' + (payload.label || payload.url || ''), payload.actor||'');
+  return ref.id;
+}
+async function firestoreDeleteEvidence(itemId, evidenceId){
+  await db.collection('evidence').doc(evidenceId).delete();
+  await firestoreLogAudit(itemId, 'evidence', 'ลบหลักฐานอ้างอิง', '');
+}
+
+async function firestoreAddProposal(payload){
+  const ref = await db.collection('proposals').add(Object.assign({createdAt: fsTimestamp()}, payload));
+  await firestoreLogAudit('', 'proposal', 'เพิ่มข้อเสนอกลยุทธ์ใหม่: ' + (payload.title||''), payload.submittedBy||'');
+  return ref.id;
+}
+async function firestoreDeleteProposal(proposalId){
+  const snap = await db.collection('proposals').doc(proposalId).get();
+  const title = snap.exists ? snap.data().title : '';
+  await db.collection('proposals').doc(proposalId).delete();
+  await firestoreLogAudit('', 'proposal', 'ลบข้อเสนอ: ' + title, '');
+}
+
+async function firestoreUpdateNotes(notes){
+  await db.collection('meta').doc('settings').set({teamNotes: notes}, {merge:true});
+  await firestoreLogAudit('', 'notes', 'แก้ไขบันทึกมติของทีม', '');
+}
+async function firestoreUpdateWeights(w){
+  await db.collection('meta').doc('settings').set({weights: w}, {merge:true});
+  await firestoreLogAudit('', 'weights', 'ปรับน้ำหนักเกณฑ์การให้คะแนน', '');
+}
+
+/** บันทึกทั้งหมดของกลยุทธ์เดียวในการเขียนชุดเดียว (atomic batch): การประเมิน (ถ้ามี) + ตัวชี้วัดทุกตัว + งบประมาณ + ความคืบหน้า */
+async function firestoreSaveAllForItem(itemId, {evaluation, indicators, budget, progress}){
+  const item = DATA.items.find(it=>it.id===itemId);
+
+  // อ่านค่า yearly/targetYearly/planned/actual เดิมก่อน (batch เขียนอย่างเดียว อ่านไม่ได้) เพื่อ merge ให้ถูกต้อง
+  const indDocs = (indicators||[]).map(ip => ({ip, ref: db.collection('indicators').doc(indicatorDocId(itemId, ip.index))}));
+  const existingIndSnaps = await Promise.all(indDocs.map(d => d.ref.get()));
+  const budgetRef = db.collection('budgets').doc(itemId);
+  const existingBudgetSnap = budget ? await budgetRef.get() : null;
+
+  const batch = db.batch();
+
+  let evalRef = null;
+  if(evaluation){
+    evalRef = db.collection('evaluations').doc();
+    batch.set(evalRef, {
+      itemId, strategyId: item.strategyId, strategyName: STRATEGY_NAME_BY_ID[item.strategyId], num: item.num, text: item.text, owner: item.owner,
+      evaluator: evaluation.evaluator||'', date: evaluation.date||'', scores: evaluation.scores||{}, reason: evaluation.reason||'', submittedAt: fsTimestamp()
+    });
+  }
+
+  indDocs.forEach((d, i)=>{
+    const ip = d.ip;
+    const existing = existingIndSnaps[i];
+    const data = {itemId, index: Number(ip.index), text: item.indicators[ip.index] || '', updatedAt: fsTimestamp()};
+    if(ip.unit !== undefined) data.unit = ip.unit;
+    if(ip.project !== undefined) data.project = ip.project;
+    if(ip.note !== undefined) data.note = ip.note;
+    if(ip.yearly){
+      const yearly = existing.exists && existing.data().yearly ? Object.assign({}, existing.data().yearly) : {};
+      YEARS.forEach(y=>{ if(ip.yearly[y]!==undefined) yearly[y] = ip.yearly[y]===''?null:Number(ip.yearly[y]); });
+      data.yearly = yearly;
+    }
+    if(ip.targetYearly){
+      const targetYearly = existing.exists && existing.data().targetYearly ? Object.assign({}, existing.data().targetYearly) : {};
+      YEARS.forEach(y=>{ if(ip.targetYearly[y]!==undefined) targetYearly[y] = ip.targetYearly[y]===''?null:Number(ip.targetYearly[y]); });
+      data.targetYearly = targetYearly;
+    }
+    batch.set(d.ref, data, {merge:true});
+  });
+
+  if(budget){
+    const data = {updatedAt: fsTimestamp()};
+    if(budget.note !== undefined) data.note = budget.note;
+    if(budget.planned){
+      const planned = existingBudgetSnap.exists && existingBudgetSnap.data().planned ? Object.assign({}, existingBudgetSnap.data().planned) : {};
+      YEARS.forEach(y=>{ if(budget.planned[y]!==undefined) planned[y] = budget.planned[y]===''?null:Number(budget.planned[y]); });
+      data.planned = planned;
+    }
+    if(budget.actual){
+      const actual = existingBudgetSnap.exists && existingBudgetSnap.data().actual ? Object.assign({}, existingBudgetSnap.data().actual) : {};
+      YEARS.forEach(y=>{ if(budget.actual[y]!==undefined) actual[y] = budget.actual[y]===''?null:Number(budget.actual[y]); });
+      data.actual = actual;
+    }
+    batch.set(budgetRef, data, {merge:true});
+  }
+  if(progress){
+    const data = {updatedAt: fsTimestamp()};
+    if(progress.status !== undefined) data.status = progress.status;
+    if(progress.percent !== undefined) data.percent = Number(progress.percent) || 0;
+    if(progress.note !== undefined) data.note = progress.note;
+    batch.set(db.collection('progress').doc(itemId), data, {merge:true});
+  }
+
+  await batch.commit();
+  await firestoreLogAudit(itemId, 'saveAll', 'บันทึกทั้งหมด (คะแนนประเมิน/ตัวชี้วัด/งบประมาณ/ความคืบหน้า) ในครั้งเดียว', '');
+  return {evalId: evalRef ? evalRef.id : null};
+}
+
+async function firestoreResetAll(){
+  const collections = ['evaluations', 'evidence'];
+  for(const name of collections){
+    const snap = await db.collection(name).get();
+    const batch = db.batch();
+    snap.forEach(doc => batch.delete(doc.ref));
+    if(!snap.empty) await batch.commit();
+  }
+  const indSnap = await db.collection('indicators').get();
+  const indBatch = db.batch();
+  indSnap.forEach(doc => indBatch.set(doc.ref, {yearly:{}, targetYearly:{}}, {merge:true}));
+  if(!indSnap.empty) await indBatch.commit();
+
+  const budgetSnap = await db.collection('budgets').get();
+  const budgetBatch = db.batch();
+  budgetSnap.forEach(doc => budgetBatch.set(doc.ref, {planned:{}, actual:{}, note:''}, {merge:true}));
+  if(!budgetSnap.empty) await budgetBatch.commit();
+
+  const progressSnap = await db.collection('progress').get();
+  const progressBatch = db.batch();
+  progressSnap.forEach(doc => progressBatch.set(doc.ref, {status:'not_started', percent:0, note:''}, {merge:true}));
+  if(!progressSnap.empty) await progressBatch.commit();
+
+  await db.collection('meta').doc('settings').set({teamNotes: ''}, {merge:true});
+  await firestoreLogAudit('', 'reset', 'ล้างข้อมูลการประเมิน/ตัวชี้วัด/งบประมาณ/ความคืบหน้าทั้งหมด', '');
+}
+
 function applyData(data){
   evalState = {};
   (data.items||[]).forEach(it=>{
     evalState[it.itemId] = {
       evaluations: (it.evaluations||[]).map(e=>({evalId:e.evalId, evaluator:e.evaluator||'', date:e.date||'', scores:e.scores||{}, reason:e.reason||''})),
       indicators: (it.indicators||[]).map(ind=>{
-        const yearly = {};
-        YEARS.forEach(y => { yearly[y] = numOrNull(ind.yearly ? ind.yearly[y] : null); });
-        return {index:ind.index, text:ind.text, baseline:numOrNull(ind.baseline), target:numOrNull(ind.target), yearly, unit:ind.unit||'', project:ind.project||'', note:ind.note||''};
+        const yearly = {}, targetYearly = {};
+        YEARS.forEach(y => { yearly[y] = numOrNull(ind.yearly ? ind.yearly[y] : null); targetYearly[y] = numOrNull(ind.targetYearly ? ind.targetYearly[y] : null); });
+        return {index:ind.index, text:ind.text, yearly, targetYearly, unit:ind.unit||'', project:ind.project||'', note:ind.note||''};
       }),
-      budget: {planned: numOrNull(it.budget && it.budget.planned), actual: numOrNull(it.budget && it.budget.actual), note: (it.budget && it.budget.note) || ''},
+      budget: {
+        planned: Object.fromEntries(YEARS.map(y=>[y, numOrNull(it.budget && it.budget.planned ? it.budget.planned[y] : null)])),
+        actual: Object.fromEntries(YEARS.map(y=>[y, numOrNull(it.budget && it.budget.actual ? it.budget.actual[y] : null)])),
+        note: (it.budget && it.budget.note) || ''
+      },
       progress: {status: (it.progress && it.progress.status) || 'not_started', percent: (it.progress && it.progress.percent) || 0, note: (it.progress && it.progress.note) || ''},
       evidence: (it.evidence||[]).map(ev=>({evidenceId:ev.evidenceId, label:ev.label||'', url:ev.url||''}))
     };
@@ -709,10 +1024,10 @@ function defaultLocalState(){
     items[it.id] = {
       evaluations: [],
       indicators: it.indicators.map((t,idx)=>{
-        const yearly = {}; YEARS.forEach(y => yearly[y] = null);
-        return {index:idx, text:t, baseline:null, target:null, yearly, unit:'', project:'', note:''};
+        const yearly = {}, targetYearly = {}; YEARS.forEach(y => { yearly[y] = null; targetYearly[y] = null; });
+        return {index:idx, text:t, yearly, targetYearly, unit:'', project:'', note:''};
       }),
-      budget: {planned:null, actual:null, note:''},
+      budget: {planned: Object.fromEntries(YEARS.map(y=>[y,null])), actual: Object.fromEntries(YEARS.map(y=>[y,null])), note:''},
       progress: {status:'not_started', percent:0, note:''},
       evidence: []
     };
@@ -740,12 +1055,12 @@ function updateConnectionUI(){
   const dot = document.getElementById('statusDot');
   const label = document.getElementById('statusLabel');
   const statusText = document.getElementById('gasStatusText');
-  const urlInput = document.getElementById('gasUrlInput');
+  const configInput = document.getElementById('firebaseConfigInput');
   const manualForm = document.getElementById('gasManualForm');
   const embeddedNotice = document.getElementById('gasEmbeddedNotice');
-  if(urlInput && gasUrl) urlInput.value = gasUrl;
+  if(configInput && firebaseConfig) configInput.value = JSON.stringify(firebaseConfig, null, 2);
 
-  if(EMBEDDED_GAS_URL){
+  if(EMBEDDED_FIREBASE_CONFIG){
     if(manualForm) manualForm.style.display = 'none';
     if(embeddedNotice) embeddedNotice.style.display = 'block';
   } else {
@@ -755,27 +1070,33 @@ function updateConnectionUI(){
 
   if(connected){
     dot.className = 'dot on';
-    label.textContent = 'เชื่อมต่อ Google Sheets แล้ว';
-    if(statusText) statusText.innerHTML = '<span style="color:var(--green);font-weight:600;">✓ เชื่อมต่อสำเร็จ</span> ข้อมูลทุกส่วนจะถูกบันทึกลง Google Sheets โดยตรง' + (EMBEDDED_GAS_URL ? ' (เชื่อมต่ออัตโนมัติจาก URL ที่ฝังไว้ในไฟล์)' : '');
+    label.textContent = 'เชื่อมต่อ Firebase แล้ว';
+    if(statusText) statusText.innerHTML = '<span style="color:var(--green);font-weight:600;">✓ เชื่อมต่อสำเร็จ</span> ข้อมูลทุกส่วนจะถูกบันทึกลง Firebase Firestore โดยตรง' + (EMBEDDED_FIREBASE_CONFIG ? ' (เชื่อมต่ออัตโนมัติจาก config ที่ฝังไว้ในไฟล์)' : '');
   } else {
     dot.className = 'dot off';
-    label.textContent = gasUrl ? 'เชื่อมต่อไม่สำเร็จ (โหมดออฟไลน์)' : 'ยังไม่เชื่อมต่อ Google Sheets';
-    if(statusText) statusText.innerHTML = gasUrl
-      ? '<span style="color:var(--red);font-weight:600;">✗ เชื่อมต่อไม่สำเร็จ</span> กำลังใช้งานแบบออฟไลน์ชั่วคราว' + (EMBEDDED_GAS_URL ? ' — ตรวจสอบ URL ที่ฝังไว้ในไฟล์และการตั้งค่า Deploy' : '')
+    label.textContent = firebaseConfig ? 'เชื่อมต่อไม่สำเร็จ (โหมดออฟไลน์)' : 'ยังไม่เชื่อมต่อ Firebase';
+    if(statusText) statusText.innerHTML = firebaseConfig
+      ? '<span style="color:var(--red);font-weight:600;">✗ เชื่อมต่อไม่สำเร็จ</span> กำลังใช้งานแบบออฟไลน์ชั่วคราว' + (EMBEDDED_FIREBASE_CONFIG ? ' — ตรวจสอบ config ที่ฝังไว้ในไฟล์และ Firestore Security Rules' : '')
       : 'ยังไม่ได้ตั้งค่า — ระบบทำงานแบบออฟไลน์ (บันทึกไว้ในเบราว์เซอร์นี้เท่านั้น) ดูขั้นตอนเชื่อมต่อด้านบน';
   }
 }
+async function tryConnectFirebase(config){
+  fsInit(config);
+  const data = await firestoreLoadAll(); // จะโยน error ถ้า config ผิดหรือ rules ปิดกั้น
+  applyData(data);
+  firebaseConfig = config;
+  connected = true;
+}
 async function loadState(){
-  if(EMBEDDED_GAS_URL){
-    gasUrl = EMBEDDED_GAS_URL;
-  } else {
+  let config = EMBEDDED_FIREBASE_CONFIG;
+  if(!config){
     try{
-      const res = await window.storage.get(GAS_URL_KEY, true);
-      gasUrl = res && res.value ? res.value : '';
-    }catch(e){ gasUrl = ''; }
+      const res = await window.storage.get(FIREBASE_CONFIG_KEY, true);
+      config = res && res.value ? JSON.parse(res.value) : null;
+    }catch(e){ config = null; }
   }
-  if(gasUrl){
-    try{ applyData(await gasGet()); connected = true; }
+  if(config){
+    try{ await tryConnectFirebase(config); }
     catch(e){ connected = false; await loadLocalFallback(); }
   } else {
     connected = false; await loadLocalFallback();
@@ -783,11 +1104,11 @@ async function loadState(){
   updateConnectionUI();
 }
 async function refreshFromGas(){
-  if(!connected){ showToast('ยังไม่ได้เชื่อมต่อ Google Sheets', true); return; }
+  if(!connected){ showToast('ยังไม่ได้เชื่อมต่อ Firebase', true); return; }
   try{
-    applyData(await gasGet());
+    applyData(await firestoreLoadAll());
     renderAllTabs();
-    showToast('รีเฟรชข้อมูลจาก Google Sheets แล้ว');
+    showToast('รีเฟรชข้อมูลจาก Firebase แล้ว');
   }catch(e){ showToast('รีเฟรชไม่สำเร็จ: ' + e.message, true); }
 }
 function renderAllTabs(){
@@ -898,6 +1219,8 @@ function renderItemCard(item){
       <div class="item-badge-wrap">
         <div class="avg-num" id="avgnum-${item.id}" style="color:${RECO_COLOR_HEX[rk]}">${fmt(avg)}</div>
         <div class="badge ${rk}" id="badge-${item.id}">${RECO[rk].label}</div>
+        <button class="btn-light btn-light-solid btn-save-all" data-save-all="${item.id}">💾 บันทึกทั้งหมด</button>
+        <span class="unsaved-note" data-unsaved-for="all-${item.id}" style="display:none;">มีการเปลี่ยนแปลงที่ยังไม่บันทึก</span>
       </div>
     </div>
 
@@ -972,9 +1295,9 @@ function renderScorePanel(item, st){
         <textarea class="reason-input" data-new-field="reason" data-item="${item.id}" placeholder="ระบุเหตุผลหรือหลักฐานประกอบการให้คะแนน"></textarea>
       </div>
       <div style="display:flex;gap:8px;">
-        <button class="btn-light btn-light-solid" data-submit-eval="${item.id}">บันทึกการประเมิน</button>
         <button class="btn-light" data-cancel-eval="${item.id}">ยกเลิก</button>
       </div>
+      <p class="section-sub" style="margin:8px 0 0;">กรอกครบแล้วกดปุ่ม &ldquo;💾 บันทึกทั้งหมด&rdquo; ที่มุมขวาบนของการ์ดนี้ เพื่อบันทึกการประเมินพร้อมกับข้อมูลส่วนอื่นทั้งหมด</p>
     </div>`;
 }
 function avgOfScores(scores){
@@ -985,16 +1308,15 @@ function avgOfScores(scores){
 
 function getIndicatorsForItem(item, st){
   return (st.indicators && st.indicators.length) ? st.indicators : item.indicators.map((t,idx)=>{
-    const yearly = {}; YEARS.forEach(y=>yearly[y]=null);
-    return {index:idx,text:t,baseline:null,target:null,yearly,unit:'',project:''};
+    const yearly = {}, targetYearly = {}; YEARS.forEach(y=>{ yearly[y]=null; targetYearly[y]=null; });
+    return {index:idx,text:t,yearly,targetYearly,unit:'',project:''};
   });
 }
 
 function renderIndicatorCard(itemId, ind){
-  const pct = indicatorAchievementPct(ind);
-  const latest = latestActualOf(ind);
-  const rk = pct===null ? 'grey' : pct>=100 ? 'green' : pct>=50 ? 'yellow' : 'red';
-  const pctLabel = pct===null ? 'ยังไม่มีข้อมูลผลจริง' : `${pct.toFixed(0)}% บรรลุเป้าหมาย (ข้อมูลปี ${latest.year})`;
+  const achievement = indicatorAchievementPct(ind);
+  const rk = achievement===null ? 'grey' : achievement.pct>=100 ? 'green' : achievement.pct>=50 ? 'yellow' : 'red';
+  const pctLabel = achievement===null ? 'ยังไม่มีข้อมูลเป้าหมาย/ผลจริงคู่กัน' : `${achievement.pct.toFixed(0)}% บรรลุเป้าหมาย (ปี ${achievement.year})`;
   return `
     <div class="ind-card" data-item="${itemId}" data-index="${ind.index}">
       <div class="ind-card-top">
@@ -1005,12 +1327,14 @@ function renderIndicatorCard(itemId, ind){
         <div class="field-label">โครงการ / กิจกรรมที่เกี่ยวข้อง</div>
         <input type="text" data-ind-field="project" value="${escapeHtml(ind.project||'')}" placeholder="เช่น โครงการอบรมครูโรงเรียนปลายทาง รุ่นที่ 1" style="width:100%;">
       </div>
-      <div class="ind-fields-row">
-        <div><div class="field-label">ฐาน (Baseline)</div><input type="number" step="any" data-ind-field="baseline" value="${ind.baseline ?? ''}"></div>
-        <div><div class="field-label">เป้าหมาย (ปี 2570)</div><input type="number" step="any" data-ind-field="target" value="${ind.target ?? ''}"></div>
-        <div><div class="field-label">หน่วย</div><input type="text" data-ind-field="unit" value="${escapeHtml(ind.unit||'')}"></div>
+      <div style="max-width:200px;margin-bottom:10px;">
+        <div class="field-label">หน่วย</div><input type="text" data-ind-field="unit" value="${escapeHtml(ind.unit||'')}">
       </div>
-      <div class="field-label" style="margin-top:2px;">ผลจริงรายปี</div>
+      <div class="field-label">เป้าหมายรายปี</div>
+      <div class="ind-years-row">
+        ${YEARS.map(y=>`<div><div class="ind-year-label">${y}</div><input type="number" step="any" data-ind-target-year="${y}" value="${ind.targetYearly[y] ?? ''}"></div>`).join('')}
+      </div>
+      <div class="field-label" style="margin-top:10px;">ผลจริงรายปี</div>
       <div class="ind-years-row">
         ${YEARS.map(y=>`<div><div class="ind-year-label">${y}</div><input type="number" step="any" data-ind-year="${y}" value="${ind.yearly[y] ?? ''}"></div>`).join('')}
       </div>
@@ -1019,9 +1343,8 @@ function renderIndicatorCard(itemId, ind){
         <div class="field-label">หมายเหตุ</div>
         <textarea class="reason-input" style="min-height:38px;" data-ind-field="note">${escapeHtml(ind.note||'')}</textarea>
       </div>
-      <div style="display:flex;align-items:center;gap:10px;margin-top:10px;">
-        <button class="btn-light btn-light-solid" data-save-indicator="${itemId}" data-index="${ind.index}">บันทึกตัวชี้วัดนี้</button>
-        <span class="unsaved-note" data-unsaved-for="${itemId}-${ind.index}" style="display:none;">มีการเปลี่ยนแปลงที่ยังไม่บันทึก</span>
+      <div style="margin-top:10px;">
+        <span class="unsaved-note" data-unsaved-for="${itemId}-${ind.index}" style="display:none;">มีการเปลี่ยนแปลงที่ยังไม่บันทึก — กด &ldquo;บันทึกทั้งหมด&rdquo; ด้านบน</span>
       </div>
     </div>`;
 }
@@ -1029,7 +1352,7 @@ function renderIndicatorCard(itemId, ind){
 function renderIndicatorsPanel(item, st){
   const inds = getIndicatorsForItem(item, st);
   const cards = inds.map(ind => renderIndicatorCard(item.id, ind)).join('');
-  return `${cards}<p class="section-sub" style="margin:6px 0 0;">กรอกข้อมูลให้ครบแล้วกด &ldquo;บันทึกตัวชี้วัดนี้&rdquo; ระบบจะไม่บันทึกอัตโนมัติระหว่างพิมพ์ (การบันทึกจะไม่กระทบข้อมูลที่ยังไม่บันทึกในตัวชี้วัดอื่น) — % บรรลุเป้าหมายคำนวณจากปีล่าสุดที่มีข้อมูล</p>`;
+  return `${cards}<p class="section-sub" style="margin:6px 0 0;">กรอกเป้าหมายและผลจริงรายปีให้ครบเท่าที่มีข้อมูล แล้วกดปุ่ม &ldquo;💾 บันทึกทั้งหมด&rdquo; ที่มุมขวาบนของการ์ดเพียงครั้งเดียว — % บรรลุเป้าหมายคำนวณจากปีล่าสุดที่มีทั้งเป้าหมายและผลจริงคู่กัน</p>`;
 }
 
 /** แทนที่ ind-card เดียวใน DOM หลังบันทึกสำเร็จ โดยไม่แตะตัวชี้วัดอื่นหรือการ์ดอื่นที่ยังไม่บันทึก */
@@ -1048,48 +1371,59 @@ function refreshIndicatorCard(itemId, index){
 
 
 function renderBudgetPanel(item, st){
-  const b = st.budget || {planned:null, actual:null, note:''};
+  const b = st.budget || {planned:{}, actual:{}, note:''};
   const p = st.progress || {status:'not_started', percent:0, note:''};
-  const variance = budgetVariancePct(b);
-  const varColor = variance===null ? 'var(--ink-soft)' : variance>0 ? 'var(--red)' : 'var(--green)';
+  const totalPlanned = sumYearly(b.planned);
+  const totalActual = sumYearly(b.actual);
+  const overallVariance = budgetVariancePct(b);
+  const varColor = overallVariance===null ? 'var(--ink-soft)' : overallVariance>0 ? 'var(--red)' : 'var(--green)';
+  const yearCells = YEARS.map(y => ({y, v: yearVariancePct(b.planned[y], b.actual[y])}));
+
   return `
-    <div class="budget-grid">
-      <div>
-        <div class="field-label" style="margin-bottom:8px;font-size:12.5px;">งบประมาณ</div>
-        <div class="meta-row" style="grid-template-columns:1fr 1fr;margin-bottom:8px;">
-          <div>
-            <div class="field-label">งบประมาณตามแผน (บาท)</div>
-            <input type="number" step="any" class="meta-input" data-budget-field="planned" data-item="${item.id}" value="${b.planned ?? ''}">
-          </div>
-          <div>
-            <div class="field-label">ใช้จริง (บาท)</div>
-            <input type="number" step="any" class="meta-input" data-budget-field="actual" data-item="${item.id}" value="${b.actual ?? ''}">
-          </div>
-        </div>
-        <div style="font-size:12.5px;color:${varColor};font-weight:600;margin-bottom:8px;">
-          ${variance===null ? 'ยังไม่มีข้อมูลเพียงพอสำหรับคำนวณส่วนต่าง' : (variance>0?'ใช้เกินแผน':'ใช้ต่ำกว่าแผน') + ' ' + Math.abs(variance).toFixed(1) + '%'}
-        </div>
-        <div class="field-label">หมายเหตุงบประมาณ</div>
-        <textarea class="reason-input" style="min-height:44px;" data-budget-field="note" data-item="${item.id}">${escapeHtml(b.note||'')}</textarea>
+    <div style="margin-bottom:6px;">
+      <div class="field-label" style="font-size:12.5px;margin-bottom:8px;">งบประมาณรายปี (บาท)</div>
+      <div style="overflow-x:auto;">
+        <table class="budget-year-table">
+          <tr><th>ปี</th>${YEARS.map(y=>`<th>${y}</th>`).join('')}<th>รวม</th></tr>
+          <tr>
+            <td>ตามแผน</td>
+            ${YEARS.map(y=>`<td><input type="number" step="any" data-budget-planned-year="${y}" data-item="${item.id}" value="${b.planned[y] ?? ''}"></td>`).join('')}
+            <td class="budget-total">${fmtMoney(totalPlanned)}</td>
+          </tr>
+          <tr>
+            <td>ใช้จริง</td>
+            ${YEARS.map(y=>`<td><input type="number" step="any" data-budget-actual-year="${y}" data-item="${item.id}" value="${b.actual[y] ?? ''}"></td>`).join('')}
+            <td class="budget-total">${fmtMoney(totalActual)}</td>
+          </tr>
+          <tr>
+            <td>ส่วนต่าง %</td>
+            ${yearCells.map(c=>`<td style="color:${c.v===null?'var(--ink-soft)':c.v>0?'var(--red)':'var(--green)'};font-weight:600;">${c.v===null?'—':c.v.toFixed(0)+'%'}</td>`).join('')}
+            <td class="budget-total" style="color:${varColor};">${overallVariance===null?'—':overallVariance.toFixed(1)+'%'}</td>
+          </tr>
+        </table>
       </div>
-      <div>
-        <div class="field-label" style="margin-bottom:8px;font-size:12.5px;">ความคืบหน้า</div>
-        <div class="field-label">สถานะ</div>
-        <select class="meta-input" data-progress-field="status" data-item="${item.id}" style="margin-bottom:8px;">
-          <option value="not_started" ${p.status==='not_started'?'selected':''}>ยังไม่เริ่ม</option>
-          <option value="in_progress" ${p.status==='in_progress'?'selected':''}>กำลังดำเนินการ</option>
-          <option value="done" ${p.status==='done'?'selected':''}>เสร็จแล้ว</option>
-        </select>
-        <div class="field-label">% ความคืบหน้า</div>
-        <input type="number" min="0" max="100" class="meta-input" data-progress-field="percent" data-item="${item.id}" value="${p.percent||0}" style="margin-bottom:6px;">
-        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${p.percent||0}%"></div></div>
-        <div class="field-label" style="margin-top:10px;">หมายเหตุความคืบหน้า</div>
-        <textarea class="reason-input" style="min-height:44px;" data-progress-field="note" data-item="${item.id}">${escapeHtml(p.note||'')}</textarea>
+      <div style="font-size:12.5px;color:${varColor};font-weight:600;margin:8px 0;">
+        ${overallVariance===null ? 'ยังไม่มีข้อมูลเพียงพอสำหรับคำนวณส่วนต่างรวม' : (overallVariance>0?'ใช้เกินแผนรวม':'ใช้ต่ำกว่าแผนรวม') + ' ' + Math.abs(overallVariance).toFixed(1) + '%'}
       </div>
+      <div class="field-label">หมายเหตุงบประมาณ</div>
+      <textarea class="reason-input" style="min-height:44px;" data-budget-field="note" data-item="${item.id}">${escapeHtml(b.note||'')}</textarea>
     </div>
-    <div style="display:flex;align-items:center;gap:10px;">
-      <button class="btn-light btn-light-solid" data-save-budgetprogress="${item.id}">บันทึกงบประมาณ &amp; ความคืบหน้า</button>
-      <span class="unsaved-note" data-unsaved-for="bp-${item.id}" style="display:none;">มีการเปลี่ยนแปลงที่ยังไม่บันทึก</span>
+    <div style="margin-top:16px;max-width:260px;">
+      <div class="field-label" style="margin-bottom:8px;font-size:12.5px;">ความคืบหน้า</div>
+      <div class="field-label">สถานะ</div>
+      <select class="meta-input" data-progress-field="status" data-item="${item.id}" style="margin-bottom:8px;">
+        <option value="not_started" ${p.status==='not_started'?'selected':''}>ยังไม่เริ่ม</option>
+        <option value="in_progress" ${p.status==='in_progress'?'selected':''}>กำลังดำเนินการ</option>
+        <option value="done" ${p.status==='done'?'selected':''}>เสร็จแล้ว</option>
+      </select>
+      <div class="field-label">% ความคืบหน้า</div>
+      <input type="number" min="0" max="100" class="meta-input" data-progress-field="percent" data-item="${item.id}" value="${p.percent||0}" style="margin-bottom:6px;">
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${p.percent||0}%"></div></div>
+      <div class="field-label" style="margin-top:10px;">หมายเหตุความคืบหน้า</div>
+      <textarea class="reason-input" style="min-height:44px;" data-progress-field="note" data-item="${item.id}">${escapeHtml(p.note||'')}</textarea>
+    </div>
+    <div style="margin-top:10px;">
+      <span class="unsaved-note" data-unsaved-for="bp-${item.id}" style="display:none;">มีการเปลี่ยนแปลงที่ยังไม่บันทึก — กด &ldquo;บันทึกทั้งหมด&rdquo; ด้านบน</span>
     </div>`;
 }
 
@@ -1141,6 +1475,11 @@ document.getElementById('evalContainer').addEventListener('click', async (e)=>{
     const row = scoreBtn.closest('.score-row');
     row.querySelectorAll('.score-btn').forEach(b=>b.classList.remove('active'));
     scoreBtn.classList.add('active');
+    const itemCard = scoreBtn.closest('.item-card');
+    if(itemCard){
+      const masterNote = itemCard.querySelector(`[data-unsaved-for="all-${itemCard.dataset.item}"]`);
+      if(masterNote) masterNote.style.display = 'inline';
+    }
     return;
   }
   // toggle add-evaluation form
@@ -1157,25 +1496,6 @@ document.getElementById('evalContainer').addEventListener('click', async (e)=>{
     form.classList.remove('show');
     const toggle = document.querySelector(`[data-addeval-toggle="${itemId}"]`);
     if(toggle) toggle.style.display = '';
-    return;
-  }
-  // submit new evaluation
-  const submitBtn = e.target.closest('[data-submit-eval]');
-  if(submitBtn){
-    const itemId = submitBtn.dataset.submitEval;
-    const form = document.getElementById('addeval-' + itemId);
-    const evaluator = form.querySelector('[data-new-field="evaluator"]').value.trim();
-    const date = form.querySelector('[data-new-field="date"]').value;
-    const reason = form.querySelector('[data-new-field="reason"]').value.trim();
-    const scores = {};
-    let complete = true;
-    CRIT_KEYS.forEach(k=>{
-      const active = form.querySelector(`.score-row[data-newcrit="${k}"] .score-btn.active`);
-      if(active) scores[k] = Number(active.dataset.val); else complete = false;
-    });
-    if(!evaluator){ showToast('กรุณาระบุชื่อผู้ประเมิน', true); return; }
-    if(!complete){ showToast('กรุณาให้คะแนนครบทั้ง 6 ด้าน', true); return; }
-    await submitEvaluation(itemId, {evaluator, date, scores, reason});
     return;
   }
   // delete evaluation
@@ -1203,31 +1523,10 @@ document.getElementById('evalContainer').addEventListener('click', async (e)=>{
     await deleteEvidenceEntry(delEvid.dataset.item, delEvid.dataset.delEvidence);
     return;
   }
-  // save indicator (explicit button, replaces auto-save-on-blur)
-  const saveInd = e.target.closest('[data-save-indicator]');
-  if(saveInd){
-    const itemId = saveInd.dataset.saveIndicator;
-    const index = Number(saveInd.dataset.index);
-    const card = saveInd.closest('.ind-card');
-    const payload = {yearly: {}};
-    card.querySelectorAll('[data-ind-field]').forEach(inp=>{ payload[inp.dataset.indField] = inp.value; });
-    card.querySelectorAll('[data-ind-year]').forEach(inp=>{ payload.yearly[inp.dataset.indYear] = inp.value; });
-    await syncIndicator(itemId, index, payload);
-    return;
-  }
-  // save budget + progress together (explicit button, replaces auto-save-on-blur)
-  const saveBP = e.target.closest('[data-save-budgetprogress]');
-  if(saveBP){
-    const itemId = saveBP.dataset.saveBudgetprogress;
-    const card = saveBP.closest('.item-card');
-    const budgetPayload = {};
-    card.querySelectorAll('[data-budget-field]').forEach(inp=>{ budgetPayload[inp.dataset.budgetField] = inp.value; });
-    const progressPayload = {};
-    card.querySelectorAll('[data-progress-field]').forEach(inp=>{ progressPayload[inp.dataset.progressField] = inp.value; });
-    const okBudget = await syncBudget(itemId, budgetPayload, true);
-    const okProgress = await syncProgress(itemId, progressPayload, true);
-    if(okBudget && okProgress) showSuccessPopup(connected ? 'บันทึกงบประมาณและความคืบหน้าสำเร็จ' : 'บันทึกงบประมาณและความคืบหน้าสำเร็จ (โหมดออฟไลน์)');
-    refreshItemCard(itemId);
+  // บันทึกทั้งหมดของกลยุทธ์นี้ในคลิกเดียว (การประเมิน + ตัวชี้วัดทุกตัว + งบประมาณ + ความคืบหน้า)
+  const saveAllBtn = e.target.closest('[data-save-all]');
+  if(saveAllBtn){
+    await saveAllForItem(saveAllBtn.dataset.saveAll);
     return;
   }
 });
@@ -1235,18 +1534,30 @@ document.getElementById('evalContainer').addEventListener('click', async (e)=>{
 document.getElementById('evalContainer').addEventListener('input', (e)=>{
   const indField = e.target.closest('[data-ind-field]');
   const indYear = e.target.closest('[data-ind-year]');
-  if(indField || indYear){
-    const card = (indField || indYear).closest('.ind-card');
+  const indTargetYear = e.target.closest('[data-ind-target-year]');
+  const bud = e.target.closest('[data-budget-field]');
+  const budPlannedYear = e.target.closest('[data-budget-planned-year]');
+  const budActualYear = e.target.closest('[data-budget-actual-year]');
+  const prog = e.target.closest('[data-progress-field]');
+  const newEvalField = e.target.closest('[data-new-field]');
+  const newScore = e.target.closest('.score-row[data-newcrit]');
+
+  if(indField || indYear || indTargetYear){
+    const card = (indField || indYear || indTargetYear).closest('.ind-card');
     const note = card.querySelector(`[data-unsaved-for="${card.dataset.item}-${card.dataset.index}"]`);
     if(note) note.style.display = 'inline';
-    return;
   }
-  const bud = e.target.closest('[data-budget-field]');
-  const prog = e.target.closest('[data-progress-field]');
-  if(bud || prog){
-    const itemCard = (bud || prog).closest('.item-card');
+  if(bud || budPlannedYear || budActualYear || prog){
+    const itemCard = (bud || budPlannedYear || budActualYear || prog).closest('.item-card');
     const note = itemCard.querySelector(`[data-unsaved-for="bp-${itemCard.dataset.item}"]`);
     if(note) note.style.display = 'inline';
+  }
+  if(indField || indYear || indTargetYear || bud || budPlannedYear || budActualYear || prog || newEvalField || newScore){
+    const itemCard = e.target.closest('.item-card');
+    if(itemCard){
+      const masterNote = itemCard.querySelector(`[data-unsaved-for="all-${itemCard.dataset.item}"]`);
+      if(masterNote) masterNote.style.display = 'inline';
+    }
   }
   const progPercent = e.target.closest('[data-progress-field="percent"]');
   if(progPercent){
@@ -1256,108 +1567,127 @@ document.getElementById('evalContainer').addEventListener('input', (e)=>{
   }
 });
 
-/* ---- Sync functions ---- */
-async function submitEvaluation(itemId, payload){
-  if(connected){
-    try{ applyData(await gasPost('addEvaluation', {itemId, payload})); showSuccessPopup('บันทึกการประเมินสำเร็จ'); }
-    catch(e){ showToast('บันทึกไม่สำเร็จ: ' + e.message, true); return; }
-  } else {
-    const st = evalState[itemId];
-    st.evaluations.push({evalId: itemId+'_'+Date.now()+'_'+Math.random().toString(36).slice(2), evaluator:payload.evaluator, date:payload.date, scores:payload.scores, reason:payload.reason});
-    await saveLocalFallback();
-    showSuccessPopup('บันทึกการประเมินสำเร็จ (โหมดออฟไลน์)');
+/* ---- Save All (บันทึกทั้งหมดของกลยุทธ์เดียวในคลิกเดียว) ---- */
+async function saveAllForItem(itemId){
+  const card = document.querySelector(`.item-card[data-item="${itemId}"]`);
+  if(!card) return;
+
+  // 1) ฟอร์มเพิ่มการประเมิน (ถ้าเปิดอยู่และกรอกครบ)
+  let evaluation = null;
+  const form = document.getElementById('addeval-' + itemId);
+  if(form && form.classList.contains('show')){
+    const evaluator = form.querySelector('[data-new-field="evaluator"]').value.trim();
+    const date = form.querySelector('[data-new-field="date"]').value;
+    const reason = form.querySelector('[data-new-field="reason"]').value.trim();
+    const scores = {};
+    let anyFilled = !!evaluator;
+    let complete = true;
+    CRIT_KEYS.forEach(k=>{
+      const active = form.querySelector(`.score-row[data-newcrit="${k}"] .score-btn.active`);
+      if(active){ scores[k] = Number(active.dataset.val); anyFilled = true; } else complete = false;
+    });
+    if(anyFilled && (!evaluator || !complete)){
+      showToast('การประเมินใหม่กรอกไม่ครบ (ต้องมีชื่อผู้ประเมินและคะแนนทั้ง 6 ด้าน) จึงยังไม่บันทึกส่วนนี้ — ระบบจะบันทึกส่วนอื่นให้ก่อน', true);
+    } else if(anyFilled){
+      evaluation = {evaluator, date, scores, reason};
+    }
   }
-  openSubtabs[itemId] = 'score';
+
+  // 2) ตัวชี้วัดทุกตัวของกลยุทธ์นี้ (เป้าหมายรายปี + ผลจริงรายปี)
+  const indicators = [];
+  card.querySelectorAll('.ind-card').forEach(indCard=>{
+    const payload = {index: Number(indCard.dataset.index), yearly: {}, targetYearly: {}};
+    indCard.querySelectorAll('[data-ind-field]').forEach(inp=>{ payload[inp.dataset.indField] = inp.value; });
+    indCard.querySelectorAll('[data-ind-year]').forEach(inp=>{ payload.yearly[inp.dataset.indYear] = inp.value; });
+    indCard.querySelectorAll('[data-ind-target-year]').forEach(inp=>{ payload.targetYearly[inp.dataset.indTargetYear] = inp.value; });
+    indicators.push(payload);
+  });
+
+  // 3) งบประมาณรายปี + ความคืบหน้า
+  const budget = {planned: {}, actual: {}};
+  card.querySelectorAll('[data-budget-field]').forEach(inp=>{ budget[inp.dataset.budgetField] = inp.value; });
+  card.querySelectorAll('[data-budget-planned-year]').forEach(inp=>{ budget.planned[inp.dataset.budgetPlannedYear] = inp.value; });
+  card.querySelectorAll('[data-budget-actual-year]').forEach(inp=>{ budget.actual[inp.dataset.budgetActualYear] = inp.value; });
+  const progress = {};
+  card.querySelectorAll('[data-progress-field]').forEach(inp=>{ progress[inp.dataset.progressField] = inp.value; });
+
+  let newEvalId = null;
+  if(connected){
+    try{
+      const result = await firestoreSaveAllForItem(itemId, {evaluation, indicators, budget, progress});
+      newEvalId = result && result.evalId;
+    }catch(e){
+      showToast('บันทึกไม่สำเร็จ: ' + e.message, true);
+      return;
+    }
+  }
+
+  // อัปเดตสถานะฝั่งหน้าเว็บให้ตรงกับสิ่งที่เพิ่งบันทึก (เร็วกว่าการโหลดข้อมูลทั้งหมดใหม่)
+  const st = evalState[itemId];
+  if(evaluation){
+    st.evaluations.push({
+      evalId: newEvalId || (itemId+'_'+Date.now()+'_'+Math.random().toString(36).slice(2)),
+      evaluator: evaluation.evaluator, date: evaluation.date, scores: evaluation.scores, reason: evaluation.reason
+    });
+  }
+  indicators.forEach(ip=>{
+    const ind = st.indicators.find(i=>i.index===ip.index);
+    if(!ind) return;
+    if(ip.unit!==undefined) ind.unit = ip.unit;
+    if(ip.project!==undefined) ind.project = ip.project;
+    if(ip.note!==undefined) ind.note = ip.note;
+    if(ip.yearly){
+      YEARS.forEach(y=>{ if(ip.yearly[y]!==undefined) ind.yearly[y] = ip.yearly[y]===''?null:Number(ip.yearly[y]); });
+    }
+    if(ip.targetYearly){
+      YEARS.forEach(y=>{ if(ip.targetYearly[y]!==undefined) ind.targetYearly[y] = ip.targetYearly[y]===''?null:Number(ip.targetYearly[y]); });
+    }
+  });
+  if(budget.note!==undefined) st.budget.note = budget.note;
+  YEARS.forEach(y=>{
+    if(budget.planned[y]!==undefined) st.budget.planned[y] = budget.planned[y]===''?null:Number(budget.planned[y]);
+    if(budget.actual[y]!==undefined) st.budget.actual[y] = budget.actual[y]===''?null:Number(budget.actual[y]);
+  });
+  if(progress.status!==undefined) st.progress.status = progress.status;
+  if(progress.percent!==undefined) st.progress.percent = Number(progress.percent)||0;
+  if(progress.note!==undefined) st.progress.note = progress.note;
+
+  if(!connected) await saveLocalFallback();
+  showSuccessPopup(connected ? 'บันทึกทั้งหมดสำเร็จ' : 'บันทึกทั้งหมดสำเร็จ (โหมดออฟไลน์)');
+
+  if(evaluation) openSubtabs[itemId] = 'score';
   refreshItemCard(itemId);
-  updateStrategyProgress(itemId);
+  if(evaluation) updateStrategyProgress(itemId);
 }
+
 async function deleteEvaluationEntry(itemId, evalId){
   if(connected){
-    try{ applyData(await gasPost('deleteEvaluation', {itemId, evalId})); showToast('ลบข้อมูลแล้ว'); }
+    try{ await firestoreDeleteEvaluation(itemId, evalId); showToast('ลบข้อมูลแล้ว'); }
     catch(e){ showToast('ลบไม่สำเร็จ: ' + e.message, true); return; }
-  } else {
-    const st = evalState[itemId];
-    st.evaluations = st.evaluations.filter(ev=>ev.evalId!==evalId);
-    await saveLocalFallback();
-    showToast('ลบข้อมูลแล้ว (โหมดออฟไลน์)');
   }
+  const st = evalState[itemId];
+  st.evaluations = st.evaluations.filter(ev=>ev.evalId!==evalId);
+  if(!connected){ await saveLocalFallback(); showToast('ลบข้อมูลแล้ว (โหมดออฟไลน์)'); }
   refreshItemCard(itemId);
   updateStrategyProgress(itemId);
 }
-async function syncIndicator(itemId, index, payload){
-  if(connected){
-    try{ applyData(await gasPost('updateIndicator', {itemId, index, payload})); showSuccessPopup('บันทึกตัวชี้วัดสำเร็จ'); }
-    catch(e){ showToast('บันทึกไม่สำเร็จ: ' + e.message, true); return; }
-  } else {
-    const st = evalState[itemId];
-    const ind = st.indicators.find(i=>i.index===index);
-    if(ind){
-      if(payload.baseline!==undefined) ind.baseline = payload.baseline===''?null:Number(payload.baseline);
-      if(payload.target!==undefined) ind.target = payload.target===''?null:Number(payload.target);
-      if(payload.unit!==undefined) ind.unit = payload.unit;
-      if(payload.project!==undefined) ind.project = payload.project;
-      if(payload.note!==undefined) ind.note = payload.note;
-      if(payload.yearly){
-        YEARS.forEach(y=>{
-          if(payload.yearly[y]!==undefined) ind.yearly[y] = payload.yearly[y]===''?null:Number(payload.yearly[y]);
-        });
-      }
-    }
-    await saveLocalFallback();
-    showSuccessPopup('บันทึกตัวชี้วัดสำเร็จ (โหมดออฟไลน์)');
-  }
-  refreshIndicatorCard(itemId, index);
-}
-async function syncBudget(itemId, payload, silent){
-  if(connected){
-    try{ applyData(await gasPost('updateBudget', {itemId, payload})); if(!silent) showToast('บันทึกลง Google Sheets แล้ว'); }
-    catch(e){ showToast('บันทึกงบประมาณไม่สำเร็จ: ' + e.message, true); return false; }
-  } else {
-    const st = evalState[itemId];
-    st.budget.planned = payload.planned===''?null:Number(payload.planned);
-    st.budget.actual = payload.actual===''?null:Number(payload.actual);
-    if(payload.note!==undefined) st.budget.note = payload.note;
-    await saveLocalFallback();
-    if(!silent) showToast('บันทึกข้อมูลแล้ว (โหมดออฟไลน์)');
-  }
-  if(!silent) renderEvalTab();
-  return true;
-}
-async function syncProgress(itemId, payload, silent){
-  if(connected){
-    try{ applyData(await gasPost('updateProgress', {itemId, payload})); if(!silent) showToast('บันทึกลง Google Sheets แล้ว'); }
-    catch(e){ showToast('บันทึกความคืบหน้าไม่สำเร็จ: ' + e.message, true); return false; }
-  } else {
-    const st = evalState[itemId];
-    if(payload.status!==undefined) st.progress.status = payload.status;
-    if(payload.percent!==undefined) st.progress.percent = Number(payload.percent)||0;
-    if(payload.note!==undefined) st.progress.note = payload.note;
-    await saveLocalFallback();
-    if(!silent) showToast('บันทึกข้อมูลแล้ว (โหมดออฟไลน์)');
-  }
-  if(!silent) renderEvalTab();
-  return true;
-}
 async function addEvidenceEntry(itemId, payload){
+  let newId = null;
   if(connected){
-    try{ applyData(await gasPost('addEvidence', {itemId, payload})); showSuccessPopup('เพิ่มหลักฐานสำเร็จ'); }
+    try{ newId = await firestoreAddEvidence(itemId, payload); showSuccessPopup('เพิ่มหลักฐานสำเร็จ'); }
     catch(e){ showToast('เพิ่มไม่สำเร็จ: ' + e.message, true); return; }
-  } else {
-    evalState[itemId].evidence.push({evidenceId: itemId+'_'+Date.now(), label:payload.label, url:payload.url});
-    await saveLocalFallback();
-    showSuccessPopup('เพิ่มหลักฐานสำเร็จ (โหมดออฟไลน์)');
   }
+  evalState[itemId].evidence.push({evidenceId: newId || (itemId+'_'+Date.now()), label:payload.label, url:payload.url});
+  if(!connected){ await saveLocalFallback(); showSuccessPopup('เพิ่มหลักฐานสำเร็จ (โหมดออฟไลน์)'); }
   refreshItemCard(itemId);
 }
 async function deleteEvidenceEntry(itemId, evidenceId){
   if(connected){
-    try{ applyData(await gasPost('deleteEvidence', {itemId, evidenceId})); showToast('ลบหลักฐานแล้ว'); }
+    try{ await firestoreDeleteEvidence(itemId, evidenceId); showToast('ลบหลักฐานแล้ว'); }
     catch(e){ showToast('ลบไม่สำเร็จ: ' + e.message, true); return; }
-  } else {
-    evalState[itemId].evidence = evalState[itemId].evidence.filter(ev=>ev.evidenceId!==evidenceId);
-    await saveLocalFallback();
-    showToast('ลบหลักฐานแล้ว (โหมดออฟไลน์)');
   }
+  evalState[itemId].evidence = evalState[itemId].evidence.filter(ev=>ev.evidenceId!==evidenceId);
+  if(!connected){ await saveLocalFallback(); showToast('ลบหลักฐานแล้ว (โหมดออฟไลน์)'); }
   refreshItemCard(itemId);
 }
 
@@ -1385,12 +1715,14 @@ function renderDashboard(){
   items.forEach(it=>{
     const st = evalState[it.id];
     if(!st) return;
-    if(st.budget && st.budget.planned!==null){ totalPlanned+=st.budget.planned; totalActual+=(st.budget.actual||0); hasBudget++; }
+    const itemPlanned = sumYearly(st.budget && st.budget.planned);
+    const itemActual = sumYearly(st.budget && st.budget.actual);
+    if(itemPlanned!==null){ totalPlanned+=itemPlanned; totalActual+=(itemActual||0); hasBudget++; }
     if(st.progress){ progressSum += (st.progress.percent||0); progressCount++; }
     (st.indicators||[]).forEach(ind=>{
       indTotal++;
-      const pct = indicatorAchievementPct(ind);
-      if(pct!==null){ indWithData++; if(pct>=100) indAchieved++; }
+      const achievement = indicatorAchievementPct(ind);
+      if(achievement!==null){ indWithData++; if(achievement.pct>=100) indAchieved++; }
     });
     (st.evaluations||[]).forEach(ev=>{ if(ev.evaluator) evaluatorSet.add(ev.evaluator); });
   });
@@ -1474,7 +1806,7 @@ document.getElementById('teamNotes').addEventListener('input', ()=>{
 document.getElementById('btnSaveNotes').addEventListener('click', async ()=>{
   teamNotes = document.getElementById('teamNotes').value;
   if(connected){
-    try{ await gasPost('updateNotes', {notes: teamNotes}); showSuccessPopup('บันทึกบันทึกทีมสำเร็จ'); }
+    try{ await firestoreUpdateNotes(teamNotes); showSuccessPopup('บันทึกบันทึกทีมสำเร็จ'); }
     catch(err){ showToast('บันทึกไม่สำเร็จ: ' + err.message, true); return; }
   } else {
     await saveLocalFallback();
@@ -1513,14 +1845,13 @@ document.getElementById('btnAddProposal').addEventListener('click', async ()=>{
   const date = document.getElementById('propDate').value || todayStr();
   if(!title){ showToast('กรุณาระบุหัวข้อข้อเสนอ', true); return; }
   const payload = {title, description, relatedStrategy, priority, submittedBy, date};
+  let newId = null;
   if(connected){
-    try{ applyData(await gasPost('addProposal', {payload})); showSuccessPopup('เพิ่มข้อเสนอสำเร็จ'); }
+    try{ newId = await firestoreAddProposal(payload); showSuccessPopup('เพิ่มข้อเสนอสำเร็จ'); }
     catch(e){ showToast('เพิ่มไม่สำเร็จ: ' + e.message, true); return; }
-  } else {
-    proposals.push(Object.assign({proposalId: 'P_' + Date.now()}, payload));
-    await saveLocalFallback();
-    showSuccessPopup('เพิ่มข้อเสนอสำเร็จ (โหมดออฟไลน์)');
   }
+  proposals.push(Object.assign({proposalId: newId || ('P_' + Date.now())}, payload));
+  if(!connected){ await saveLocalFallback(); showSuccessPopup('เพิ่มข้อเสนอสำเร็จ (โหมดออฟไลน์)'); }
   document.getElementById('propTitle').value = '';
   document.getElementById('propDesc').value = '';
   document.getElementById('propBy').value = '';
@@ -1532,13 +1863,11 @@ document.getElementById('proposalsContainer').addEventListener('click', async (e
   if(!confirm('ยืนยันการลบข้อเสนอนี้?')) return;
   const id = del.dataset.delProposal;
   if(connected){
-    try{ applyData(await gasPost('deleteProposal', {proposalId: id})); showToast('ลบข้อเสนอแล้ว'); }
+    try{ await firestoreDeleteProposal(id); showToast('ลบข้อเสนอแล้ว'); }
     catch(err){ showToast('ลบไม่สำเร็จ: ' + err.message, true); return; }
-  } else {
-    proposals = proposals.filter(p=>p.proposalId!==id);
-    await saveLocalFallback();
-    showToast('ลบข้อเสนอแล้ว (โหมดออฟไลน์)');
   }
+  proposals = proposals.filter(p=>p.proposalId!==id);
+  if(!connected){ await saveLocalFallback(); showToast('ลบข้อเสนอแล้ว (โหมดออฟไลน์)'); }
   renderProposals();
 });
 
@@ -1549,7 +1878,7 @@ const FIELD_LABEL = {evaluation:'คะแนนประเมิน', indicato
 function renderAudit(){
   const el = document.getElementById('auditContainer');
   if(!connected){
-    el.innerHTML = '<div class="card pad"><p class="section-sub" style="margin:0;">ฟีเจอร์นี้ใช้งานได้เมื่อเชื่อมต่อ Google Sheets เท่านั้น (ดูวิธีเชื่อมต่อที่แท็บ &ldquo;คำแนะนำการใช้งาน&rdquo;) ในโหมดออฟไลน์ระบบจะไม่บันทึกประวัติการเปลี่ยนแปลง</p></div>';
+    el.innerHTML = '<div class="card pad"><p class="section-sub" style="margin:0;">ฟีเจอร์นี้ใช้งานได้เมื่อเชื่อมต่อ Firebase เท่านั้น (ดูวิธีเชื่อมต่อที่แท็บ &ldquo;คำแนะนำการใช้งาน&rdquo;) ในโหมดออฟไลน์ระบบจะไม่บันทึกประวัติการเปลี่ยนแปลง</p></div>';
     return;
   }
   if(!auditLog.length){ el.innerHTML = '<p class="section-sub">ยังไม่มีประวัติการเปลี่ยนแปลง</p>'; return; }
@@ -1625,7 +1954,7 @@ document.getElementById('btnSaveWeights').addEventListener('click', async ()=>{
   if(Object.values(newWeights).every(w=>w===0)){ showToast('น้ำหนักทั้งหมดต้องไม่เป็น 0 ทุกช่อง', true); return; }
   weights = newWeights;
   if(connected){
-    try{ await gasPost('updateWeights', {weights}); showToast('บันทึกน้ำหนักลง Google Sheets แล้ว'); }
+    try{ await firestoreUpdateWeights(weights); showToast('บันทึกน้ำหนักลง Firebase แล้ว'); }
     catch(e){ showToast('บันทึกไม่สำเร็จ: ' + e.message, true); }
   } else {
     await saveLocalFallback();
@@ -1646,31 +1975,41 @@ document.getElementById('statusPill').addEventListener('click', ()=>{
   document.querySelector('.tab-btn[data-tab="about"]').click();
   setTimeout(()=>document.getElementById('gasSettings').scrollIntoView({behavior:'smooth', block:'start'}), 60);
 });
-document.getElementById('btnGasSave').addEventListener('click', async ()=>{
-  const url = document.getElementById('gasUrlInput').value.trim();
-  if(!url){ showToast('กรุณาวางลิงก์ Web App URL', true); return; }
-  showToast('กำลังทดสอบการเชื่อมต่อ...');
-  const prevUrl = gasUrl;
-  gasUrl = url;
+function parseFirebaseConfigInput(text){
+  const trimmed = text.trim();
+  if(!trimmed) return null;
+  try{ return JSON.parse(trimmed); }
+  catch(e){}
+  // รองรับการวางแบบ JS object literal ตรง ๆ จาก Firebase Console (คีย์ไม่มีเครื่องหมายคำพูด)
   try{
-    const data = await gasGet();
-    try{ await window.storage.set(GAS_URL_KEY, url, true); }catch(e){}
-    connected = true;
-    applyData(data);
+    const obj = Function('"use strict"; return (' + trimmed + ');')();
+    if(obj && typeof obj === 'object') return obj;
+  }catch(e){}
+  throw new Error('รูปแบบ config ไม่ถูกต้อง กรุณาคัดลอกมาจาก Firebase Console โดยตรง');
+}
+document.getElementById('btnGasSave').addEventListener('click', async ()=>{
+  const raw = document.getElementById('firebaseConfigInput').value;
+  let config;
+  try{ config = parseFirebaseConfigInput(raw); }
+  catch(e){ showToast(e.message, true); return; }
+  if(!config || !config.projectId){ showToast('กรุณาวาง Firebase config ให้ครบถ้วน (ต้องมี projectId เป็นอย่างน้อย)', true); return; }
+  showToast('กำลังทดสอบการเชื่อมต่อ...');
+  try{
+    await tryConnectFirebase(config);
+    try{ await window.storage.set(FIREBASE_CONFIG_KEY, JSON.stringify(config), true); }catch(e){}
     renderAllTabs();
     updateConnectionUI();
-    showToast('เชื่อมต่อ Google Sheets สำเร็จ');
+    showToast('เชื่อมต่อ Firebase สำเร็จ');
   }catch(e){
-    gasUrl = prevUrl;
     connected = false;
     updateConnectionUI();
-    showToast('เชื่อมต่อไม่สำเร็จ: ' + e.message + ' — ตรวจสอบ URL และการตั้งค่า Deploy (Who has access: Anyone)', true);
+    showToast('เชื่อมต่อไม่สำเร็จ: ' + e.message + ' — ตรวจสอบ config และ Firestore Security Rules', true);
   }
 });
 document.getElementById('btnGasDisconnect').addEventListener('click', async ()=>{
-  gasUrl = ''; connected = false;
-  try{ await window.storage.delete(GAS_URL_KEY, true); }catch(e){}
-  document.getElementById('gasUrlInput').value = '';
+  firebaseConfig = null; connected = false;
+  try{ await window.storage.delete(FIREBASE_CONFIG_KEY, true); }catch(e){}
+  document.getElementById('firebaseConfigInput').value = '';
   await loadLocalFallback();
   renderAllTabs();
   updateConnectionUI();
@@ -1714,10 +2053,10 @@ function csvEscape(v){
 document.getElementById('btnExport').addEventListener('click', exportCsv);
 
 document.getElementById('btnReset').addEventListener('click', async ()=>{
-  const scope = connected ? 'ใน Google Sheets ที่เชื่อมต่ออยู่' : 'ในเบราว์เซอร์นี้';
+  const scope = connected ? 'ใน Firebase ที่เชื่อมต่ออยู่' : 'ในเบราว์เซอร์นี้';
   if(!confirm(`ยืนยันการล้างข้อมูลการประเมิน ตัวชี้วัด งบประมาณ และความคืบหน้าทั้งหมด ${scope}? (ข้อเสนอกลยุทธ์ใหม่จะไม่ถูกลบ) การกระทำนี้ไม่สามารถย้อนกลับได้`)) return;
   if(connected){
-    try{ applyData(await gasPost('reset', {})); showToast('ล้างข้อมูลใน Google Sheets แล้ว'); }
+    try{ await firestoreResetAll(); applyData(await firestoreLoadAll()); showToast('ล้างข้อมูลใน Firebase แล้ว'); }
     catch(e){ showToast('ล้างข้อมูลไม่สำเร็จ: ' + e.message, true); return; }
   } else {
     const local = defaultLocalState();

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ระบบประเมินผลยุทธศาสตร์ดิจิทัล (DSES)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 /* =====================================================================
  * DSES — Minimal UI  ·  ระบบสีกลาง เส้นบาง พื้นที่ว่างเยอะ + motion นุ่ม ๆ
@@ -29,7 +29,7 @@
 *{box-sizing:border-box;}
 html{scroll-behavior:smooth;}
 html,body{margin:0;padding:0;}
-body{background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans Thai','Sarabun',system-ui,sans-serif;font-size:14.5px;line-height:1.65;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+body{background:var(--bg);color:var(--ink);font-family:'Noto Sans Thai',sans-serif;font-size:14.5px;line-height:1.65;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
 a{color:inherit;}
 button{font-family:inherit;}
 input,select,textarea{font-family:inherit;color:var(--ink);}
@@ -464,12 +464,169 @@ footer.appfoot{text-align:center;font-size:11.5px;color:var(--ink-faint);padding
 }
 
 
+
+/* =====================================================================
+ * COLORFUL LAYER — เพิ่มสีสัน (ทับธีมมินิมอล) + ฟอนต์ Noto Sans Thai
+ * ===================================================================== */
+:root{
+  --bg:#F5F4FB;
+  --primary:#5B4BE0; --primary-2:#14A3A8; --primary-soft:#ECEAFD;
+  --violet:#8B5CF6; --violet-soft:#F1EBFE;
+  --pink:#E2557A; --pink-soft:#FDEBF0;
+  --sky:#3B8FE8; --sky-soft:#E7F1FD;
+  --teal:#14A3A8; --teal-soft:#E2F5F5;
+  --amber:#EE9B2F; --amber-soft:#FDF2E2;
+  --accent:#E8673F; --accent-soft:#FDEEE8;
+  --red:#E0525A; --red-soft:#FDECEC; --orange:#EB8A2F; --orange-soft:#FDF0E2;
+  --yellow:#C99A12; --yellow-soft:#FCF5D9; --green:#2FA572; --green-soft:#E3F6EC;
+  --s4:#D18E10; --s4-soft:#FCF1DA;
+  --grad-main:linear-gradient(120deg,#5B4BE0 0%,#8B5CF6 45%,#14A3A8 100%);
+  --grad-warm:linear-gradient(120deg,#E8673F,#E2557A);
+}
+body,button,input,select,textarea,.tab-btn,.auth-tab-btn,.subtab-btn{font-family:'Noto Sans Thai',sans-serif;}
+body{
+  background:
+    radial-gradient(900px 500px at -5% -10%, rgba(139,92,246,.10), transparent 60%),
+    radial-gradient(800px 500px at 105% 10%, rgba(20,163,168,.10), transparent 60%),
+    radial-gradient(700px 500px at 50% 110%, rgba(226,85,122,.07), transparent 60%),
+    var(--bg);
+  background-attachment:fixed;
+}
+
+/* ---------- Header ไล่สี ---------- */
+@keyframes gradShift{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
+.topbar{position:relative;overflow:hidden;border-bottom:none;color:#fff;
+  background:linear-gradient(120deg,#4B3FD1,#7C4DEB,#9B5CF0,#2E8FC4,#14A3A8);background-size:300% 300%;animation:gradShift 18s ease infinite;}
+.topbar::before,.topbar::after{content:'';position:absolute;border-radius:50%;filter:blur(40px);pointer-events:none;}
+.topbar::before{width:340px;height:340px;background:rgba(255,255,255,.18);top:-180px;right:8%;animation:drift 14s ease-in-out infinite alternate;}
+.topbar::after{width:260px;height:260px;background:rgba(255,170,200,.25);bottom:-170px;left:20%;animation:drift2 17s ease-in-out infinite alternate;}
+.topbar-inner{position:relative;z-index:1;}
+.brand-eyebrow{color:rgba(255,255,255,.75);}
+.brand-eyebrow::before{background:#fff;box-shadow:0 0 0 4px rgba(255,255,255,.25);}
+.brand-title{color:#fff;font-weight:700;}
+.brand-sub{color:rgba(255,255,255,.85);}
+.topbar .btn{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.28);color:#fff;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);}
+.topbar .btn:hover{background:rgba(255,255,255,.26);border-color:rgba(255,255,255,.5);}
+.topbar .btn-danger-outline{color:#FFE1E6;}
+.topbar .btn-danger-outline:hover{background:rgba(224,82,90,.45);}
+.topbar .role-badge,.topbar .role-badge:hover{background:#fff;color:var(--primary);}
+.topbar .role-badge.evaluator{color:var(--green);} .topbar .role-badge.contributor{color:var(--orange);}
+.dot.on{background:#5BE3A4;}
+.dot.off{background:#FF8C93;}
+
+/* ---------- Tabs ---------- */
+.tabbar{background:rgba(255,255,255,.8);}
+.tab-btn.active{color:var(--primary);font-weight:600;}
+.tab-btn:hover{color:var(--primary);}
+.tab-indicator{height:3px;bottom:-1px;background:var(--grad-main);}
+
+/* ---------- Titles ---------- */
+h2.section-title{font-weight:700;}
+h2.section-title::before{width:5px;height:20px;border-radius:4px;background:var(--grad-main);}
+.card h2.section-title::before{height:16px;}
+
+/* ---------- Buttons ---------- */
+.btn-light-solid,.btn-tiny.success{background:var(--grad-main);background-size:200% 100%;border-color:transparent;color:#fff;transition:background-position .5s var(--ease),transform .2s var(--ease),box-shadow .3s var(--ease);}
+.btn-light-solid:hover,.btn-tiny.success:hover{background:var(--grad-main);background-size:200% 100%;background-position:100% 0;border-color:transparent;box-shadow:0 10px 24px -10px rgba(91,75,224,.65);}
+.btn-save-all{background:linear-gradient(120deg,#2FA572,#14A3A8);}
+.btn-save-all:hover{background:linear-gradient(120deg,#2FA572,#14A3A8);box-shadow:0 10px 24px -10px rgba(47,165,114,.7);}
+.btn-tiny:hover{border-color:var(--primary);color:var(--primary);}
+
+/* ---------- Stat cards มีสีประจำ ---------- */
+.stat-grid .stat-card{--c:var(--primary);--cs:var(--primary-soft);border-top:3px solid var(--c);
+  background:linear-gradient(160deg,var(--cs) 0%,#fff 55%);}
+.stat-grid .stat-card:nth-child(1){--c:#5B4BE0;--cs:#EEEBFF;}
+.stat-grid .stat-card:nth-child(2){--c:#3B8FE8;--cs:#E7F1FD;}
+.stat-grid .stat-card:nth-child(3){--c:#E2557A;--cs:#FDEBF0;}
+.stat-grid .stat-card:nth-child(4){--c:#2FA572;--cs:#E3F6EC;}
+#statGrid2 .stat-card:nth-child(1){--c:#EE9B2F;--cs:#FDF2E2;}
+#statGrid2 .stat-card:nth-child(2){--c:#8B5CF6;--cs:#F1EBFE;}
+#statGrid2 .stat-card:nth-child(3){--c:#14A3A8;--cs:#E2F5F5;}
+#statGrid2 .stat-card:nth-child(4){--c:#E8673F;--cs:#FDEEE8;}
+.stat-card .stat-label{color:var(--c);font-weight:600;}
+.stat-card .stat-value{color:var(--c);}
+.stat-card::after{background:var(--c);}
+.stat-card:hover{box-shadow:0 18px 36px -18px var(--c);}
+
+/* ---------- Cards / dashboard ---------- */
+.dash-grid .card,.rank-grid .card{border-top:3px solid transparent;border-image:none;}
+.dash-grid .card:nth-child(1){border-top-color:#8B5CF6;}
+.dash-grid .card:nth-child(2){border-top-color:#14A3A8;}
+.rank-header.low{background:linear-gradient(90deg,var(--red-soft),#fff);color:var(--red);}
+.rank-header.high{background:linear-gradient(90deg,var(--green-soft),#fff);color:var(--green);}
+.rank-grid .card:nth-child(1){border-top-color:var(--red);}
+.rank-grid .card:nth-child(2){border-top-color:var(--green);}
+.rank-list li:hover{background:var(--primary-soft);}
+.summary-box{background:linear-gradient(120deg,#F1EEFF,#E6F6F6);border:none;border-left:4px solid var(--violet);}
+.summary-box b{color:var(--violet);}
+.donut-hole b{background:var(--grad-main);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;font-weight:700;}
+table.heat th{color:var(--primary);font-weight:600;}
+
+/* ---------- Strategy groups (สีประจำยุทธศาสตร์) ---------- */
+.strategy-group{--sc:#5B4BE0;--scs:#EEEBFF;}
+.strategy-group:nth-of-type(2){--sc:#14A3A8;--scs:#E2F5F5;}
+.strategy-group:nth-of-type(3){--sc:#E8673F;--scs:#FDEEE8;}
+.strategy-group:nth-of-type(4){--sc:#D18E10;--scs:#FCF1DA;}
+.strategy-head{background:linear-gradient(100deg,var(--scs) 0%,#fff 70%);border-left:5px solid var(--sc);}
+.strategy-group .strategy-num{color:var(--sc) !important;}
+.strategy-group .strategy-name{color:var(--ink);}
+.strategy-group.open .strategy-head{border-color:var(--sc) !important;box-shadow:0 14px 30px -18px var(--sc);}
+.strategy-head:hover .chev{background:var(--sc);}
+.strategy-group.open .chev{background:var(--sc);color:#fff;}
+.progress-pill{background:#fff;color:var(--sc);border:1px solid var(--scs);font-weight:600;}
+.strategy-group .item-card{border-left:3px solid var(--sc);}
+.strategy-group .item-card:hover{box-shadow:0 16px 34px -20px var(--sc);}
+.strategy-group .subtab-btn.active{color:var(--sc);}
+.strategy-group .indicators-toggle{color:var(--sc);}
+
+/* ---------- Score buttons แยกสีตามระดับ ---------- */
+.score-btn[data-val="1"]{--v:#E0525A;} .score-btn[data-val="2"]{--v:#EB8A2F;}
+.score-btn[data-val="3"]{--v:#C99A12;} .score-btn[data-val="4"]{--v:#3B8FE8;}
+.score-btn[data-val="5"]{--v:#2FA572;}
+.score-btn:hover{border-color:var(--v);color:var(--v);}
+.score-btn.active{background:var(--v);border-color:var(--v);color:#fff;box-shadow:0 6px 14px -6px var(--v);}
+
+/* ---------- Forms ---------- */
+.crit-block{background:linear-gradient(160deg,#F7F5FF,#fff);}
+.crit-en{color:var(--violet);}
+.addeval-form{border-color:#CFC8FA;background:linear-gradient(160deg,#F7F5FF,#fff);}
+.addeval-header{color:var(--primary);}
+.chip-score{border-color:#E3DFFB;color:var(--primary);}
+.ind-card{background:linear-gradient(160deg,#F4FBFB,#fff);}
+.progress-bar-fill{background:linear-gradient(90deg,#8B5CF6,#3B8FE8,#14A3A8);}
+table.budget-year-table th{color:var(--primary);}
+
+/* ---------- Rubric / about / proposals ---------- */
+.criteria-card{border-top:3px solid var(--cc,#5B4BE0);}
+.criteria-card:nth-child(1){--cc:#5B4BE0;} .criteria-card:nth-child(2){--cc:#8B5CF6;}
+.criteria-card:nth-child(3){--cc:#3B8FE8;} .criteria-card:nth-child(4){--cc:#14A3A8;}
+.criteria-card:nth-child(5){--cc:#E2557A;} .criteria-card:nth-child(6){--cc:#2FA572;}
+.criteria-card .criteria-en{color:var(--cc);}
+.criteria-card:hover{box-shadow:0 16px 34px -18px var(--cc);}
+.about-step-num{background:var(--grad-main);color:#fff;}
+.about-step:hover .about-step-num{background:var(--grad-warm);}
+.proposal-card{border-left:4px solid var(--violet);}
+.proposal-title{color:var(--primary);}
+table.ref-table th,table.audit-table th{background:var(--grad-main);color:#fff;font-weight:600;border-bottom:none;}
+.field-tag{background:var(--primary-soft);color:var(--primary);}
+.weight-item{background:linear-gradient(160deg,#F7F5FF,#fff);}
+
+/* ---------- Auth ---------- */
+.auth-screen::before{background:#C9BFFB;opacity:.7;}
+.auth-screen::after{background:#B8EAE8;opacity:.7;}
+.auth-title{background:var(--grad-main);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;font-weight:700;}
+.auth-tab-btn.active{color:var(--primary);}
+
+/* ---------- Toast ---------- */
+.toast{background:var(--grad-main);}
+
+
 /* ---- รายงานสำหรับพิมพ์ / ส่งออก PDF ---- */
 .print-only{display:none;}
 @media print{
   .topbar, .tabbar, .container, footer.appfoot, .toast, .success-popup{display:none !important;}
   .print-only{display:block !important;}
-  body{background:#fff;font-family:'Sarabun',sans-serif;color:#1a1a2e;font-size:12px;}
+  body{background:#fff;font-family:'Noto Sans Thai',sans-serif;color:#1a1a2e;font-size:12px;}
   .report-cover{text-align:center;padding:60px 20px 40px;border-bottom:3px solid #1B2340;margin-bottom:24px;}
   .report-eyebrow{font-size:11px;letter-spacing:.06em;color:#8878c9;font-weight:700;margin-bottom:10px;}
   .report-cover h1{font-size:26px;margin:0 0 10px;color:#1B2340;}
@@ -481,7 +638,7 @@ footer.appfoot{text-align:center;font-size:11.5px;color:var(--ink-faint);padding
   .report-item{page-break-inside:avoid;margin-bottom:18px;padding:12px 14px;border:1px solid #ddd;border-radius:6px;}
   .report-item h3{font-size:13.5px;margin:0 0 6px;color:#1B2340;}
   .report-meta{font-size:11px;color:#444;margin:4px 0 8px;}
-  .report-subhead{font-size:11.5px;font-weight:700;color:#6C5CE0;margin:10px 0 4px;}
+  .report-subhead{font-size:11.5px;font-weight:700;color:#5B4BE0;margin:10px 0 4px;}
   .report-empty{font-size:11px;color:#888;font-style:italic;}
   table.report-table{width:100%;border-collapse:collapse;margin-bottom:6px;}
   table.report-table td, table.report-table th{border:1px solid #ccc;padding:5px 7px;font-size:10.5px;text-align:left;}
@@ -1003,9 +1160,9 @@ function trendChartSvg(ind){
     return `<path d="${path}" fill="none" stroke="${color}" stroke-width="2"${dash}/>${points}`;
   }
   const targetSeries = buildSeries(targetVals, '#4E9B79', true);
-  const actualSeries = buildSeries(actualVals, '#6C5CE0', false);
+  const actualSeries = buildSeries(actualVals, '#5B4BE0', false);
   const yearLabels = YEARS.map((y,i)=>`<text x="${xFor(i).toFixed(1)}" y="${H-4}" font-size="8.5" fill="#847FA3" text-anchor="middle">${y}</text>`).join('');
-  const legend = `<circle cx="${padL}" cy="8" r="3" fill="#6C5CE0"/><text x="${padL+7}" y="11" font-size="8" fill="#3F3A5C">ผลจริง</text>
+  const legend = `<circle cx="${padL}" cy="8" r="3" fill="#5B4BE0"/><text x="${padL+7}" y="11" font-size="8" fill="#3F3A5C">ผลจริง</text>
     <line x1="${padL+55}" y1="8" x2="${padL+68}" y2="8" stroke="#4E9B79" stroke-width="2" stroke-dasharray="4,2"/><text x="${padL+72}" y="11" font-size="8" fill="#3F3A5C">เป้าหมาย</text>`;
   return `<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" style="max-width:280px;display:block;">${legend}${targetSeries}${actualSeries}${yearLabels}</svg>`;
 }
@@ -2960,19 +3117,19 @@ const PREFERS_REDUCED_MOTION = window.matchMedia && window.matchMedia('(prefers-
 document.documentElement.classList.add('js-motion');
 
 // โทนสีใหม่ให้เข้ากับธีมมินิมอล
-Object.assign(RECO_COLOR_HEX, {red:'#C2524F', orange:'#C27C3A', yellow:'#A88B2A', green:'#3E8E6B', grey:'#D6D4DC'});
+Object.assign(RECO_COLOR_HEX, {red:'#E0525A', orange:'#EB8A2F', yellow:'#C99A12', green:'#2FA572', grey:'#D9D6E8'});
 heatColor = function(v){
   const clamp = Math.max(1, Math.min(5, v));
   let c1, c2, t;
-  if(clamp <= 3){ c1=[248,222,219]; c2=[249,239,212]; t=(clamp-1)/2; }
-  else { c1=[249,239,212]; c2=[214,237,224]; t=(clamp-3)/2; }
+  if(clamp <= 3){ c1=[250,205,208]; c2=[252,234,190]; t=(clamp-1)/2; }
+  else { c1=[252,234,190]; c2=[190,234,212]; t=(clamp-3)/2; }
   const r = Math.round(c1[0]+(c2[0]-c1[0])*t), g = Math.round(c1[1]+(c2[1]-c1[1])*t), b = Math.round(c1[2]+(c2[2]-c1[2])*t);
   return `rgb(${r},${g},${b})`;
 };
 showToast = function(msg, isError){
   const t = document.getElementById('toast');
   t.textContent = msg || 'บันทึกข้อมูลแล้ว';
-  t.style.background = isError ? 'var(--red)' : 'var(--ink)';
+  t.style.background = isError ? 'linear-gradient(120deg,#E0525A,#E2557A)' : 'linear-gradient(120deg,#5B4BE0,#8B5CF6,#14A3A8)';
   t.classList.add('show');
   clearTimeout(window.__toastTimer);
   window.__toastTimer = setTimeout(()=>t.classList.remove('show'), 2200);

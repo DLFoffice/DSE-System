@@ -649,6 +649,89 @@ table.ref-table th,table.audit-table th{background:var(--grad-main);color:#fff;f
 .tag-mine{background:var(--primary-soft);color:var(--primary);font-weight:600;margin-left:6px;}
 .eval-entry-top .tag{margin-left:6px;}
 button[disabled]{opacity:.65;cursor:progress;}
+
+/* ---- methodology: ตัวชี้วัด/โครงการ/มติ/วิเคราะห์ ---- */
+.ind-meta-grid{display:grid;grid-template-columns:230px 180px 1fr;gap:10px;margin-bottom:12px;}
+@media (max-width:760px){.ind-meta-grid{grid-template-columns:1fr 1fr;} .ind-meta-wide{grid-column:1/-1;}}
+.ind-card select,.ind-years-row select{width:100%;border:1px solid var(--border);border-radius:8px;padding:8px 9px;font-size:15px;font-family:inherit;background:var(--surface);}
+.ind-card input[data-ind-field]{width:100%;}
+.decision-chip{display:inline-block;font-size:13px;font-weight:700;padding:4px 11px;border-radius:999px;white-space:nowrap;border:1.5px solid currentColor;}
+.dc-green{color:var(--green);background:var(--green-soft);} .dc-yellow{color:var(--yellow);background:var(--yellow-soft);}
+.dc-orange{color:var(--orange);background:var(--orange-soft);} .dc-red{color:var(--red);background:var(--red-soft);}
+.dc-violet{color:var(--violet);background:var(--violet-soft);}
+.dc-bg-green{background:var(--green);} .dc-bg-yellow{background:var(--yellow);} .dc-bg-orange{background:var(--orange);} .dc-bg-red{background:var(--red);} .dc-bg-violet{background:var(--violet);}
+.subtab-btn.subtab-key{color:var(--violet);}
+.proj-summary{font-size:14px;color:var(--ink-soft);margin-bottom:10px;}
+.proj-list{display:flex;flex-direction:column;gap:10px;margin-bottom:12px;}
+.proj-card{border:1px solid var(--border);border-left:3px solid var(--sky);border-radius:12px;padding:14px 16px;background:linear-gradient(160deg,#F3F8FE,#fff);animation:rise .4s var(--ease) both;}
+.proj-top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.proj-name{font-weight:700;font-size:16px;}
+.proj-meta{font-size:13.5px;color:var(--ink-soft);margin-top:2px;}
+.proj-right{display:flex;align-items:center;gap:8px;}
+.proj-score{font-size:22px;font-weight:700;}
+.proj-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;}
+@media (max-width:600px){.proj-stats{grid-template-columns:1fr;}}
+.proj-stats div{background:#fff;border:1px solid var(--border);border-radius:10px;padding:8px 11px;display:flex;flex-direction:column;}
+.proj-stats span{font-size:12.5px;color:var(--ink-soft);} .proj-stats b{font-size:15px;} .proj-stats em{font-style:normal;font-size:12.5px;color:var(--ink-soft);}
+.proj-outcome{font-size:14px;margin-top:8px;} .proj-outcome span{color:var(--ink-soft);}
+.proj-actions{display:flex;gap:6px;margin-top:10px;}
+.proj-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.proj-grid .span2{grid-column:1/-1;}
+@media (max-width:600px){.proj-grid{grid-template-columns:1fr;}}
+.proj-form{margin-top:12px;}
+.lesson-block,.decision-block{border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:12px;}
+.lesson-block{background:linear-gradient(160deg,#F2FAF6,#fff);border-left:3px solid var(--green);}
+.decision-block{background:linear-gradient(160deg,#F5F1FF,#fff);border-left:3px solid var(--violet);}
+.block-title{font-weight:700;font-size:16px;margin-bottom:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.block-actions{display:flex;gap:10px;align-items:center;margin-top:12px;}
+.sys-reco{font-size:14px;margin-bottom:12px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
+.sys-reco-note{color:var(--ink-soft);font-size:13px;}
+.differs-flag{display:inline-block;font-size:12.5px;font-weight:700;color:var(--orange);background:var(--orange-soft);border-radius:999px;padding:1px 9px;margin-left:6px;}
+.reason-input[readonly],.meta-input[readonly]{background:var(--surface-2);}
+.analysis-card{margin-bottom:16px;}
+.table-scroll{overflow-x:auto;margin:0 -4px;padding:0 4px;}
+table.syn-table{width:100%;border-collapse:collapse;font-size:14px;min-width:900px;}
+table.syn-table th{background:var(--grad-main);color:#fff;padding:9px 10px;text-align:left;font-weight:600;font-size:13px;white-space:nowrap;}
+table.syn-table td{padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:top;}
+table.syn-table tr:hover td{background:var(--surface-soft);}
+table.syn-table td.num{text-align:center;white-space:nowrap;}
+.syn-strategy td{background:var(--primary-soft) !important;color:var(--primary);font-weight:700;}
+.syn-name{min-width:260px;} .syn-text{min-width:220px;color:var(--ink-soft);}
+.syn-total td{font-weight:700;background:var(--surface-2) !important;}
+.syn-total td.gap{color:var(--red);}
+.muted{color:var(--ink-faint);font-size:12.5px;}
+.align-table th.fw-th{white-space:normal;min-width:120px;max-width:160px;font-size:12px;line-height:1.35;}
+.align-cell{min-width:136px;}
+.align-cell select{width:100%;border:1px solid var(--border);border-radius:8px;padding:6px;font-size:13.5px;font-family:inherit;background:transparent;}
+.align-cell.al-2{background:var(--green-soft);} .align-cell.al-1{background:var(--yellow-soft);} .align-cell.al-0{background:var(--red-soft);}
+.quad-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media (max-width:700px){.quad-grid{grid-template-columns:1fr;}}
+.quad{border-radius:14px;padding:14px 16px;border:1px solid var(--border);animation:rise .45s var(--ease) both;}
+.quad-S{background:var(--green-soft);border-color:#BFE5CF;} .quad-W{background:var(--orange-soft);border-color:#F3D2AE;}
+.quad-O{background:var(--sky-soft);border-color:#C3DBF7;} .quad-T{background:var(--red-soft);border-color:#F2C6C8;}
+.quad-SO{background:linear-gradient(135deg,var(--green-soft),var(--sky-soft));} .quad-WO{background:linear-gradient(135deg,var(--orange-soft),var(--sky-soft));}
+.quad-ST{background:linear-gradient(135deg,var(--green-soft),var(--red-soft));} .quad-WT{background:linear-gradient(135deg,var(--orange-soft),var(--red-soft));}
+.quad-title{font-weight:700;font-size:16px;}
+.quad-hint{font-size:13px;color:var(--ink-soft);margin-bottom:8px;}
+.quad-list{list-style:none;margin:0 0 10px;padding:0;display:flex;flex-direction:column;gap:6px;}
+.quad-list li{background:rgba(255,255,255,.8);border-radius:10px;padding:8px 10px;font-size:14.5px;display:flex;flex-wrap:wrap;gap:6px;align-items:flex-start;justify-content:space-between;}
+.quad-list li em{width:100%;font-style:normal;font-size:12px;color:var(--ink-faint);}
+.quad-actions{display:flex;gap:4px;flex-shrink:0;}
+.quad-del{border:none;background:none;color:var(--ink-faint);cursor:pointer;font-size:14px;padding:2px 6px;border-radius:6px;transition:color .2s,background .2s;}
+.quad-del:hover{color:var(--red);background:var(--red-soft);}
+.quad-add{display:flex;gap:6px;}
+.quad-add .meta-input{flex:1;}
+.fw-editor{margin-top:14px;font-size:14px;} .fw-editor summary{cursor:pointer;color:var(--primary);font-weight:600;}
+.fw-list{list-style:none;padding:0;margin:10px 0;display:flex;flex-direction:column;gap:4px;}
+.fw-list li{display:flex;justify-content:space-between;align-items:center;border:1px solid var(--border);border-radius:8px;padding:6px 10px;background:#fff;}
+.method-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:20px;align-items:start;}
+@media (max-width:860px){.method-grid{grid-template-columns:1fr;}}
+.dbar{display:grid;grid-template-columns:190px 1fr 30px;gap:10px;align-items:center;font-size:14px;margin-bottom:7px;}
+.dbar-track{height:10px;background:var(--surface-2);border-radius:6px;overflow:hidden;}
+.dbar-fill{display:block;height:100%;border-radius:6px;transform-origin:left;animation:barGrow .9s var(--ease) both;}
+.method-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.method-stats div{border:1px solid var(--border);border-radius:12px;padding:10px 12px;background:linear-gradient(160deg,#F7F5FF,#fff);display:flex;flex-direction:column;}
+.method-stats span{font-size:13px;color:var(--ink-soft);} .method-stats b{font-size:22px;color:var(--primary);}
 /* ---- รายงานสำหรับพิมพ์ / ส่งออก PDF ---- */
 .print-only{display:none;}
 @media print{
@@ -757,6 +840,7 @@ button[disabled]{opacity:.65;cursor:progress;}
   <div class="tabbar-inner" id="tabbar">
     <button class="tab-btn active" data-tab="dashboard">แดชบอร์ด</button>
     <button class="tab-btn" data-tab="eval">แบบประเมิน OECD-DAC</button>
+    <button class="tab-btn" data-tab="analysis">วิเคราะห์เพื่อแผนใหม่</button>
     <button class="tab-btn" data-tab="proposals">ข้อเสนอกลยุทธ์ใหม่</button>
     <button class="tab-btn" data-tab="audit">ประวัติการเปลี่ยนแปลง</button>
     <button class="tab-btn" data-tab="master">ข้อมูลยุทธศาสตร์</button>
@@ -800,6 +884,8 @@ button[disabled]{opacity:.65;cursor:progress;}
       </div>
     </div>
 
+    <div id="methodSummary" style="margin-bottom:14px;"></div>
+
     <div class="summary-box" id="summaryBox"></div>
 
     <div class="card pad">
@@ -818,6 +904,33 @@ button[disabled]{opacity:.65;cursor:progress;}
     <h2 class="section-title">แบบประเมิน OECD-DAC รายกลยุทธ์</h2>
     <p class="section-sub">แต่ละกลยุทธ์แบ่งเป็น 4 ส่วน: คะแนนประเมิน (รับได้หลายผู้ประเมิน) · ตัวชี้วัดผลจริง · งบประมาณ&ความคืบหน้า · หลักฐานอ้างอิง ข้อมูลบันทึกอัตโนมัติและใช้ร่วมกันทั้งทีม</p>
     <div id="evalContainer"></div>
+  </div>
+
+  <!-- ============ ANALYSIS ============ -->
+  <div class="view" id="view-analysis">
+    <h2 class="section-title">วิเคราะห์เพื่อยกร่างแผนยุทธศาสตร์ พ.ศ. 2571-2575</h2>
+    <p class="section-sub">รวมหลักฐานจากการประเมินทุกกลยุทธ์ไว้ในที่เดียว แล้ววิเคราะห์สภาพแวดล้อม (SWOT/TOWS) และความสอดคล้องกับนโยบายระดับชาติ เพื่อใช้ยกร่างกลยุทธ์ใหม่</p>
+    <div id="analysisNotice"></div>
+    <div class="card pad analysis-card">
+      <h2 class="section-title" style="font-size:17px;">1. ตารางสรุปผลรายกลยุทธ์ (หลักฐานประกอบมติ)</h2>
+      <div id="synthesisTable"></div>
+    </div>
+    <div class="card pad analysis-card">
+      <h2 class="section-title" style="font-size:17px;">2. การวิเคราะห์ SWOT</h2>
+      <p class="section-sub">ใช้ผลประเมิน บทเรียน และข้อมูลภายนอกประกอบ — ผู้ประเมินและผู้บริหารเพิ่มรายการได้</p>
+      <div id="swotGrid"></div>
+    </div>
+    <div class="card pad analysis-card">
+      <h2 class="section-title" style="font-size:17px;">3. TOWS Matrix — แปลง SWOT เป็นทางเลือกกลยุทธ์</h2>
+      <p class="section-sub">กด &ldquo;→ ข้อเสนอ&rdquo; เพื่อนำทางเลือกไปเป็นข้อเสนอกลยุทธ์ใหม่ได้ทันที</p>
+      <div id="towsGrid"></div>
+    </div>
+    <div class="card pad analysis-card">
+      <h2 class="section-title" style="font-size:17px;">4. ความสอดคล้องเชิงนโยบาย</h2>
+      <p class="section-sub">ประเมินแต่ละกลยุทธ์เทียบกับนโยบาย/แผนระดับชาติ (บันทึกอัตโนมัติเมื่อเลือก) — คอลัมน์ที่ไม่มีกลยุทธ์ใดสอดคล้องสูง คือช่องว่างที่ควรเติมในแผนใหม่</p>
+      <div id="alignMatrix"></div>
+      <div id="frameworkEditor"></div>
+    </div>
   </div>
 
   <!-- ============ PROPOSALS ============ -->
@@ -1094,6 +1207,27 @@ service cloud.firestore {
     }
 
     match /meta/{id} { allow read: if isMember(); allow write: if isEvaluator(); }
+
+    // โครงการภายใต้กลยุทธ์: ผู้ประเมินแก้ร่วมกันได้ (ถ้ากลยุทธ์ยังไม่ล็อก) ลบได้เฉพาะผู้สร้างหรือผู้บริหาร
+    match /projects/{id} {
+      allow read: if isMember();
+      allow create: if canWriteItem(request.resource.data.itemId) && request.resource.data.createdByUid == request.auth.uid;
+      allow update: if canWriteItem(resource.data.itemId) && request.resource.data.itemId == resource.data.itemId;
+      allow delete: if isExecutive()
+        || (resource.data.createdByUid == request.auth.uid && canWriteItem(resource.data.itemId));
+    }
+
+    // บทเรียนรายกลยุทธ์ (ผู้ประเมิน) และมติคณะกรรมการ (ผู้บริหารเท่านั้น)
+    match /lessons/{itemId}   { allow read: if isMember(); allow write: if canWriteItem(itemId); }
+    match /decisions/{itemId} { allow read: if isMember(); allow write: if isExecutive(); }
+
+    // ความสอดคล้องเชิงนโยบาย และรายการ SWOT/TOWS
+    match /alignment/{itemId} { allow read: if isMember(); allow write: if canWriteItem(itemId); }
+    match /analysis/{id} {
+      allow read: if isMember();
+      allow create: if isEvaluator() && request.resource.data.authorUid == request.auth.uid;
+      allow update, delete: if isExecutive() || resource.data.authorUid == request.auth.uid;
+    }
   }
 }`;
 
@@ -1180,7 +1314,7 @@ function sameText(a, b){ return String(a ?? '') === String(b ?? ''); }
 function toNumOrNull(v){ return (v===null || v===undefined || v==='') ? null : Number(v); }
 function mapToNums(obj){ const out = {}; Object.keys(obj).forEach(k=>{ out[k] = toNumOrNull(obj[k]); }); return out; }
 function emptyYears(){ return Object.fromEntries(YEARS.map(y=>[y, null])); }
-const IND_FIELD_TH = {unit:'หน่วย', project:'โครงการ/กิจกรรม', note:'หมายเหตุ'};
+const IND_FIELD_TH = {type:'ประเภทตัวชี้วัด', unit:'หน่วย', project:'โครงการ/กิจกรรม', note:'หมายเหตุ'};
 
 
 /* ---------------- Utilities ---------------- */
@@ -1262,18 +1396,36 @@ function latestActualOf(ind){
   }
   return null;
 }
+/* ---- ประเภทตัวชี้วัด: ยิ่งมากยิ่งดี / ยิ่งน้อยยิ่งดี / มี-ไม่มี ---- */
+const IND_TYPES = {higher:'ยิ่งมากยิ่งดี', lower:'ยิ่งน้อยยิ่งดี', binary:'มี/ไม่มี (บรรลุ/ไม่บรรลุ)'};
+/** ค่าเริ่มต้นเมื่อยังไม่ได้เลือกประเภท: ตัวชี้วัดที่ขึ้นต้นด้วย "มี..." (เช่น มีคู่มือ มีระบบ) ถือเป็นแบบ มี/ไม่มี */
+function defaultIndType(text){ return /^มี(?!ค่า|อัตรา|การเพิ่ม)/.test(String(text||'').trim()) ? 'binary' : 'higher'; }
+function indType(ind){ return (ind && ind.type) || defaultIndType(ind && ind.text); }
 function indicatorAchievementPct(ind){
-  if(!ind || !ind.targetYearly) return null;
-  // หาปีล่าสุดที่มีทั้งเป้าหมายและผลจริงคู่กัน แล้วคำนวณ % จากปีนั้นโดยตรง
+  if(!ind) return null;
+  const type = indType(ind);
+  const has = v => v!==null && v!==undefined && v!=='';
   for(let i=YEARS.length-1;i>=0;i--){
     const y = YEARS[i];
-    const t = ind.targetYearly[y], a = ind.yearly ? ind.yearly[y] : null;
-    if(t!==null && t!==undefined && t!=='' && Number(t)!==0 && a!==null && a!==undefined && a!==''){
-      return {pct: Math.max(0, Math.min(150, (Number(a)/Number(t))*100)), year: y};
+    const t = ind.targetYearly ? ind.targetYearly[y] : null;
+    const a = ind.yearly ? ind.yearly[y] : null;
+    if(type === 'binary'){
+      // แบบ มี/ไม่มี: ดูผลจริงปีล่าสุดที่กรอก (เป้าหมายโดยปริยายคือ "มี")
+      if(has(a)) return {pct: Number(a) >= 1 ? 100 : 0, year: y};
+      continue;
     }
+    if(!has(t) || !has(a)) continue;
+    const tn = Number(t), an = Number(a);
+    if(type === 'lower'){
+      if(an <= 0) return {pct: 150, year: y};
+      return {pct: Math.max(0, Math.min(150, tn / an * 100)), year: y};
+    }
+    if(tn === 0) continue;
+    return {pct: Math.max(0, Math.min(150, an / tn * 100)), year: y};
   }
   return null;
 }
+
 function trendChartSvg(ind){
   const W=260, H=84, padL=30, padR=12, padT=10, padB=20;
   const actualVals = YEARS.map(y => (ind.yearly && ind.yearly[y]!==null && ind.yearly[y]!==undefined && ind.yearly[y]!=='') ? Number(ind.yearly[y]) : null);
@@ -1347,7 +1499,7 @@ async function firestoreLoadAll(){
     if(!indByItem[d.itemId]) indByItem[d.itemId] = [];
     const yearly = Object.fromEntries(YEARS.map(y => [y, numOrNull(d.yearly ? d.yearly[y] : null)]));
     const targetYearly = Object.fromEntries(YEARS.map(y => [y, numOrNull(d.targetYearly ? d.targetYearly[y] : null)]));
-    indByItem[d.itemId][d.index] = {index: d.index, text: d.text, yearly, targetYearly, unit: d.unit||'', project: d.project||'', note: d.note||''};
+    indByItem[d.itemId][d.index] = {index: d.index, text: d.text, type: d.type||'', yearly, targetYearly, unit: d.unit||'', project: d.project||'', note: d.note||''};
   });
 
   const budgetByItem = {};
@@ -1562,7 +1714,7 @@ async function firestoreSaveAllForItem(itemId, {evaluation, changes}, force){
     changes.indicators.forEach((ch, i)=>{
       const d = indSnaps[i].exists ? indSnaps[i].data() : {};
       const label = 'ตัวชี้วัดที่ ' + (ch.index + 1);
-      Object.keys(ch.fields).forEach(f=>{ if(!sameText(d[f], ch.base[f])) conflicts.push(label + ' – ' + (IND_FIELD_TH[f] || f)); });
+      Object.keys(ch.fields).forEach(f=>{ if(!sameText(f==='type' ? (d.type || defaultIndType(ch.base.text)) : d[f], f==='type' ? indType(ch.base) : ch.base[f])) conflicts.push(label + ' – ' + (IND_FIELD_TH[f] || f)); });
       Object.keys(ch.targetYearly).forEach(y=>{ if(!sameNum(d.targetYearly && d.targetYearly[y], ch.base.targetYearly && ch.base.targetYearly[y])) conflicts.push(label + ' – เป้าหมายปี ' + y); });
       Object.keys(ch.yearly).forEach(y=>{ if(!sameNum(d.yearly && d.yearly[y], ch.base.yearly && ch.base.yearly[y])) conflicts.push(label + ' – ผลจริงปี ' + y); });
     });
@@ -1646,7 +1798,7 @@ async function reloadItemFromServer(itemId){
       index: d.index, text: d.text,
       yearly: Object.fromEntries(YEARS.map(y=>[y, numOrNull(d.yearly ? d.yearly[y] : null)])),
       targetYearly: Object.fromEntries(YEARS.map(y=>[y, numOrNull(d.targetYearly ? d.targetYearly[y] : null)])),
-      unit: d.unit||'', project: d.project||'', note: d.note||''
+      unit: d.unit||'', project: d.project||'', note: d.note||'', type: d.type||''
     };
   });
   st.indicators = item.indicators.map((t, idx)=> byIdx[idx] || {index: idx, text: t, yearly: emptyYears(), targetYearly: emptyYears(), unit: '', project: '', note: ''});
@@ -1758,12 +1910,12 @@ async function loadLocalFallback(){
     local = res && res.value ? JSON.parse(res.value) : null;
   }catch(e){ local = null; }
   if(!local) local = defaultLocalState();
-  applyData({items: DATA.items.map(it => Object.assign({itemId: it.id}, local.items[it.id] || {})), proposals: local.proposals, auditLog: [], weights: local.weights, notes: local.notes});
+  applyData({items: DATA.items.map(it => Object.assign({itemId: it.id}, local.items[it.id] || {})), proposals: local.proposals, auditLog: [], weights: local.weights, notes: local.notes, analysis: local.analysis, frameworks: local.frameworks});
 }
 async function saveLocalFallback(){
   const items = {};
   Object.keys(evalState).forEach(id=>{ items[id] = evalState[id]; });
-  const payload = {items, proposals, weights, notes: teamNotes};
+  const payload = {items, proposals, weights, notes: teamNotes, analysis: analysisItems, frameworks: alignmentFrameworks};
   try{ await window.storage.set(LOCAL_KEY, JSON.stringify(payload), true); }
   catch(e){ showToast('บันทึกไม่สำเร็จ (โหมดออฟไลน์)', true); }
 }
@@ -2036,6 +2188,7 @@ function renderItemCard(item){
           <span class="tag mini-status status-${progress.status}">${statusLabel(progress.status)} ${progress.percent||0}%</span>
           <span class="tag">${(st.evaluations||[]).length} ผู้ประเมิน</span>
           <span class="tag">${(st.evidence||[]).length} หลักฐาน</span>
+          ${(st.projects||[]).length ? `<span class="tag">${st.projects.length} โครงการ</span>` : ''}
           ${(st.dependsOn||[]).length ? `<span class="tag">เชื่อมโยง ${st.dependsOn.length} กลยุทธ์</span>` : ''}
         </div>
         <span class="indicators-toggle" data-ind-toggle="${indicatorsId}">ดูรายการตัวชี้วัด ▾</span>
@@ -2046,6 +2199,7 @@ function renderItemCard(item){
       <div class="item-badge-wrap">
         <div class="avg-num" id="avgnum-${item.id}" style="color:${RECO_COLOR_HEX[rk]}">${fmt(avg)}</div>
         <div class="badge ${rk}" id="badge-${item.id}">${RECO[rk].label}</div>
+        ${decisionChipHtml(st)}
         ${editable ? `<button class="btn-light btn-light-solid btn-save-all" data-save-all="${item.id}">💾 บันทึกทั้งหมด</button>` : `<span class="tag" style="font-weight:600;">🔒 ไม่มีสิทธิ์แก้ไข</span>`}
         <span class="unsaved-note" data-unsaved-for="all-${item.id}" style="display:none;">มีการเปลี่ยนแปลงที่ยังไม่บันทึก</span>
       </div>
@@ -2060,6 +2214,8 @@ function renderItemCard(item){
       <button class="subtab-btn ${activeSub==='evidence'?'active':''}" data-sub="evidence">หลักฐาน (${(st.evidence||[]).length})</button>
       <button class="subtab-btn ${activeSub==='comments'?'active':''}" data-sub="comments">ความคิดเห็น (${(st.comments||[]).length})</button>
       <button class="subtab-btn ${activeSub==='dependencies'?'active':''}" data-sub="dependencies">ความเชื่อมโยง (${(st.dependsOn||[]).length})</button>
+      <button class="subtab-btn ${activeSub==='projects'?'active':''}" data-sub="projects">โครงการ (${(st.projects||[]).length})</button>
+      <button class="subtab-btn subtab-key ${activeSub==='decision'?'active':''}" data-sub="decision">บทเรียน &amp; มติ${st.decision && st.decision.decision ? ' ✓' : ''}</button>
     </div>
 
     <div class="subtab-panel ${activeSub==='score'?'active':''}" data-sub-panel="score" data-item="${item.id}">${renderScorePanel(item, st)}</div>
@@ -2068,6 +2224,8 @@ function renderItemCard(item){
     <div class="subtab-panel ${activeSub==='evidence'?'active':''}" data-sub-panel="evidence" data-item="${item.id}">${renderEvidencePanel(item, st)}</div>
     <div class="subtab-panel ${activeSub==='comments'?'active':''}" data-sub-panel="comments" data-item="${item.id}">${renderCommentsPanel(item, st)}</div>
     <div class="subtab-panel ${activeSub==='dependencies'?'active':''}" data-sub-panel="dependencies" data-item="${item.id}">${renderDependenciesPanel(item, st)}</div>
+    <div class="subtab-panel ${activeSub==='projects'?'active':''}" data-sub-panel="projects" data-item="${item.id}">${renderProjectsPanel(item, st)}</div>
+    <div class="subtab-panel ${activeSub==='decision'?'active':''}" data-sub-panel="decision" data-item="${item.id}">${renderDecisionPanel(item, st)}</div>
   </div>`;
 }
 function statusLabel(s){ return s==='done' ? 'เสร็จแล้ว' : (s==='in_progress' ? 'กำลังดำเนินการ' : 'ยังไม่เริ่ม'); }
@@ -2219,33 +2377,56 @@ function getIndicatorsForItem(item, st){
   });
 }
 
+function indYearInputs(kind, ind, type, dis){
+  const attr = kind === 'target' ? 'data-ind-target-year' : 'data-ind-year';
+  const vals = kind === 'target' ? (ind.targetYearly||{}) : (ind.yearly||{});
+  return YEARS.map(y=>{
+    const v = vals[y];
+    const cell = type === 'binary'
+      ? `<select ${attr}="${y}" ${dis}>
+           <option value="" ${v===null||v===undefined||v===''?'selected':''}>—</option>
+           <option value="1" ${Number(v)===1&&v!==null&&v!==''?'selected':''}>${kind==='target'?'ต้องมี':'มี/บรรลุ'}</option>
+           <option value="0" ${v!==null&&v!==undefined&&v!==''&&Number(v)===0?'selected':''}>${kind==='target'?'ไม่กำหนด':'ไม่มี'}</option>
+         </select>`
+      : `<input type="number" step="any" ${attr}="${y}" value="${v ?? ''}" ${dis}>`;
+    return `<div><div class="ind-year-label">${y}</div>${cell}</div>`;
+  }).join('');
+}
 function renderIndicatorCard(itemId, ind){
   const editable = canEditItem(itemId);
   const dis = editable ? '' : 'disabled';
+  const type = indType(ind);
   const achievement = indicatorAchievementPct(ind);
   const rk = achievement===null ? 'grey' : achievement.pct>=100 ? 'green' : achievement.pct>=50 ? 'yellow' : 'red';
-  const pctLabel = achievement===null ? 'ยังไม่มีข้อมูลเป้าหมาย/ผลจริงคู่กัน' : `${achievement.pct.toFixed(0)}% บรรลุเป้าหมาย (ปี ${achievement.year})`;
+  const pctLabel = achievement===null
+    ? (type==='binary' ? 'ยังไม่ได้ระบุผล' : 'ยังไม่มีข้อมูลเป้าหมาย/ผลจริงคู่กัน')
+    : type==='binary' ? (achievement.pct>=100 ? `บรรลุแล้ว (ปี ${achievement.year})` : `ยังไม่บรรลุ (ปี ${achievement.year})`)
+    : `${achievement.pct.toFixed(0)}% บรรลุเป้าหมาย (ปี ${achievement.year})`;
   return `
     <div class="ind-card" data-item="${itemId}" data-index="${ind.index}">
       <div class="ind-card-top">
         <div class="ind-text">${escapeHtml(ind.text)}</div>
         <span class="badge ${rk}">${pctLabel}</span>
       </div>
-      <div style="margin-bottom:10px;">
-        <div class="field-label">โครงการ / กิจกรรมที่เกี่ยวข้อง</div>
-        <input type="text" data-ind-field="project" value="${escapeHtml(ind.project||'')}" placeholder="เช่น โครงการอบรมครูโรงเรียนปลายทาง รุ่นที่ 1" style="width:100%;" ${dis}>
+      <div class="ind-meta-grid">
+        <div>
+          <div class="field-label">ประเภทตัวชี้วัด</div>
+          <select data-ind-field="type" ${dis}>
+            ${Object.keys(IND_TYPES).map(k=>`<option value="${k}" ${k===type?'selected':''}>${IND_TYPES[k]}</option>`).join('')}
+          </select>
+        </div>
+        <div>
+          <div class="field-label">หน่วย</div><input type="text" data-ind-field="unit" value="${escapeHtml(ind.unit||'')}" placeholder="${type==='binary'?'(ไม่ต้องระบุ)':'เช่น ร้อยละ, คน, ตอน'}" ${dis}>
+        </div>
+        <div class="ind-meta-wide">
+          <div class="field-label">โครงการ / กิจกรรมที่เกี่ยวข้อง</div>
+          <input type="text" data-ind-field="project" value="${escapeHtml(ind.project||'')}" placeholder="เช่น โครงการอบรมครูโรงเรียนปลายทาง รุ่นที่ 1" ${dis}>
+        </div>
       </div>
-      <div style="max-width:200px;margin-bottom:10px;">
-        <div class="field-label">หน่วย</div><input type="text" data-ind-field="unit" value="${escapeHtml(ind.unit||'')}" ${dis}>
-      </div>
-      <div class="field-label">เป้าหมายรายปี</div>
-      <div class="ind-years-row">
-        ${YEARS.map(y=>`<div><div class="ind-year-label">${y}</div><input type="number" step="any" data-ind-target-year="${y}" value="${ind.targetYearly[y] ?? ''}" ${dis}></div>`).join('')}
-      </div>
+      <div class="field-label">${type==='lower' ? 'เป้าหมายรายปี (ไม่เกิน)' : type==='binary' ? 'เป้าหมายรายปี' : 'เป้าหมายรายปี'}</div>
+      <div class="ind-years-row" data-years-kind="target">${indYearInputs('target', ind, type, dis)}</div>
       <div class="field-label" style="margin-top:10px;">ผลจริงรายปี</div>
-      <div class="ind-years-row">
-        ${YEARS.map(y=>`<div><div class="ind-year-label">${y}</div><input type="number" step="any" data-ind-year="${y}" value="${ind.yearly[y] ?? ''}" ${dis}></div>`).join('')}
-      </div>
+      <div class="ind-years-row" data-years-kind="actual">${indYearInputs('actual', ind, type, dis)}</div>
       <div class="ind-chart-wrap">${trendChartSvg(ind)}</div>
       <div style="margin-top:8px;">
         <div class="field-label">หมายเหตุ</div>
@@ -2284,7 +2465,7 @@ function renderBudgetPanel(item, st){
   const totalPlanned = sumYearly(b.planned);
   const totalActual = sumYearly(b.actual);
   const overallVariance = budgetVariancePct(b);
-  const varColor = overallVariance===null ? 'var(--ink-soft)' : overallVariance>0 ? 'var(--red)' : 'var(--green)';
+  const varColor = budgetVarColor(overallVariance);
   const yearCells = YEARS.map(y => ({y, v: yearVariancePct(b.planned[y], b.actual[y])}));
 
   return `
@@ -2305,13 +2486,13 @@ function renderBudgetPanel(item, st){
           </tr>
           <tr>
             <td>ส่วนต่าง %</td>
-            ${yearCells.map(c=>`<td style="color:${c.v===null?'var(--ink-soft)':c.v>0?'var(--red)':'var(--green)'};font-weight:600;">${c.v===null?'—':c.v.toFixed(0)+'%'}</td>`).join('')}
+            ${yearCells.map(c=>`<td style="color:${budgetVarColor(c.v)};font-weight:600;">${c.v===null?'—':c.v.toFixed(0)+'%'}</td>`).join('')}
             <td class="budget-total" style="color:${varColor};">${overallVariance===null?'—':overallVariance.toFixed(1)+'%'}</td>
           </tr>
         </table>
       </div>
       <div style="font-size:14.5px;color:${varColor};font-weight:600;margin:8px 0;">
-        ${overallVariance===null ? 'ยังไม่มีข้อมูลเพียงพอสำหรับคำนวณส่วนต่างรวม' : (overallVariance>0?'ใช้เกินแผนรวม':'ใช้ต่ำกว่าแผนรวม') + ' ' + Math.abs(overallVariance).toFixed(1) + '%'}
+        ${budgetVarText(overallVariance)}
       </div>
       <div class="field-label">หมายเหตุงบประมาณ</div>
       <textarea class="reason-input" style="min-height:44px;" data-budget-field="note" data-item="${item.id}" ${dis}>${escapeHtml(b.note||'')}</textarea>
@@ -2549,7 +2730,7 @@ function collectItemChanges(itemId, card){
     const index = Number(indCard.dataset.index);
     const base = baseInds.find(i=>i.index===index) || {index, yearly: emptyYears(), targetYearly: emptyYears()};
     const ch = {index, base, fields: {}, yearly: {}, targetYearly: {}};
-    indCard.querySelectorAll('[data-ind-field]').forEach(inp=>{ const f = inp.dataset.indField; if(!sameText(inp.value, base[f])) ch.fields[f] = inp.value; });
+    indCard.querySelectorAll('[data-ind-field]').forEach(inp=>{ const f = inp.dataset.indField; if(!sameText(inp.value, f==='type' ? indType(base) : base[f])) ch.fields[f] = inp.value; });
     indCard.querySelectorAll('[data-ind-year]').forEach(inp=>{ const y = inp.dataset.indYear; if(!sameNum(inp.value, base.yearly && base.yearly[y])) ch.yearly[y] = inp.value; });
     indCard.querySelectorAll('[data-ind-target-year]').forEach(inp=>{ const y = inp.dataset.indTargetYear; if(!sameNum(inp.value, base.targetYearly && base.targetYearly[y])) ch.targetYearly[y] = inp.value; });
     if(Object.keys(ch.fields).length || Object.keys(ch.yearly).length || Object.keys(ch.targetYearly).length) changes.indicators.push(ch);
@@ -2932,7 +3113,7 @@ document.getElementById('proposalsContainer').addEventListener('click', async (e
 /* ================================================================ */
 /* AUDIT LOG TAB                                                     */
 /* ================================================================ */
-const FIELD_LABEL = {evaluation:'คะแนนประเมิน', indicator:'ตัวชี้วัด', budget:'งบประมาณ', progress:'ความคืบหน้า', evidence:'หลักฐาน', proposal:'ข้อเสนอใหม่', notes:'บันทึกทีม', weights:'น้ำหนักเกณฑ์', reset:'ล้างข้อมูล', comment:'ความคิดเห็น', approval:'การอนุมัติ', dependency:'ความเชื่อมโยง', saveAll:'บันทึกข้อมูล', user:'ผู้ใช้/บทบาท'};
+const FIELD_LABEL = {evaluation:'คะแนนประเมิน', indicator:'ตัวชี้วัด', budget:'งบประมาณ', progress:'ความคืบหน้า', evidence:'หลักฐาน', proposal:'ข้อเสนอใหม่', notes:'บันทึกทีม', weights:'น้ำหนักเกณฑ์', reset:'ล้างข้อมูล', comment:'ความคิดเห็น', approval:'การอนุมัติ', dependency:'ความเชื่อมโยง', saveAll:'บันทึกข้อมูล', user:'ผู้ใช้/บทบาท', project:'โครงการ', lessons:'บทเรียน', decision:'มติคณะกรรมการ', analysis:'วิเคราะห์แผนใหม่'};
 function renderAudit(){
   const el = document.getElementById('auditContainer');
   if(!connected){
@@ -3300,7 +3481,7 @@ function exportExcel(){
   XLSX.utils.book_append_sheet(wb, wsEval, 'คะแนนประเมิน');
 
   // --- Sheet 3: ตัวชี้วัด ---
-  const indHeaders = ['ยุทธศาสตร์ที่','กลยุทธ์ที่','กลยุทธ์','ตัวชี้วัด','โครงการ/กิจกรรม','หน่วย',
+  const indHeaders = ['ยุทธศาสตร์ที่','กลยุทธ์ที่','กลยุทธ์','ตัวชี้วัด','โครงการ/กิจกรรม','ประเภท','หน่วย',
     ...YEARS.map(y=>'เป้าหมาย '+y), ...YEARS.map(y=>'ผลจริง '+y), '% บรรลุ (ปีล่าสุดที่มีคู่)','หมายเหตุ'];
   const indRows = [indHeaders];
   items.forEach(it=>{
@@ -3308,13 +3489,13 @@ function exportExcel(){
     const inds = getIndicatorsForItem(it, st || {});
     inds.forEach(ind=>{
       const ach = indicatorAchievementPct(ind);
-      indRows.push([it.strategyId, it.num, it.text, ind.text, ind.project||'', ind.unit||'',
+      indRows.push([it.strategyId, it.num, it.text, ind.text, ind.project||'', IND_TYPES[indType(ind)], ind.unit||'',
         ...YEARS.map(y=>ind.targetYearly[y] ?? ''), ...YEARS.map(y=>ind.yearly[y] ?? ''),
         ach===null ? '' : ach.pct.toFixed(0)+'% (ปี '+ach.year+')', ind.note||'']);
     });
   });
   const wsInd = XLSX.utils.aoa_to_sheet(indRows);
-  wsInd['!cols'] = [{wch:8},{wch:8},{wch:40},{wch:45},{wch:24},{wch:8},...YEARS.map(()=>({wch:10})),...YEARS.map(()=>({wch:10})),{wch:16},{wch:30}];
+  wsInd['!cols'] = [{wch:8},{wch:8},{wch:40},{wch:45},{wch:24},{wch:18},{wch:8},...YEARS.map(()=>({wch:10})),...YEARS.map(()=>({wch:10})),{wch:16},{wch:30}];
   XLSX.utils.book_append_sheet(wb, wsInd, 'ตัวชี้วัด');
 
   // --- Sheet 4: งบประมาณ ---
@@ -3380,6 +3561,7 @@ function exportExcel(){
     XLSX.utils.book_append_sheet(wb, wsAudit, 'ประวัติการเปลี่ยนแปลง');
   }
 
+  appendMethodologySheets(wb);
   XLSX.writeFile(wb, 'DSES_รายงานผลการประเมิน.xlsx');
 }
 function csvEscape(v){
@@ -3416,6 +3598,758 @@ document.getElementById('btnReset').addEventListener('click', async ()=>{
   }
   renderAllTabs();
 });
+
+/* ================================================================ */
+/* METHODOLOGY: โครงการ · บทเรียน & มติ · งบประมาณ · วิเคราะห์แผนใหม่   */
+/* ================================================================ */
+const DECISIONS = {
+  retain_scale: {label:'คงไว้และขยายผล', color:'green'},
+  retain:       {label:'คงไว้ / ปรับปรุงเล็กน้อย', color:'yellow'},
+  revise:       {label:'ปรับเปลี่ยนสาระสำคัญ', color:'orange'},
+  merge:        {label:'ควบรวมกับกลยุทธ์อื่น', color:'violet'},
+  discontinue:  {label:'ยุติ / ตัดออก', color:'red'}
+};
+const RECO_TO_DECISION = {green:'retain_scale', yellow:'retain', orange:'revise', red:'discontinue'};
+const PROJECT_STATUS = {not_started:'ยังไม่เริ่ม', in_progress:'กำลังดำเนินการ', done:'เสร็จสิ้น', cancelled:'ยกเลิก'};
+const PROJECT_RECO = {continue:'ดำเนินการต่อ', improve:'ดำเนินการต่อโดยปรับปรุง', scale:'ขยายผล', stop:'ยุติ'};
+const SWOT_Q = {
+  S:{label:'จุดแข็ง (Strengths)', hint:'ปัจจัยภายในที่เอื้อ เช่น เครือข่ายโรงเรียนปลายทาง ครูต้นทาง'},
+  W:{label:'จุดอ่อน (Weaknesses)', hint:'ปัจจัยภายในที่เป็นข้อจำกัด'},
+  O:{label:'โอกาส (Opportunities)', hint:'ปัจจัยภายนอกที่เอื้อ เช่น นโยบาย เทคโนโลยีใหม่'},
+  T:{label:'อุปสรรค (Threats)', hint:'ปัจจัยภายนอกที่คุกคาม เช่น จำนวนนักเรียนลดลง สื่อออนไลน์แข่งขัน'}
+};
+const TOWS_Q = {
+  SO:{label:'SO — กลยุทธ์เชิงรุก', hint:'ใช้จุดแข็งฉวยโอกาส'},
+  WO:{label:'WO — กลยุทธ์เชิงแก้ไข', hint:'ใช้โอกาสแก้จุดอ่อน'},
+  ST:{label:'ST — กลยุทธ์เชิงป้องกัน', hint:'ใช้จุดแข็งรับมืออุปสรรค'},
+  WT:{label:'WT — กลยุทธ์เชิงรับ', hint:'ลดจุดอ่อนและหลีกเลี่ยงอุปสรรค'}
+};
+const DEFAULT_FRAMEWORKS = [
+  {key:'ns20', name:'ยุทธศาสตร์ชาติ 20 ปี — ด้านการพัฒนาและเสริมสร้างศักยภาพทรัพยากรมนุษย์'},
+  {key:'mp_learning', name:'แผนแม่บทภายใต้ยุทธศาสตร์ชาติ (2566-2580) — ประเด็นการพัฒนาการเรียนรู้'},
+  {key:'nesdp14', name:'แผนพัฒนาเศรษฐกิจและสังคมแห่งชาติ ฉบับที่ 14 (2571-2575)'},
+  {key:'edplan', name:'แผนการศึกษาแห่งชาติ พ.ศ. 2560-2579'},
+  {key:'moe', name:'นโยบายกระทรวงศึกษาธิการ / สพฐ. (ฉบับล่าสุด)'},
+  {key:'royal', name:'พระบรมราโชบายด้านการศึกษา'},
+  {key:'sdg4', name:'เป้าหมายการพัฒนาที่ยั่งยืน SDG 4 (การศึกษาที่มีคุณภาพ)'}
+];
+const ALIGN_LEVELS = {'':'—', '0':'ไม่สอดคล้อง', '1':'บางส่วน', '2':'สอดคล้องสูง'};
+
+let analysisItems = [];                       // SWOT/TOWS: {id, quadrant, text, author, authorUid}
+let alignmentFrameworks = DEFAULT_FRAMEWORKS.slice();
+let methodologyRulesMissing = false;          // อ่านคอลเลกชันใหม่ไม่ได้ (ยังไม่ได้ Publish Rules ชุดใหม่)
+
+/* ---------- งบประมาณ: แปลผลส่วนต่างให้ถูกต้อง ---------- */
+// ใช้ต่ำกว่าแผนมาก ไม่ได้แปลว่าดีเสมอ อาจหมายถึงเบิกจ่ายล่าช้า/ดำเนินการไม่ได้ตามแผน
+function budgetVarClass(v){
+  if(v===null || v===undefined || isNaN(v)) return 'none';
+  if(Math.abs(v) <= 10) return 'ok';
+  return v > 0 ? 'over' : 'under';
+}
+function budgetVarColor(v){ return {none:'var(--ink-soft)', ok:'var(--green)', over:'var(--red)', under:'var(--orange)'}[budgetVarClass(v)]; }
+function budgetVarText(v){
+  const c = budgetVarClass(v);
+  if(c === 'none') return 'ยังไม่มีข้อมูลเพียงพอสำหรับคำนวณส่วนต่างรวม';
+  const rate = (100 + v).toFixed(1);
+  if(c === 'ok') return `ใกล้เคียงแผน (อัตราเบิกจ่าย ${rate}%)`;
+  if(c === 'over') return `ใช้เกินแผน ${v.toFixed(1)}% (อัตราเบิกจ่าย ${rate}%) — ตรวจสอบสาเหตุและแหล่งงบที่ใช้`;
+  return `ใช้ต่ำกว่าแผน ${Math.abs(v).toFixed(1)}% (อัตราเบิกจ่าย ${rate}%) — ตรวจสอบว่าเบิกจ่ายล่าช้าหรือดำเนินการไม่ได้ตามแผน`;
+}
+
+/* ---------- state hooks ---------- */
+function blankLessons(){ return {successFactors:'', problems:'', lessons:''}; }
+function blankDecision(){ return {decision:'', mergeWith:'', reason:'', direction:'', meetingRef:'', decidedBy:'', decidedAt:''}; }
+function normProject(p){
+  return {
+    projectId: p.projectId, itemId: p.itemId, rev: Number(p.rev) || 1,
+    name: p.name||'', fiscalYear: p.fiscalYear||'', owner: p.owner||'',
+    budgetPlanned: numOrNull(p.budgetPlanned), budgetActual: numOrNull(p.budgetActual),
+    outputTarget: p.outputTarget||'', outputActual: p.outputActual||'', outputPct: numOrNull(p.outputPct),
+    outcome: p.outcome||'', status: p.status||'not_started', scores: p.scores||{}, recommendation: p.recommendation||'', note: p.note||'',
+    createdByUid: p.createdByUid||'', updatedBy: p.updatedBy||''
+  };
+}
+const __itemToStateBase = itemToState;
+itemToState = function(it){
+  const st = __itemToStateBase(it);
+  (st.indicators||[]).forEach((ind, i)=>{ const src = (it.indicators||[])[i]; if(src && src.type) ind.type = src.type; });
+  st.projects = (it.projects||[]).map(normProject);
+  st.lessons = Object.assign(blankLessons(), it.lessons||{});
+  st.decision = Object.assign(blankDecision(), it.decision||{});
+  st.alignment = Object.assign({}, it.alignment||{});
+  return st;
+};
+const __applyDataBase = applyData;
+applyData = function(data){
+  __applyDataBase(data);
+  if(data.analysis !== undefined) analysisItems = data.analysis || [];
+  if(data.frameworks !== undefined) alignmentFrameworks = (data.frameworks && data.frameworks.length) ? data.frameworks : DEFAULT_FRAMEWORKS.slice();
+};
+function tsToIso(v){ return v && v.toDate ? v.toDate().toISOString() : (v || ''); }
+async function loadMethodologyData(){
+  methodologyRulesMissing = false;
+  const safe = p => p.catch(e=>{ if(String(e && e.code).includes('permission')) methodologyRulesMissing = true; return null; });
+  const [proj, les, dec, ali, ana, meta] = await Promise.all([
+    safe(db.collection('projects').get()), safe(db.collection('lessons').get()), safe(db.collection('decisions').get()),
+    safe(db.collection('alignment').get()), safe(db.collection('analysis').get()), safe(db.collection('meta').doc('settings').get())
+  ]);
+  const out = {projects:{}, lessons:{}, decisions:{}, alignment:{}, analysis:[], frameworks:null};
+  if(proj) proj.forEach(doc=>{ const d = doc.data(); (out.projects[d.itemId] = out.projects[d.itemId] || []).push(Object.assign({projectId: doc.id}, d)); });
+  if(les) les.forEach(doc=>{ out.lessons[doc.id] = doc.data(); });
+  if(dec) dec.forEach(doc=>{ const d = doc.data(); out.decisions[doc.id] = Object.assign({}, d, {decidedAt: tsToIso(d.decidedAt)}); });
+  if(ali) ali.forEach(doc=>{ out.alignment[doc.id] = (doc.data().scores) || {}; });
+  if(ana) ana.forEach(doc=>{ const d = doc.data(); out.analysis.push({id: doc.id, quadrant: d.quadrant, text: d.text||'', author: d.author||'', authorUid: d.authorUid||'', createdAt: tsToIso(d.createdAt)}); });
+  out.analysis.sort((a,b)=> (a.createdAt||'') < (b.createdAt||'') ? -1 : 1);
+  if(meta && meta.exists && Array.isArray(meta.data().frameworks)) out.frameworks = meta.data().frameworks;
+  return out;
+}
+const __firestoreLoadAllBase = firestoreLoadAll;
+firestoreLoadAll = async function(){
+  const data = await __firestoreLoadAllBase();
+  const extra = await loadMethodologyData();
+  data.items.forEach(it=>{
+    it.projects = extra.projects[it.itemId] || [];
+    it.lessons = extra.lessons[it.itemId] || null;
+    it.decision = extra.decisions[it.itemId] || null;
+    it.alignment = extra.alignment[it.itemId] || {};
+  });
+  data.analysis = extra.analysis;
+  data.frameworks = extra.frameworks || DEFAULT_FRAMEWORKS.slice();
+  return data;
+};
+const __firestoreResetAllBase = firestoreResetAll;
+firestoreResetAll = async function(){
+  await __firestoreResetAllBase();
+  for(const name of ['projects', 'lessons', 'decisions', 'alignment']){
+    const snap = await db.collection(name).get();
+    if(snap.empty) continue;
+    const batch = db.batch();
+    snap.forEach(doc=>batch.delete(doc.ref));
+    await batch.commit();
+  }
+};
+
+/* ---------- การ์ดกลยุทธ์: ชิปมติ ---------- */
+/** บันทึกมติได้: ผู้บริหาร (คลาวด์) หรือผู้ใช้โหมดออฟไลน์ล้วน (ข้อมูลอยู่ในเครื่องเดียว) */
+function canRecordDecision(){
+  if(cloudLoadFailed) return false;
+  if(currentUser && currentUser.uid) return canApprove();
+  return true;
+}
+function decisionChipHtml(st){
+  const d = st && st.decision && st.decision.decision;
+  if(!d || !DECISIONS[d]) return '';
+  return `<div class="decision-chip dc-${DECISIONS[d].color}" title="มติคณะกรรมการ">มติ: ${escapeHtml(DECISIONS[d].label)}</div>`;
+}
+function itemRecoDecision(itemId){ return RECO_TO_DECISION[getRecoKey(computeItemAvg(itemId))] || ''; }
+
+/* ---------- แผงโครงการ ---------- */
+function projectAvg(p){ const v = CRIT_KEYS.map(k=>p.scores && p.scores[k]).filter(x=>x!==null && x!==undefined && x!==''); return v.length ? v.reduce((a,b)=>a+Number(b),0)/v.length : null; }
+function renderProjectsPanel(item, st){
+  const editable = canEditItem(item.id);
+  const projects = st.projects || [];
+  const totalP = projects.reduce((a,p)=>a+(p.budgetPlanned||0),0), totalA = projects.reduce((a,p)=>a+(p.budgetActual||0),0);
+  const list = projects.length ? projects.map(p=>{
+    const avg = projectAvg(p);
+    const rate = p.budgetPlanned ? (p.budgetActual||0)/p.budgetPlanned*100 : null;
+    const canDel = canApprove() || (editable && (!isCloudUser() || p.createdByUid === myUid()));
+    return `
+    <div class="proj-card" data-project="${escapeHtml(p.projectId)}">
+      <div class="proj-top">
+        <div>
+          <div class="proj-name">${escapeHtml(p.name)}</div>
+          <div class="proj-meta">ปีงบ ${escapeHtml(p.fiscalYear||'—')} · ${escapeHtml(p.owner||'ไม่ระบุผู้รับผิดชอบ')} · <span class="tag status-${p.status==='done'?'done':p.status==='in_progress'?'in_progress':'not_started'}">${PROJECT_STATUS[p.status]||p.status}</span></div>
+        </div>
+        <div class="proj-right">
+          ${avg!==null ? `<span class="proj-score" style="color:${RECO_COLOR_HEX[getRecoKey(avg)]}">${avg.toFixed(2)}</span>` : ''}
+          ${p.recommendation ? `<span class="badge ${p.recommendation==='stop'?'red':p.recommendation==='improve'?'orange':'green'}">${PROJECT_RECO[p.recommendation]}</span>` : ''}
+        </div>
+      </div>
+      <div class="proj-stats">
+        <div><span>งบได้รับ / ใช้จริง</span><b>${fmtMoney(p.budgetPlanned)} / ${fmtMoney(p.budgetActual)}</b>${rate!==null?`<em style="color:${budgetVarColor(rate-100)}">เบิกจ่าย ${rate.toFixed(0)}%</em>`:''}</div>
+        <div><span>ผลผลิต</span><b>${escapeHtml(p.outputActual||'—')}</b><em>เป้า: ${escapeHtml(p.outputTarget||'—')}${p.outputPct!==null?` · บรรลุ ${p.outputPct}%`:''}</em></div>
+      </div>
+      ${p.outcome ? `<div class="proj-outcome"><span>ผลลัพธ์/ผลกระทบ:</span> ${escapeHtml(p.outcome)}</div>` : ''}
+      ${(editable || canDel) ? `<div class="proj-actions">
+        ${editable ? `<button class="btn-tiny" data-edit-project="${escapeHtml(p.projectId)}" data-item="${item.id}">✎ แก้ไข</button>` : ''}
+        ${canDel ? `<button class="btn-tiny danger" data-del-project="${escapeHtml(p.projectId)}" data-item="${item.id}">ลบ</button>` : ''}
+      </div>` : ''}
+    </div>`;
+  }).join('') : `<div class="eval-empty">ยังไม่มีโครงการภายใต้กลยุทธ์นี้</div>`;
+  return `
+    ${projects.length ? `<div class="proj-summary">${projects.length} โครงการ · งบรวม ${fmtMoney(totalP)} / ใช้จริง ${fmtMoney(totalA)} บาท</div>` : ''}
+    <div class="proj-list">${list}</div>
+    ${editable ? `<button class="btn-tiny success" data-new-project="${item.id}" style="padding:8px 14px;">+ เพิ่มโครงการ</button>
+    <div class="proj-form-host" id="projform-${item.id}"></div>` : `<p class="section-sub" style="margin:8px 0 0;">คุณไม่มีสิทธิ์เพิ่ม/แก้ไขโครงการของกลยุทธ์นี้</p>`}`;
+}
+function projectFormHtml(itemId, p){
+  p = p || normProject({});
+  const yearOpts = ['', ...YEARS].map(y=>`<option value="${y}" ${y===String(p.fiscalYear)?'selected':''}>${y||'— เลือก —'}</option>`).join('');
+  return `
+  <div class="addeval-form show proj-form" data-item="${itemId}" data-project-id="${escapeHtml(p.projectId||'')}" data-rev="${p.rev||1}">
+    <div class="addeval-header">${p.projectId ? 'แก้ไขโครงการ' : 'เพิ่มโครงการใหม่'}</div>
+    <div class="proj-grid">
+      <div class="span2"><div class="field-label">ชื่อโครงการ *</div><input class="meta-input" data-proj-field="name" value="${escapeHtml(p.name)}"></div>
+      <div><div class="field-label">ปีงบประมาณ</div><select class="meta-input" data-proj-field="fiscalYear">${yearOpts}</select></div>
+      <div><div class="field-label">ผู้รับผิดชอบ</div><input class="meta-input" data-proj-field="owner" value="${escapeHtml(p.owner)}"></div>
+      <div><div class="field-label">งบประมาณที่ได้รับ (บาท)</div><input type="number" step="any" class="meta-input" data-proj-field="budgetPlanned" value="${p.budgetPlanned ?? ''}"></div>
+      <div><div class="field-label">ใช้จริง (บาท)</div><input type="number" step="any" class="meta-input" data-proj-field="budgetActual" value="${p.budgetActual ?? ''}"></div>
+      <div><div class="field-label">ผลผลิต — เป้าหมาย</div><input class="meta-input" data-proj-field="outputTarget" value="${escapeHtml(p.outputTarget)}" placeholder="เช่น ครู 500 คน"></div>
+      <div><div class="field-label">ผลผลิต — ที่ได้จริง</div><input class="meta-input" data-proj-field="outputActual" value="${escapeHtml(p.outputActual)}" placeholder="เช่น ครู 430 คน"></div>
+      <div><div class="field-label">% บรรลุผลผลิต</div><input type="number" step="any" class="meta-input" data-proj-field="outputPct" value="${p.outputPct ?? ''}"></div>
+      <div><div class="field-label">สถานะ</div><select class="meta-input" data-proj-field="status">${Object.keys(PROJECT_STATUS).map(k=>`<option value="${k}" ${k===p.status?'selected':''}>${PROJECT_STATUS[k]}</option>`).join('')}</select></div>
+      <div class="span2"><div class="field-label">ผลลัพธ์ / ผลกระทบที่เกิดขึ้นจริง (Outcome)</div><textarea class="reason-input" data-proj-field="outcome">${escapeHtml(p.outcome)}</textarea></div>
+    </div>
+    <div class="field-label" style="margin-top:12px;">คะแนน OECD-DAC ระดับโครงการ (ไม่บังคับ)</div>
+    <div class="crit-grid">
+      ${CRIT_KEYS.map((k,i)=>`<div class="crit-block"><div class="crit-name">${escapeHtml(CRIT_LABELS[i].th)}</div><div class="crit-en">${escapeHtml(CRIT_LABELS[i].en)}</div>
+        <div class="score-row" data-projcrit="${k}">${[1,2,3,4,5].map(v=>`<button type="button" class="score-btn${Number(p.scores[k])===v?' active':''}" data-val="${v}">${v}</button>`).join('')}</div></div>`).join('')}
+    </div>
+    <div class="proj-grid">
+      <div><div class="field-label">ข้อเสนอสำหรับแผนใหม่</div><select class="meta-input" data-proj-field="recommendation"><option value="">— เลือก —</option>${Object.keys(PROJECT_RECO).map(k=>`<option value="${k}" ${k===p.recommendation?'selected':''}>${PROJECT_RECO[k]}</option>`).join('')}</select></div>
+      <div class="span2"><div class="field-label">เหตุผล / หมายเหตุ</div><textarea class="reason-input" data-proj-field="note">${escapeHtml(p.note)}</textarea></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:10px;align-items:center;">
+      <button class="btn-light btn-light-solid" data-save-project="${itemId}">บันทึกโครงการ</button>
+      <button class="btn-light" data-cancel-project="${itemId}">ยกเลิก</button>
+      <span class="unsaved-note" data-proj-unsaved style="display:none;">ยังไม่บันทึก</span>
+    </div>
+  </div>`;
+}
+function readProjectForm(form){
+  const data = {};
+  form.querySelectorAll('[data-proj-field]').forEach(inp=>{ data[inp.dataset.projField] = inp.value.trim(); });
+  ['budgetPlanned','budgetActual','outputPct'].forEach(k=>{ data[k] = toNumOrNull(data[k]); });
+  data.scores = {};
+  form.querySelectorAll('[data-projcrit]').forEach(row=>{ const a = row.querySelector('.score-btn.active'); if(a) data.scores[row.dataset.projcrit] = Number(a.dataset.val); });
+  return data;
+}
+async function saveProject(itemId, form, force){
+  const data = readProjectForm(form);
+  if(!data.name){ showToast('กรุณาระบุชื่อโครงการ', true); return; }
+  const projectId = form.dataset.projectId || '';
+  const rev = Number(form.dataset.rev) || 1;
+  const st = evalState[itemId];
+  if(connected){
+    try{
+      if(!projectId){
+        const ref = db.collection('projects').doc();
+        await ref.set(Object.assign({}, data, {itemId, rev: 1, createdBy: actorName(), createdByUid: myUid(), createdAt: fsTimestamp(), updatedBy: actorName(), updatedAt: fsTimestamp()}));
+        st.projects.push(normProject(Object.assign({projectId: ref.id, itemId, rev: 1, createdByUid: myUid()}, data)));
+      } else {
+        const ref = db.collection('projects').doc(projectId);
+        let newRev = rev + 1;
+        await db.runTransaction(async tx=>{
+          const snap = await tx.get(ref);
+          if(!snap.exists){ const e = new Error('โครงการนี้ถูกลบไปแล้วโดยผู้อื่น'); throw e; }
+          const serverRev = Number(snap.data().rev) || 1;
+          if(serverRev !== rev && !force){ const e = new Error('conflict'); e.conflicts = ['ข้อมูลโครงการนี้ (แก้ไขล่าสุดโดย ' + (snap.data().updatedBy || 'ผู้อื่น') + ')']; throw e; }
+          newRev = serverRev + 1;
+          tx.set(ref, Object.assign({}, data, {itemId, rev: newRev, updatedBy: actorName(), updatedAt: fsTimestamp()}), {merge:true});
+        });
+        const idx = st.projects.findIndex(p=>p.projectId===projectId);
+        const prev = idx>=0 ? st.projects[idx] : {};
+        const merged = normProject(Object.assign({}, prev, data, {projectId, itemId, rev: newRev}));
+        if(idx>=0) st.projects[idx] = merged; else st.projects.push(merged);
+      }
+      await firestoreLogAudit(itemId, 'project', (projectId ? 'แก้ไข' : 'เพิ่ม') + 'โครงการ: ' + data.name, '');
+    }catch(e){
+      if(e && e.conflicts){
+        if(confirm('มีผู้อื่นแก้ไข' + e.conflicts[0] + ' หลังจากที่คุณเปิดฟอร์ม\n\nOK = บันทึกทับด้วยข้อมูลของคุณ\nCancel = ยกเลิก (ข้อมูลในฟอร์มยังอยู่)')) return saveProject(itemId, form, true);
+        return;
+      }
+      showToast('บันทึกโครงการไม่สำเร็จ: ' + friendlyError(e), true); return;
+    }
+  } else {
+    if(projectId){
+      const idx = st.projects.findIndex(p=>p.projectId===projectId);
+      if(idx>=0) st.projects[idx] = normProject(Object.assign({}, st.projects[idx], data, {rev: rev+1}));
+    } else st.projects.push(normProject(Object.assign({projectId: 'P_' + Date.now(), itemId, rev: 1}, data)));
+    await saveLocalFallback();
+  }
+  showSuccessPopup('บันทึกโครงการแล้ว');
+  openSubtabs[itemId] = 'projects';
+  refreshItemCard(itemId);
+}
+async function deleteProject(itemId, projectId){
+  const st = evalState[itemId];
+  const p = st.projects.find(x=>x.projectId===projectId);
+  if(!confirm('ยืนยันการลบโครงการ "' + (p ? p.name : '') + '"?')) return;
+  if(connected){
+    try{ await db.collection('projects').doc(projectId).delete(); await firestoreLogAudit(itemId, 'project', 'ลบโครงการ: ' + (p ? p.name : ''), ''); }
+    catch(e){ showToast('ลบไม่สำเร็จ: ' + friendlyError(e), true); return; }
+  }
+  st.projects = st.projects.filter(x=>x.projectId!==projectId);
+  if(!connected) await saveLocalFallback();
+  showToast('ลบโครงการแล้ว');
+  refreshItemCard(itemId);
+}
+
+/* ---------- แผงบทเรียน & มติคณะกรรมการ ---------- */
+function renderDecisionPanel(item, st){
+  const canL = canEditItem(item.id);
+  const canD = canRecordDecision();
+  const L = st.lessons || blankLessons();
+  const D = st.decision || blankDecision();
+  const avg = computeItemAvg(item.id);
+  const rk = getRecoKey(avg);
+  const sysDec = itemRecoDecision(item.id);
+  const differs = D.decision && sysDec && D.decision !== sysDec;
+  const ro = b => b ? '' : 'readonly';
+  const dis = b => b ? '' : 'disabled';
+  return `
+  <div class="lesson-block">
+    <div class="block-title">บทเรียนจากการดำเนินงาน (Lessons learned)</div>
+    <div class="proj-grid">
+      <div><div class="field-label">ปัจจัยความสำเร็จ</div><textarea class="reason-input" data-lesson-field="successFactors" ${ro(canL)}>${escapeHtml(L.successFactors)}</textarea></div>
+      <div><div class="field-label">ปัญหา/อุปสรรค และสาเหตุ</div><textarea class="reason-input" data-lesson-field="problems" ${ro(canL)}>${escapeHtml(L.problems)}</textarea></div>
+      <div class="span2"><div class="field-label">บทเรียนและข้อเสนอแนะเพื่อปรับปรุง</div><textarea class="reason-input" data-lesson-field="lessons" ${ro(canL)}>${escapeHtml(L.lessons)}</textarea></div>
+    </div>
+    ${canL ? `<div class="block-actions"><button class="btn-light btn-light-solid" data-save-lessons="${item.id}">บันทึกบทเรียน</button><span class="unsaved-note" data-lesson-unsaved style="display:none;">ยังไม่บันทึก</span></div>` : ''}
+  </div>
+  <div class="decision-block">
+    <div class="block-title">มติคณะกรรมการ / ทีมวางแผน ${canD ? '' : '<span class="tag">เฉพาะผู้บริหารบันทึกได้</span>'}</div>
+    <div class="sys-reco">ข้อเสนอแนะจากระบบ (คะแนนเฉลี่ย ${fmt(avg)}): <span class="badge ${rk}">${RECO[rk].label}</span>
+      <span class="sys-reco-note">— ใช้ประกอบการพิจารณาเท่านั้น มติสุดท้ายควรพิจารณาร่วมกับตัวชี้วัด งบประมาณ บทเรียน และบริบทนโยบาย</span></div>
+    <div class="proj-grid">
+      <div><div class="field-label">มติ</div><select class="meta-input" data-decision-field="decision" ${dis(canD)}>
+        <option value="">— ยังไม่มีมติ —</option>${Object.keys(DECISIONS).map(k=>`<option value="${k}" ${k===D.decision?'selected':''}>${DECISIONS[k].label}</option>`).join('')}</select></div>
+      <div class="merge-field" ${D.decision==='merge'?'':'style="display:none;"'}><div class="field-label">ควบรวมกับ</div><select class="meta-input" data-decision-field="mergeWith" ${dis(canD)}>
+        <option value="">— เลือกกลยุทธ์ —</option>${DATA.items.filter(it=>it.id!==item.id).map(it=>`<option value="${it.id}" ${it.id===D.mergeWith?'selected':''}>ยุทธศาสตร์ ${it.strategyId} กลยุทธ์ ${it.num}: ${escapeHtml(it.text.slice(0,40))}${it.text.length>40?'…':''}</option>`).join('')}</select></div>
+      <div><div class="field-label">การประชุม / วันที่มีมติ</div><input class="meta-input" data-decision-field="meetingRef" value="${escapeHtml(D.meetingRef)}" placeholder="เช่น ประชุมครั้งที่ 3/2569 (15 ต.ค. 69)" ${ro(canD)}></div>
+      <div class="span2"><div class="field-label">เหตุผลประกอบมติ ${differs ? '<span class="differs-flag">มติต่างจากข้อเสนอแนะของระบบ — โปรดระบุเหตุผล</span>' : ''}</div><textarea class="reason-input" data-decision-field="reason" ${ro(canD)}>${escapeHtml(D.reason)}</textarea></div>
+      <div class="span2"><div class="field-label">แนวทางสำหรับแผนยุทธศาสตร์ พ.ศ. 2571-2575</div><textarea class="reason-input" data-decision-field="direction" ${ro(canD)} placeholder="เช่น ปรับเป้าหมาย/ตัวชี้วัด ปรับกลุ่มเป้าหมาย ย้ายไปอยู่ภายใต้ยุทธศาสตร์ใด">${escapeHtml(D.direction)}</textarea></div>
+    </div>
+    ${D.decidedBy ? `<div class="proj-meta" style="margin-top:6px;">บันทึกมติล่าสุดโดย ${escapeHtml(D.decidedBy)}${D.decidedAt ? ' · ' + escapeHtml(formatTimestamp(D.decidedAt)) : ''}</div>` : ''}
+    ${canD ? `<div class="block-actions"><button class="btn-light btn-light-solid" data-save-decision="${item.id}">บันทึกมติ</button><span class="unsaved-note" data-decision-unsaved style="display:none;">ยังไม่บันทึก</span></div>` : ''}
+  </div>`;
+}
+/** บันทึกเอกสารแบบหลายช่องพร้อมตรวจว่าช่องที่แก้ถูกผู้อื่นแก้ไปก่อนหรือไม่ */
+async function saveFieldsDoc(col, docId, fields, base, extra, labels, force){
+  const ref = db.collection(col).doc(docId);
+  await db.runTransaction(async tx=>{
+    const snap = await tx.get(ref);
+    const d = snap.exists ? snap.data() : {};
+    const conflicts = Object.keys(fields).filter(f=>!sameText(d[f], base[f])).map(f=>labels[f]||f);
+    if(conflicts.length && !force){ const e = new Error('conflict'); e.conflicts = conflicts; throw e; }
+    tx.set(ref, Object.assign({}, fields, extra), {merge:true});
+  });
+}
+const LESSON_LABELS = {successFactors:'ปัจจัยความสำเร็จ', problems:'ปัญหา/อุปสรรค', lessons:'บทเรียนและข้อเสนอแนะ'};
+const DECISION_LABELS = {decision:'มติ', mergeWith:'ควบรวมกับ', reason:'เหตุผลประกอบมติ', direction:'แนวทางสำหรับแผนใหม่', meetingRef:'การประชุม/วันที่'};
+async function saveLessonsOrDecision(kind, itemId, force){
+  const card = document.querySelector(`.item-card[data-item="${itemId}"]`);
+  const st = evalState[itemId];
+  const attr = kind === 'lessons' ? 'data-lesson-field' : 'data-decision-field';
+  const base = kind === 'lessons' ? st.lessons : st.decision;
+  const fields = {};
+  card.querySelectorAll(`[${attr}]`).forEach(inp=>{
+    const f = inp.getAttribute(attr);
+    const v = inp.value.trim();
+    if(!sameText(v, base[f])) fields[f] = v;
+  });
+  if(kind === 'decision' && 'decision' in fields && fields.decision !== 'merge') fields.mergeWith = '';
+  if(!Object.keys(fields).length){ showToast('ไม่มีข้อมูลที่เปลี่ยนแปลง'); return; }
+  if(kind === 'decision'){
+    const finalDec = 'decision' in fields ? fields.decision : base.decision;
+    const finalReason = 'reason' in fields ? fields.reason : base.reason;
+    const finalMerge = 'mergeWith' in fields ? fields.mergeWith : base.mergeWith;
+    const sys = itemRecoDecision(itemId);
+    if(finalDec && sys && finalDec !== sys && !finalReason){ showToast('มติต่างจากข้อเสนอแนะของระบบ — กรุณาระบุเหตุผลประกอบมติ', true); return; }
+    if(finalDec === 'merge' && !finalMerge){ showToast('กรุณาเลือกกลยุทธ์ที่จะควบรวมด้วย', true); return; }
+  }
+  const extra = kind === 'lessons'
+    ? {updatedBy: actorName(), updatedByUid: myUid(), updatedAt: connected ? fsTimestamp() : new Date().toISOString()}
+    : {decidedBy: actorName(), decidedByUid: myUid(), decidedAt: connected ? fsTimestamp() : new Date().toISOString()};
+  if(connected){
+    try{
+      await saveFieldsDoc(kind === 'lessons' ? 'lessons' : 'decisions', itemId, fields, base, extra, kind === 'lessons' ? LESSON_LABELS : DECISION_LABELS, !!force);
+      await firestoreLogAudit(itemId, kind === 'lessons' ? 'lessons' : 'decision',
+        kind === 'lessons' ? 'บันทึกบทเรียนจากการดำเนินงาน' : ('บันทึกมติ: ' + ((DECISIONS[fields.decision || base.decision] || {}).label || 'ยังไม่มีมติ')), '');
+    }catch(e){
+      if(e && e.conflicts){
+        if(confirm('ช่องต่อไปนี้ถูกผู้อื่นแก้ไขหลังจากที่คุณเปิดหน้า:\n- ' + e.conflicts.join('\n- ') + '\n\nOK = บันทึกทับด้วยข้อความของคุณ\nCancel = ยกเลิก')) return saveLessonsOrDecision(kind, itemId, true);
+        return;
+      }
+      showToast('บันทึกไม่สำเร็จ: ' + friendlyError(e), true); return;
+    }
+  }
+  Object.assign(base, fields, kind === 'decision' ? {decidedBy: actorName(), decidedAt: new Date().toISOString()} : {});
+  if(!connected) await saveLocalFallback();
+  showSuccessPopup(kind === 'lessons' ? 'บันทึกบทเรียนแล้ว' : 'บันทึกมติแล้ว');
+  openSubtabs[itemId] = 'decision';
+  refreshItemCard(itemId);
+}
+
+/* ---------- event handlers ภายในการ์ดกลยุทธ์ ---------- */
+document.getElementById('evalContainer').addEventListener('click', async (e)=>{
+  const t = e.target;
+  const newBtn = t.closest('[data-new-project]');
+  if(newBtn){ const id = newBtn.dataset.newProject; document.getElementById('projform-' + id).innerHTML = projectFormHtml(id, null); newBtn.style.display = 'none'; return; }
+  const editBtn = t.closest('[data-edit-project]');
+  if(editBtn){
+    const id = editBtn.dataset.item;
+    const p = evalState[id].projects.find(x=>x.projectId===editBtn.dataset.editProject);
+    const host = document.getElementById('projform-' + id);
+    host.innerHTML = projectFormHtml(id, p);
+    const nb = document.querySelector(`[data-new-project="${id}"]`); if(nb) nb.style.display = 'none';
+    host.scrollIntoView({behavior:'smooth', block:'nearest'});
+    return;
+  }
+  const cancelBtn = t.closest('[data-cancel-project]');
+  if(cancelBtn){ const id = cancelBtn.dataset.cancelProject; document.getElementById('projform-' + id).innerHTML = ''; const nb = document.querySelector(`[data-new-project="${id}"]`); if(nb) nb.style.display = ''; return; }
+  const saveBtn = t.closest('[data-save-project]');
+  if(saveBtn){ await saveProject(saveBtn.dataset.saveProject, saveBtn.closest('.proj-form')); return; }
+  const delBtn = t.closest('[data-del-project]');
+  if(delBtn){ await deleteProject(delBtn.dataset.item, delBtn.dataset.delProject); return; }
+  const projScore = t.closest('.score-row[data-projcrit] .score-btn');
+  if(projScore){
+    const row = projScore.closest('.score-row');
+    const wasActive = projScore.classList.contains('active');
+    row.querySelectorAll('.score-btn').forEach(b=>b.classList.remove('active'));
+    if(!wasActive) projScore.classList.add('active'); // กดซ้ำเพื่อยกเลิกคะแนนได้ (ไม่บังคับให้คะแนน)
+    const n = row.closest('.proj-form').querySelector('[data-proj-unsaved]'); if(n) n.style.display = 'inline';
+    return;
+  }
+  const saveL = t.closest('[data-save-lessons]');
+  if(saveL){ await saveLessonsOrDecision('lessons', saveL.dataset.saveLessons); return; }
+  const saveD = t.closest('[data-save-decision]');
+  if(saveD){ await saveLessonsOrDecision('decision', saveD.dataset.saveDecision); return; }
+});
+document.getElementById('evalContainer').addEventListener('input', (e)=>{
+  const t = e.target;
+  if(t.closest('[data-proj-field]')){ const n = t.closest('.proj-form').querySelector('[data-proj-unsaved]'); if(n) n.style.display = 'inline'; }
+  if(t.closest('[data-lesson-field]')){ const n = t.closest('.lesson-block').querySelector('[data-lesson-unsaved]'); if(n) n.style.display = 'inline'; }
+  if(t.closest('[data-decision-field]')){ const n = t.closest('.decision-block').querySelector('[data-decision-unsaved]'); if(n) n.style.display = 'inline'; }
+});
+document.getElementById('evalContainer').addEventListener('change', (e)=>{
+  const t = e.target;
+  // เปลี่ยนประเภทตัวชี้วัด -> สลับช่องกรอกรายปี (ตัวเลข <-> มี/ไม่มี) โดยคงค่าที่กรอกไว้
+  if(t.matches('[data-ind-field="type"]')){
+    const card = t.closest('.ind-card');
+    const type = t.value;
+    const dis = t.disabled ? 'disabled' : '';
+    const read = sel => { const o = {}; card.querySelectorAll(sel).forEach(inp=>{ const y = inp.getAttribute(sel.slice(1,-1)); o[y] = inp.value; }); return o; };
+    const cur = {targetYearly: read('[data-ind-target-year]'), yearly: read('[data-ind-year]')};
+    if(type === 'binary'){ ['targetYearly','yearly'].forEach(k=>YEARS.forEach(y=>{ const v = cur[k][y]; if(v!=='' && v!=='0' && v!=='1') cur[k][y] = Number(v) > 0 ? '1' : '0'; })); }
+    card.querySelector('[data-years-kind="target"]').innerHTML = indYearInputs('target', cur, type, dis);
+    card.querySelector('[data-years-kind="actual"]').innerHTML = indYearInputs('actual', cur, type, dis);
+  }
+  if(t.matches('[data-decision-field="decision"]')){
+    const mf = t.closest('.decision-block').querySelector('.merge-field');
+    if(mf) mf.style.display = t.value === 'merge' ? '' : 'none';
+  }
+});
+
+/* ================================================================ */
+/* แท็บ "วิเคราะห์เพื่อแผนใหม่"                                          */
+/* ================================================================ */
+function alignmentScoreOf(itemId){
+  const a = (evalState[itemId] && evalState[itemId].alignment) || {};
+  const vals = alignmentFrameworks.map(f=>a[f.key]).filter(v=>v!==null && v!==undefined && v!=='');
+  if(!vals.length) return null;
+  return vals.reduce((s,v)=>s+Number(v),0) / (vals.length * 2) * 100;
+}
+function indicatorSummary(itemId){
+  const item = DATA.items.find(it=>it.id===itemId);
+  const inds = getIndicatorsForItem(item, evalState[itemId] || {});
+  let withData = 0, achieved = 0;
+  inds.forEach(ind=>{ const a = indicatorAchievementPct(ind); if(a){ withData++; if(a.pct>=100) achieved++; } });
+  return {total: inds.length, withData, achieved};
+}
+function renderSynthesisTable(){
+  const el = document.getElementById('synthesisTable');
+  if(!el) return;
+  const rows = DATA.strategies.map(s=>{
+    const items = DATA.items.filter(it=>it.strategyId===s.id);
+    return `<tr class="syn-strategy"><td colspan="9">ยุทธศาสตร์ที่ ${s.id}: ${escapeHtml(s.name)}</td></tr>` + items.map(it=>{
+      const st = evalState[it.id] || {};
+      const avg = computeItemAvg(it.id), rk = getRecoKey(avg);
+      const ind = indicatorSummary(it.id);
+      const v = budgetVariancePct(st.budget);
+      const al = alignmentScoreOf(it.id);
+      const D = st.decision || {};
+      const sys = itemRecoDecision(it.id);
+      const differs = D.decision && sys && D.decision !== sys;
+      return `<tr>
+        <td class="syn-name"><b>${it.strategyId}.${it.num}</b> ${escapeHtml(it.text)}</td>
+        <td class="num" style="color:${RECO_COLOR_HEX[rk]};font-weight:700;">${fmt(avg)}</td>
+        <td><span class="badge ${rk}">${RECO[rk].label}</span></td>
+        <td>${D.decision ? `<span class="decision-chip dc-${DECISIONS[D.decision].color}">${DECISIONS[D.decision].label}</span>${differs ? '<div class="differs-flag">ต่างจากระบบ</div>' : ''}` : '<span class="muted">ยังไม่มีมติ</span>'}</td>
+        <td class="num">${ind.withData ? `${ind.achieved}/${ind.withData}` : '—'}<div class="muted">จาก ${ind.total} ตัว</div></td>
+        <td class="num" style="color:${budgetVarColor(v)};">${v===null ? '—' : (100+v).toFixed(0) + '%'}</td>
+        <td class="num">${(st.projects||[]).length || '—'}</td>
+        <td class="num">${al===null ? '—' : al.toFixed(0) + '%'}</td>
+        <td class="syn-text">${escapeHtml(D.direction || (st.lessons && st.lessons.lessons) || '')}</td>
+      </tr>`;
+    }).join('');
+  }).join('');
+  const decided = DATA.items.filter(it=>evalState[it.id] && evalState[it.id].decision && evalState[it.id].decision.decision).length;
+  el.innerHTML = `
+    <p class="section-sub" style="margin:0 0 10px;">มีมติแล้ว <b>${decided}/${DATA.items.length}</b> กลยุทธ์ · อัตราเบิกจ่าย = งบใช้จริง ÷ งบตามแผน · ความสอดคล้องนโยบาย = คะแนนเฉลี่ยจากตารางข้อ 4</p>
+    <div class="table-scroll"><table class="syn-table">
+      <tr><th>กลยุทธ์</th><th>คะแนน</th><th>ระบบแนะนำ</th><th>มติ</th><th>ตัวชี้วัดบรรลุ</th><th>อัตราเบิกจ่าย</th><th>โครงการ</th><th>สอดคล้องนโยบาย</th><th>แนวทางแผนใหม่ / บทเรียน</th></tr>
+      ${rows}
+    </table></div>`;
+}
+function renderQuadrants(elId, defs, cls){
+  const el = document.getElementById(elId);
+  if(!el) return;
+  const canAdd = canEdit();
+  el.innerHTML = `<div class="quad-grid ${cls}">${Object.keys(defs).map(q=>{
+    const items = analysisItems.filter(a=>a.quadrant===q);
+    return `<div class="quad quad-${q}">
+      <div class="quad-title">${defs[q].label}</div>
+      <div class="quad-hint">${defs[q].hint}</div>
+      <ul class="quad-list">${items.map(a=>{
+        const canDel = canApprove() || (canAdd && (!isCloudUser() || a.authorUid === myUid()));
+        return `<li><span>${escapeHtml(a.text)}</span><span class="quad-actions">
+          ${cls==='tows' && canEdit() ? `<button class="btn-tiny" data-to-proposal="${escapeHtml(a.id)}" title="นำไปเป็นข้อเสนอกลยุทธ์ใหม่">→ ข้อเสนอ</button>` : ''}
+          ${canDel ? `<button class="quad-del" data-del-analysis="${escapeHtml(a.id)}" title="ลบ">✕</button>` : ''}</span>
+          ${a.author ? `<em>${escapeHtml(a.author)}</em>` : ''}</li>`;
+      }).join('') || '<li class="muted">ยังไม่มีรายการ</li>'}</ul>
+      ${canAdd ? `<div class="quad-add"><input class="meta-input" data-analysis-input="${q}" placeholder="เพิ่มรายการ..."><button class="btn-tiny success" data-add-analysis="${q}">+</button></div>` : ''}
+    </div>`;
+  }).join('')}</div>`;
+}
+function renderAlignmentMatrix(){
+  const el = document.getElementById('alignMatrix');
+  if(!el) return;
+  const fws = alignmentFrameworks;
+  const colStats = fws.map(f=>{ let high = 0, filled = 0; DATA.items.forEach(it=>{ const v = (evalState[it.id]?.alignment || {})[f.key]; if(v!==undefined && v!==null && v!==''){ filled++; if(Number(v)===2) high++; } }); return {high, filled}; });
+  const rows = DATA.items.map(it=>{
+    const a = (evalState[it.id] && evalState[it.id].alignment) || {};
+    const can = canEditItem(it.id);
+    const sc = alignmentScoreOf(it.id);
+    return `<tr><td class="syn-name"><b>${it.strategyId}.${it.num}</b> ${escapeHtml(it.text.slice(0,60))}${it.text.length>60?'…':''}</td>
+      ${fws.map(f=>{
+        const v = a[f.key]; const vs = (v===null||v===undefined) ? '' : String(v);
+        return `<td class="align-cell al-${vs||'none'}"><select data-align-item="${it.id}" data-align-fw="${escapeHtml(f.key)}" ${can?'':'disabled'}>
+          ${Object.keys(ALIGN_LEVELS).map(k=>`<option value="${k}" ${k===vs?'selected':''}>${ALIGN_LEVELS[k]}</option>`).join('')}</select></td>`;
+      }).join('')}
+      <td class="num"><b>${sc===null?'—':sc.toFixed(0)+'%'}</b></td></tr>`;
+  }).join('');
+  const gaps = fws.filter((f,i)=>colStats[i].filled >= 5 && colStats[i].high === 0);
+  el.innerHTML = `
+    <div class="table-scroll"><table class="syn-table align-table">
+      <tr><th>กลยุทธ์</th>${fws.map(f=>`<th class="fw-th" title="${escapeHtml(f.name)}">${escapeHtml(f.name)}</th>`).join('')}<th>รวม</th></tr>
+      ${rows}
+      <tr class="syn-total"><td>จำนวนกลยุทธ์ที่ "สอดคล้องสูง"</td>${colStats.map(c=>`<td class="num ${c.filled && c.high===0 ? 'gap' : ''}">${c.high}</td>`).join('')}<td></td></tr>
+    </table></div>
+    ${gaps.length ? `<div class="dep-warning" style="margin-top:10px;">⚠️ ช่องว่างเชิงนโยบาย: ยังไม่มีกลยุทธ์ใดสอดคล้องสูงกับ ${gaps.map(g=>'&ldquo;'+escapeHtml(g.name)+'&rdquo;').join(', ')} — ควรพิจารณาเพิ่มกลยุทธ์ใหม่ในแผน 2571-2575</div>` : ''}`;
+  const ed = document.getElementById('frameworkEditor');
+  if(ed){
+    ed.innerHTML = canApprove() ? `
+      <details class="fw-editor"><summary>ปรับรายการนโยบาย/แผนที่ใช้เทียบ (ผู้บริหาร)</summary>
+        <ul class="fw-list">${fws.map(f=>`<li><span>${escapeHtml(f.name)}</span><button class="quad-del" data-del-fw="${escapeHtml(f.key)}" title="ลบ">✕</button></li>`).join('')}</ul>
+        <div class="quad-add"><input class="meta-input" id="newFwName" placeholder="ชื่อนโยบาย/แผน เช่น แผนปฏิบัติการด้านดิจิทัลเพื่อการศึกษา"><button class="btn-tiny success" id="btnAddFw">+ เพิ่ม</button></div>
+      </details>` : '';
+  }
+}
+function renderAnalysisTab(){
+  const notice = document.getElementById('analysisNotice');
+  if(notice) notice.innerHTML = methodologyRulesMissing
+    ? '<div class="offline-banner error"><b>⚠️ ยังอ่าน/บันทึกข้อมูลส่วนใหม่ไม่ได้</b><span>ผู้บริหารต้องนำ Security Rules ชุดล่าสุด (แท็บ &ldquo;จัดการผู้ใช้&rdquo;) ไป Publish ใน Firebase Console ก่อน</span></div>' : '';
+  renderSynthesisTable();
+  renderQuadrants('swotGrid', SWOT_Q, 'swot');
+  renderQuadrants('towsGrid', TOWS_Q, 'tows');
+  renderAlignmentMatrix();
+}
+async function addAnalysisItem(quadrant, text){
+  const item = {quadrant, text, author: actorName(), authorUid: myUid() || '', createdAt: new Date().toISOString()};
+  if(connected){
+    try{
+      const ref = await db.collection('analysis').add({quadrant, text, author: actorName(), authorUid: myUid(), createdAt: fsTimestamp()});
+      item.id = ref.id;
+      await firestoreLogAudit('', 'analysis', 'เพิ่ม ' + quadrant + ': ' + text.slice(0,60), '');
+    }catch(e){ showToast('บันทึกไม่สำเร็จ: ' + friendlyError(e), true); return; }
+  } else { item.id = 'A_' + Date.now(); }
+  analysisItems.push(item);
+  if(!connected) await saveLocalFallback();
+  renderAnalysisTab();
+}
+async function deleteAnalysisItem(id){
+  const a = analysisItems.find(x=>x.id===id);
+  if(!confirm('ลบรายการ "' + (a ? a.text.slice(0,60) : '') + '"?')) return;
+  if(connected){
+    try{ await db.collection('analysis').doc(id).delete(); await firestoreLogAudit('', 'analysis', 'ลบรายการ ' + (a ? a.quadrant : ''), ''); }
+    catch(e){ showToast('ลบไม่สำเร็จ: ' + friendlyError(e), true); return; }
+  }
+  analysisItems = analysisItems.filter(x=>x.id!==id);
+  if(!connected) await saveLocalFallback();
+  renderAnalysisTab();
+}
+async function setAlignment(itemId, fwKey, value){
+  const v = value === '' ? null : Number(value);
+  if(connected){
+    try{
+      await db.collection('alignment').doc(itemId).set({scores: {[fwKey]: v}, updatedBy: actorName(), updatedAt: fsTimestamp()}, {merge:true});
+    }catch(e){ showToast('บันทึกไม่สำเร็จ: ' + friendlyError(e), true); renderAlignmentMatrix(); return; }
+  }
+  const st = evalState[itemId];
+  st.alignment = Object.assign({}, st.alignment, {[fwKey]: v});
+  if(!connected) await saveLocalFallback();
+  renderAlignmentMatrix();
+  renderSynthesisTable();
+}
+async function saveFrameworks(list){
+  if(connected){
+    try{ await db.collection('meta').doc('settings').set({frameworks: list}, {merge:true}); await firestoreLogAudit('', 'analysis', 'ปรับรายการนโยบายที่ใช้เทียบความสอดคล้อง', ''); }
+    catch(e){ showToast('บันทึกไม่สำเร็จ: ' + friendlyError(e), true); return; }
+  }
+  alignmentFrameworks = list;
+  if(!connected) await saveLocalFallback();
+  renderAnalysisTab();
+}
+document.getElementById('view-analysis').addEventListener('click', async (e)=>{
+  const t = e.target;
+  const add = t.closest('[data-add-analysis]');
+  if(add){
+    const q = add.dataset.addAnalysis;
+    const inp = document.querySelector(`[data-analysis-input="${q}"]`);
+    const text = inp.value.trim();
+    if(!text){ showToast('กรุณาพิมพ์รายการก่อน', true); return; }
+    await addAnalysisItem(q, text); return;
+  }
+  const del = t.closest('[data-del-analysis]');
+  if(del){ await deleteAnalysisItem(del.dataset.delAnalysis); return; }
+  const toProp = t.closest('[data-to-proposal]');
+  if(toProp){
+    const a = analysisItems.find(x=>x.id===toProp.dataset.toProposal);
+    if(!a) return;
+    document.querySelector('.tab-btn[data-tab="proposals"]').click();
+    document.getElementById('propTitle').value = a.text.slice(0, 120);
+    document.getElementById('propDesc').value = `ที่มา: ${TOWS_Q[a.quadrant] ? TOWS_Q[a.quadrant].label : a.quadrant} (จากการวิเคราะห์ TOWS)\n` + a.text;
+    document.getElementById('propStrategy').value = 'new';
+    document.getElementById('propTitle').focus();
+    showToast('คัดลอกไปที่ฟอร์มข้อเสนอแล้ว — ตรวจสอบแล้วกด "เพิ่มข้อเสนอ"');
+    return;
+  }
+  const delFw = t.closest('[data-del-fw]');
+  if(delFw){
+    const f = alignmentFrameworks.find(x=>x.key===delFw.dataset.delFw);
+    if(!confirm('นำ "' + (f ? f.name : '') + '" ออกจากตาราง? (คะแนนที่เคยกรอกจะถูกเก็บไว้ แต่ไม่แสดง)')) return;
+    await saveFrameworks(alignmentFrameworks.filter(x=>x.key!==delFw.dataset.delFw)); return;
+  }
+  if(t.closest('#btnAddFw')){
+    const name = document.getElementById('newFwName').value.trim();
+    if(!name){ showToast('กรุณาระบุชื่อนโยบาย/แผน', true); return; }
+    await saveFrameworks(alignmentFrameworks.concat([{key: 'fw' + Date.now().toString(36), name}])); return;
+  }
+});
+document.getElementById('view-analysis').addEventListener('keydown', (e)=>{
+  const inp = e.target.closest('[data-analysis-input]');
+  if(inp && e.key === 'Enter'){ e.preventDefault(); document.querySelector(`[data-add-analysis="${inp.dataset.analysisInput}"]`).click(); }
+});
+document.getElementById('view-analysis').addEventListener('change', async (e)=>{
+  const sel = e.target.closest('[data-align-item]');
+  if(sel) await setAlignment(sel.dataset.alignItem, sel.dataset.alignFw, sel.value);
+});
+document.getElementById('tabbar').addEventListener('click', (e)=>{
+  const btn = e.target.closest('.tab-btn');
+  if(btn && btn.dataset.tab === 'analysis') renderAnalysisTab();
+});
+
+/* ---------- แดชบอร์ด: สรุปมติ/โครงการ ---------- */
+function renderMethodSummary(){
+  const el = document.getElementById('methodSummary');
+  if(!el) return;
+  const counts = {}; Object.keys(DECISIONS).forEach(k=>counts[k]=0);
+  let decided = 0, differs = 0, lessons = 0, nProj = 0, pP = 0, pA = 0;
+  DATA.items.forEach(it=>{
+    const st = evalState[it.id] || {};
+    const d = st.decision && st.decision.decision;
+    if(d && counts[d]!==undefined){ counts[d]++; decided++; const sys = itemRecoDecision(it.id); if(sys && sys!==d) differs++; }
+    if(st.lessons && (st.lessons.lessons || st.lessons.problems || st.lessons.successFactors)) lessons++;
+    (st.projects||[]).forEach(p=>{ nProj++; pP += p.budgetPlanned||0; pA += p.budgetActual||0; });
+  });
+  const total = DATA.items.length;
+  el.innerHTML = `
+    <div class="card pad">
+      <h2 class="section-title" style="font-size:17px;">มติคณะกรรมการ และข้อมูลประกอบการตัดสินใจ</h2>
+      <div class="method-grid">
+        <div class="decision-bars">
+          ${Object.keys(DECISIONS).map(k=>`<div class="dbar"><span class="dbar-label">${DECISIONS[k].label}</span><span class="dbar-track"><span class="dbar-fill dc-bg-${DECISIONS[k].color}" style="width:${total?counts[k]/total*100:0}%"></span></span><b>${counts[k]}</b></div>`).join('')}
+          <div class="muted" style="margin-top:6px;">มีมติแล้ว ${decided}/${total} กลยุทธ์${differs ? ` · <span style="color:var(--orange);font-weight:600;">${differs} มติต่างจากข้อเสนอแนะของระบบ</span>` : ''}</div>
+        </div>
+        <div class="method-stats">
+          <div><span>บันทึกบทเรียนแล้ว</span><b>${lessons}/${total}</b></div>
+          <div><span>โครงการที่บันทึก</span><b>${nProj}</b></div>
+          <div><span>งบโครงการ (ได้รับ/ใช้จริง)</span><b style="font-size:16px;">${fmtMoney(pP)} / ${fmtMoney(pA)}</b></div>
+          <div><span>รายการ SWOT/TOWS</span><b>${analysisItems.length}</b></div>
+        </div>
+      </div>
+    </div>`;
+}
+const __renderDashboardBase = renderDashboard;
+renderDashboard = function(){ __renderDashboardBase(); renderMethodSummary(); };
+const __renderAllTabsBase = renderAllTabs;
+renderAllTabs = function(){ __renderAllTabsBase(); renderAnalysisTab(); };
+
+/* ---------- ส่งออก Excel: ชีตเพิ่มเติม ---------- */
+function appendMethodologySheets(wb){
+  const sheet = (rows, cols, name)=>{ const ws = XLSX.utils.aoa_to_sheet(rows); ws['!cols'] = cols.map(w=>({wch:w})); XLSX.utils.book_append_sheet(wb, ws, name); };
+  // สรุปเพื่อยกร่างแผน
+  const syn = [['ยุทธศาสตร์ที่','กลยุทธ์ที่','กลยุทธ์','คะแนนเฉลี่ย','ข้อเสนอแนะของระบบ','มติคณะกรรมการ','ควบรวมกับ','เหตุผลประกอบมติ','แนวทางแผน 2571-2575','การประชุม','ตัวชี้วัดบรรลุ/มีข้อมูล/ทั้งหมด','อัตราเบิกจ่าย (%)','จำนวนโครงการ','ความสอดคล้องนโยบาย (%)']];
+  DATA.items.forEach(it=>{
+    const st = evalState[it.id] || {}; const D = st.decision || {}; const avg = computeItemAvg(it.id); const ind = indicatorSummary(it.id);
+    const v = budgetVariancePct(st.budget); const al = alignmentScoreOf(it.id);
+    syn.push([it.strategyId, it.num, it.text, avg===null?'':Number(avg.toFixed(2)), RECO[getRecoKey(avg)].label, D.decision ? DECISIONS[D.decision].label : '', D.mergeWith||'', D.reason||'', D.direction||'', D.meetingRef||'',
+      `${ind.achieved}/${ind.withData}/${ind.total}`, v===null?'':Number((100+v).toFixed(1)), (st.projects||[]).length, al===null?'':Number(al.toFixed(0))]);
+  });
+  sheet(syn, [8,8,40,10,26,24,10,40,40,20,14,12,10,14], 'สรุปเพื่อยกร่างแผน');
+  // บทเรียน
+  const les = [['ยุทธศาสตร์ที่','กลยุทธ์ที่','กลยุทธ์','ปัจจัยความสำเร็จ','ปัญหา/อุปสรรค','บทเรียนและข้อเสนอแนะ']];
+  DATA.items.forEach(it=>{ const L = (evalState[it.id]||{}).lessons || {}; les.push([it.strategyId, it.num, it.text, L.successFactors||'', L.problems||'', L.lessons||'']); });
+  sheet(les, [8,8,40,40,40,40], 'บทเรียน');
+  // โครงการ
+  const pr = [['ยุทธศาสตร์ที่','กลยุทธ์ที่','กลยุทธ์','ชื่อโครงการ','ปีงบ','ผู้รับผิดชอบ','สถานะ','งบได้รับ','ใช้จริง','อัตราเบิกจ่าย (%)','ผลผลิต-เป้า','ผลผลิต-จริง','% บรรลุผลผลิต','ผลลัพธ์/ผลกระทบ', ...CRIT_LABELS.map(c=>c.th), 'คะแนนเฉลี่ย','ข้อเสนอ','เหตุผล/หมายเหตุ']];
+  DATA.items.forEach(it=>{ ((evalState[it.id]||{}).projects||[]).forEach(p=>{
+    const avg = projectAvg(p);
+    pr.push([it.strategyId, it.num, it.text, p.name, p.fiscalYear, p.owner, PROJECT_STATUS[p.status]||p.status, p.budgetPlanned ?? '', p.budgetActual ?? '',
+      p.budgetPlanned ? Number(((p.budgetActual||0)/p.budgetPlanned*100).toFixed(1)) : '', p.outputTarget, p.outputActual, p.outputPct ?? '', p.outcome,
+      ...CRIT_KEYS.map(k=>p.scores[k] ?? ''), avg===null?'':Number(avg.toFixed(2)), PROJECT_RECO[p.recommendation]||'', p.note]);
+  }); });
+  sheet(pr, [8,8,30,34,8,18,14,12,12,12,20,20,10,40,8,8,8,8,8,8,10,18,30], 'โครงการ');
+  // SWOT/TOWS
+  const sw = [['ประเภท','รายการ','ผู้เพิ่ม']];
+  Object.keys(SWOT_Q).concat(Object.keys(TOWS_Q)).forEach(q=>{ analysisItems.filter(a=>a.quadrant===q).forEach(a=>sw.push([(SWOT_Q[q]||TOWS_Q[q]).label, a.text, a.author||''])); });
+  sheet(sw, [28,70,20], 'SWOT-TOWS');
+  // ความสอดคล้อง
+  const al = [['ยุทธศาสตร์ที่','กลยุทธ์ที่','กลยุทธ์', ...alignmentFrameworks.map(f=>f.name), 'รวม (%)']];
+  DATA.items.forEach(it=>{ const a = (evalState[it.id]||{}).alignment || {}; const sc = alignmentScoreOf(it.id);
+    al.push([it.strategyId, it.num, it.text, ...alignmentFrameworks.map(f=>{ const v = a[f.key]; return (v===null||v===undefined||v==='') ? '' : ALIGN_LEVELS[String(v)]; }), sc===null?'':Number(sc.toFixed(0))]); });
+  sheet(al, [8,8,40, ...alignmentFrameworks.map(()=>18), 10], 'ความสอดคล้องนโยบาย');
+}
+
+/* ---------- รายงาน PDF: ส่วนเพิ่มเติม ---------- */
+const __buildReportHtmlBase = buildReportHtml;
+buildReportHtml = function(){
+  let html = __buildReportHtmlBase();
+  const decRows = DATA.items.map(it=>{
+    const st = evalState[it.id] || {}; const D = st.decision || {}; const avg = computeItemAvg(it.id);
+    return `<tr><td>${it.strategyId}.${it.num} ${escapeHtml(it.text)}</td><td>${fmt(avg)}</td><td>${RECO[getRecoKey(avg)].label}</td><td>${D.decision ? DECISIONS[D.decision].label : '—'}</td><td>${escapeHtml(D.reason||'')}</td><td>${escapeHtml(D.direction||'')}</td></tr>`;
+  }).join('');
+  html += `<div class="report-section"><h2>สรุปมติคณะกรรมการรายกลยุทธ์</h2>
+    <table class="report-table"><tr><th>กลยุทธ์</th><th>คะแนน</th><th>ระบบแนะนำ</th><th>มติ</th><th>เหตุผล</th><th>แนวทางแผน 2571-2575</th></tr>${decRows}</table></div>`;
+  const lesRows = DATA.items.filter(it=>{ const L = (evalState[it.id]||{}).lessons; return L && (L.successFactors||L.problems||L.lessons); }).map(it=>{
+    const L = evalState[it.id].lessons;
+    return `<tr><td>${it.strategyId}.${it.num} ${escapeHtml(it.text)}</td><td>${escapeHtml(L.successFactors)}</td><td>${escapeHtml(L.problems)}</td><td>${escapeHtml(L.lessons)}</td></tr>`;
+  }).join('');
+  if(lesRows) html += `<div class="report-section"><h2>บทเรียนจากการดำเนินงาน</h2><table class="report-table"><tr><th>กลยุทธ์</th><th>ปัจจัยความสำเร็จ</th><th>ปัญหา/อุปสรรค</th><th>บทเรียน/ข้อเสนอแนะ</th></tr>${lesRows}</table></div>`;
+  const projRows = [];
+  DATA.items.forEach(it=>((evalState[it.id]||{}).projects||[]).forEach(p=>{ const avg = projectAvg(p);
+    projRows.push(`<tr><td>${it.strategyId}.${it.num}</td><td>${escapeHtml(p.name)}</td><td>${escapeHtml(p.fiscalYear)}</td><td>${fmtMoney(p.budgetPlanned)} / ${fmtMoney(p.budgetActual)}</td><td>${escapeHtml(p.outputActual)}${p.outputTarget?' (เป้า '+escapeHtml(p.outputTarget)+')':''}</td><td>${avg===null?'—':avg.toFixed(2)}</td><td>${PROJECT_RECO[p.recommendation]||'—'}</td></tr>`); }));
+  if(projRows.length) html += `<div class="report-section"><h2>ผลการดำเนินงานรายโครงการ</h2><table class="report-table"><tr><th>กลยุทธ์</th><th>โครงการ</th><th>ปีงบ</th><th>งบได้รับ/ใช้จริง</th><th>ผลผลิต</th><th>คะแนน</th><th>ข้อเสนอ</th></tr>${projRows.join('')}</table></div>`;
+  if(analysisItems.length){
+    const block = defs => Object.keys(defs).map(q=>{ const xs = analysisItems.filter(a=>a.quadrant===q); return `<td style="vertical-align:top;"><b>${defs[q].label}</b><ul class="report-list">${xs.map(a=>`<li>${escapeHtml(a.text)}</li>`).join('') || '<li>—</li>'}</ul></td>`; });
+    const s = block(SWOT_Q), t = block(TOWS_Q);
+    html += `<div class="report-section"><h2>การวิเคราะห์ SWOT และ TOWS Matrix</h2>
+      <table class="report-table"><tr>${s[0]}${s[1]}</tr><tr>${s[2]}${s[3]}</tr></table>
+      <table class="report-table"><tr>${t[0]}${t[1]}</tr><tr>${t[2]}${t[3]}</tr></table></div>`;
+  }
+  return html;
+};
 
 /* ================================================================ */
 /* ผู้ใช้/บทบาท · หน้ารออนุมัติ · แถบเตือนออฟไลน์ · สำรองข้อมูล            */

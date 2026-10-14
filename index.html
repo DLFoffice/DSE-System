@@ -735,36 +735,153 @@ table.syn-table td.num{text-align:center;white-space:nowrap;}
 .method-stats span{font-size:13px;color:var(--ink-soft);} .method-stats b{font-size:22px;color:var(--primary);}
 /* ---- รายงานสำหรับพิมพ์ / ส่งออก PDF ---- */
 .print-only{display:none;}
+
+/* หน้าต่างตั้งค่ารายงาน (บนหน้าจอ) */
+.rp-modal{position:fixed;inset:0;z-index:250;background:rgba(29,28,36,.35);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s var(--ease);}
+.rp-modal.show{opacity:1;pointer-events:auto;}
+.rp-modal-card{background:#fff;border-radius:20px;box-shadow:0 30px 70px -20px rgba(29,28,36,.4);width:100%;max-width:560px;max-height:92vh;overflow:auto;padding:24px 26px;transform:translateY(12px) scale(.97);transition:transform .35s var(--ease-spring);}
+.rp-modal.show .rp-modal-card{transform:none;}
+.rp-modal h3{margin:0 0 4px;font-size:19px;}
+.rp-modal p{margin:0 0 14px;color:var(--ink-soft);font-size:14px;}
+.rp-opts{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+.rp-opts label{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;border:1px solid var(--border);border-radius:12px;cursor:pointer;font-size:15px;transition:border-color .2s,background .2s;}
+.rp-opts label:hover{border-color:var(--primary);background:var(--primary-soft);}
+.rp-opts label.sub{margin-left:26px;padding:6px 12px;font-size:14px;}
+.rp-opts input{margin-top:5px;accent-color:var(--primary);}
+.rp-opts small{display:block;color:var(--ink-soft);font-size:12.5px;}
+.rp-modal-foot{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:6px;}
+.rp-tip{background:var(--amber-soft);color:#7a4a10;border-radius:10px;padding:9px 12px;font-size:13px;margin-bottom:12px;}
+
 @media print{
-  .topbar, .tabbar, .container, footer.appfoot, .toast, .success-popup{display:none !important;}
+  html,body{background:#fff !important;}
+  body{font-family:'Noto Sans Thai',sans-serif;color:#1d1c24;font-size:10pt;line-height:1.5;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .topbar,.tabbar,.container,footer.appfoot,.toast,.success-popup,.rp-modal,#authScreen{display:none !important;}
   .print-only{display:block !important;}
-  body{background:#fff;font-family:'Noto Sans Thai',sans-serif;color:#1a1a2e;font-size:12px;}
-  .report-cover{text-align:center;padding:60px 20px 40px;border-bottom:3px solid #1B2340;margin-bottom:24px;}
-  .report-eyebrow{font-size:11px;letter-spacing:.06em;color:#8878c9;font-weight:700;margin-bottom:10px;}
-  .report-cover h1{font-size:26px;margin:0 0 10px;color:#1B2340;}
-  .report-sub{font-size:13px;color:#555;margin:2px 0;}
-  .report-date{font-size:12px;color:#888;margin-top:14px;}
-  .report-section, .report-strategy{padding:0 24px;margin-bottom:20px;page-break-inside:avoid;}
-  .report-section h2, .report-strategy h2{font-size:17px;color:#1B2340;border-bottom:2px solid #B8872B;padding-bottom:6px;margin:24px 0 10px;}
-  .report-goal{font-size:12px;color:#555;margin:0 0 14px;font-style:italic;}
-  .report-item{page-break-inside:avoid;margin-bottom:18px;padding:12px 14px;border:1px solid #ddd;border-radius:6px;}
-  .report-item h3{font-size:13.5px;margin:0 0 6px;color:#1B2340;}
-  .report-meta{font-size:11px;color:#444;margin:4px 0 8px;}
-  .report-subhead{font-size:11.5px;font-weight:700;color:#5B4BE0;margin:10px 0 4px;}
-  .report-empty{font-size:11px;color:#888;font-style:italic;}
-  table.report-table{width:100%;border-collapse:collapse;margin-bottom:6px;}
-  table.report-table td, table.report-table th{border:1px solid #ccc;padding:5px 7px;font-size:10.5px;text-align:left;}
-  table.report-table th{background:#f0f0f5;font-weight:700;}
-  table.report-table.small td, table.report-table.small th{padding:4px 5px;font-size:9.5px;text-align:center;}
-  table.report-table.small td:first-child, table.report-table.small th:first-child{text-align:left;}
-  .report-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px;}
-  .report-badge.red{background:#f6e3e1;color:#a33;}
-  .report-badge.orange{background:#f8e9d8;color:#a56;}
-  .report-badge.yellow{background:#f6efd3;color:#8a6;}
-  .report-badge.green{background:#deede5;color:#396;}
-  .report-badge.grey{background:#eee;color:#888;}
-  .report-list{font-size:11px;margin:4px 0;padding-left:18px;}
-  @page{size:A4;margin:14mm 10mm;}
+  *{animation:none !important;transition:none !important;}
+  @page{size:A4;margin:16mm 14mm 18mm;
+    @bottom-left{content:"รายงานผลการประเมินแผนยุทธศาสตร์ พ.ศ. 2566-2570 · DSES";font-family:'Noto Sans Thai',sans-serif;font-size:7.5pt;color:#8a8796;}
+    @bottom-right{content:"หน้า " counter(page) " / " counter(pages);font-family:'Noto Sans Thai',sans-serif;font-size:7.5pt;color:#8a8796;}
+  }
+  @page:first{margin:0; @bottom-left{content:none;} @bottom-right{content:none;}}
+
+  .rp-doc{font-size:10pt;}
+  .rp-doc p{margin:0 0 6px;}
+  .rp-break{break-before:page;}
+  .rp-muted{color:#7a7886;font-size:8.5pt;}
+  .rp-small{font-size:8.5pt;}
+  .rp-empty{color:#9a98a6;font-style:italic;font-size:9pt;margin:2px 0 6px;}
+
+  /* ปก */
+  .rp-cover{height:297mm;display:flex;flex-direction:column;break-after:page;}
+  .rp-cover-band{background:linear-gradient(120deg,#4B3FD1,#7C4DEB 55%,#14A3A8);color:#fff;padding:34mm 22mm 24mm;}
+  .rp-cover-eyebrow{font-size:9pt;letter-spacing:.18em;opacity:.85;margin-bottom:10mm;font-weight:600;}
+  .rp-cover h1{font-size:28pt;line-height:1.3;margin:0 0 4mm;font-weight:700;}
+  .rp-cover-sub{font-size:13pt;opacity:.92;}
+  .rp-cover-body{padding:16mm 22mm;flex:1;display:flex;flex-direction:column;}
+  .rp-cover-org{font-size:16pt;font-weight:700;color:#3c2fb8;line-height:1.45;margin-bottom:12mm;}
+  .rp-cover-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:4mm;margin-bottom:12mm;}
+  .rp-cover-kpis div{border:1px solid #e3e0f5;border-top:3px solid #5B4BE0;border-radius:3mm;padding:4mm;background:#faf9ff;}
+  .rp-cover-kpis b{display:block;font-size:20pt;color:#4B3FD1;line-height:1.2;}
+  .rp-cover-kpis span{font-size:8.5pt;color:#6b6880;}
+  .rp-meta{border-collapse:collapse;width:100%;font-size:10pt;margin-top:auto;}
+  .rp-meta td{padding:2.5mm 0;border-bottom:1px solid #ecebf3;vertical-align:top;}
+  .rp-meta td:first-child{width:38mm;color:#6b6880;font-weight:600;}
+
+  /* สารบัญ */
+  .rp-toc{break-after:page;padding-top:6mm;}
+  .rp-toc-title{font-size:20pt;color:#3c2fb8;margin:0 0 6mm;}
+  .rp-toc ol{font-size:13pt;line-height:2.1;padding-left:8mm;margin:0 0 10mm;}
+  .rp-toc li::marker{color:#5B4BE0;font-weight:700;}
+  .rp-note{font-size:9pt;color:#6b6880;border-left:3px solid #c9c2f5;padding:2mm 4mm;background:#f8f7fd;}
+
+  /* หัวข้อ */
+  .rp-h1{display:flex;align-items:center;gap:4mm;font-size:17pt;color:#2b2370;margin:0 0 5mm;padding-bottom:3mm;border-bottom:2px solid #5B4BE0;break-after:avoid;}
+  .rp-h1 span{display:inline-flex;align-items:center;justify-content:center;width:10mm;height:10mm;border-radius:50%;background:#5B4BE0;color:#fff;font-size:12pt;flex-shrink:0;}
+  .rp-h3{font-size:11.5pt;color:#3c2fb8;margin:5mm 0 2.5mm;break-after:avoid;}
+  .rp-red-t{color:#b8434a;} .rp-green-t{color:#26845b;}
+  .rp-sub{font-size:10pt;font-weight:700;color:#3c2fb8;margin:4mm 0 1.5mm;break-after:avoid;}
+  .rp-line{font-size:9pt;margin:1.5mm 0;}
+  .rp-break-avoid{break-before:auto;}
+
+  /* ตาราง */
+  .rp-table{width:100%;border-collapse:collapse;font-size:9pt;margin:0 0 3mm;}
+  .rp-table thead{display:table-header-group;}
+  .rp-table tr{break-inside:avoid;}
+  .rp-table th{background:#5B4BE0;color:#fff;font-weight:600;padding:1.8mm 2mm;text-align:left;border:1px solid #5B4BE0;font-size:8.5pt;}
+  .rp-table td{padding:1.6mm 2mm;border:1px solid #e2e0ec;vertical-align:top;}
+  .rp-table tbody tr:nth-child(even) td{background:#faf9fd;}
+  .rp-table .c{text-align:center;} .rp-table .r{text-align:right;white-space:nowrap;}
+  .rp-compact{font-size:8.3pt;}
+  .rp-fixed{table-layout:fixed;} .rp-fixed td{word-wrap:break-word;}
+  .rp-compact .rp-badge{white-space:normal;line-height:1.35;font-size:7.4pt;padding:.3mm 1.6mm;}
+  .rp-chips{display:flex;flex-wrap:wrap;gap:2mm 5mm;font-size:9pt;margin-bottom:2mm;}
+  .rp-chips span{display:inline-flex;align-items:center;gap:1.5mm;} .rp-compact td,.rp-compact th{padding:1.2mm 1.6mm;}
+  .rp-narrow{width:60%;}
+  .rp-total td{font-weight:700;background:#f0eefb !important;}
+  .rp-gap{color:#c2524f;background:#fbe9e9 !important;}
+  .rp-heat td{font-size:9.5pt;}
+  .rp-reason td{background:#fff !important;color:#55536a;font-size:8pt;border-top:none;}
+  .rp-ind td.rp-yr span{display:block;color:#8a8796;font-size:7.8pt;}
+  .rp-ind td.rp-yr b{display:block;font-size:8.6pt;}
+
+  /* ตัวบ่งชี้/ป้าย */
+  .rp-badge{display:inline-block;font-size:7.8pt;font-weight:700;padding:.4mm 2.2mm;border-radius:10mm;white-space:nowrap;border:1px solid currentColor;}
+  .rp-green{color:#26845b;background:#e3f4eb;} .rp-yellow{color:#9b7a0d;background:#fbf3d6;} .rp-orange{color:#c06e22;background:#fcefdf;}
+  .rp-red{color:#b8434a;background:#fbe8e8;} .rp-grey{color:#8a8796;background:#f1f0f5;} .rp-violet{color:#6d43d8;background:#efe9fd;}
+  .rp-flag{display:inline-block;font-size:7.5pt;color:#c06e22;font-weight:700;margin-top:.8mm;}
+  .rp-dot{display:inline-block;min-width:5mm;padding:0 1mm;border-radius:3mm;color:#fff;font-size:7.8pt;font-weight:700;margin:0 .4mm;}
+  .rp-bar{display:inline-block;width:32mm;height:2.6mm;background:#ecebf3;border-radius:2mm;overflow:hidden;vertical-align:middle;}
+  .rp-bar span{display:block;height:100%;border-radius:2mm;}
+  .rp-approved{color:#26845b;font-weight:700;}
+  .rp-url{color:#4B3FD1;word-break:break-all;}
+  .rp-al{font-size:11pt;line-height:1;} .rp-al2{color:#26845b;} .rp-al1{color:#c99a12;} .rp-al0{color:#c2524f;}
+
+  /* บทสรุป */
+  .rp-kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:3mm;margin-bottom:3mm;}
+  .rp-kpi{border:1px solid #e3e0f5;border-top:3px solid #5B4BE0;border-radius:2.5mm;padding:3mm;background:#faf9ff;break-inside:avoid;}
+  .rp-kpi:nth-child(2){border-top-color:#3B8FE8;} .rp-kpi:nth-child(3){border-top-color:#EE9B2F;} .rp-kpi:nth-child(4){border-top-color:#2FA572;}
+  .rp-kpi span{display:block;font-size:8.5pt;color:#6b6880;} .rp-kpi b{display:block;font-size:17pt;color:#2b2370;line-height:1.25;} .rp-kpi em{font-style:normal;font-size:8pt;color:#8a8796;}
+  .rp-points{margin:0 0 3mm;padding-left:5mm;} .rp-points li{margin-bottom:1.5mm;}
+  .rp-dist{display:flex;height:6mm;border-radius:2mm;overflow:hidden;margin-bottom:2mm;}
+  .rp-seg{display:flex;align-items:center;justify-content:center;color:#fff;font-size:8pt;font-weight:700;}
+  .rp-legend{display:flex;flex-wrap:wrap;gap:2mm 5mm;font-size:8.5pt;margin-bottom:3mm;}
+  .rp-leg i{display:inline-block;width:3mm;height:3mm;border-radius:1mm;margin-right:1.5mm;vertical-align:middle;}
+  .rp-two{display:grid;grid-template-columns:1fr 1fr;gap:5mm;}
+  .rp-rank{margin:0;padding-left:5mm;font-size:9pt;} .rp-rank li{margin-bottom:1.5mm;} .rp-rank li span{display:inline;} .rp-rank b{float:right;margin-left:2mm;}
+
+  /* รายกลยุทธ์ */
+  .rp-strategy-head{border-radius:3mm;padding:5mm 6mm;margin-bottom:4mm;color:#fff;background:#5B4BE0;break-after:avoid;}
+  .rp-strategy-head.rp-s2{background:#14A3A8;} .rp-strategy-head.rp-s3{background:#E8673F;} .rp-strategy-head.rp-s4{background:#C98A0F;}
+  .rp-strategy-head div{font-size:9pt;letter-spacing:.08em;opacity:.9;font-weight:600;}
+  .rp-strategy-head h2{font-size:16pt;margin:1mm 0 2mm;}
+  .rp-strategy-head p{font-size:9pt;margin:0;opacity:.95;}
+  .rp-item{border:1px solid #e2e0ec;border-top:3px solid #5B4BE0;border-radius:2.5mm;padding:4mm 5mm;margin-bottom:5mm;}
+  .rp-item.rp-s2{border-top-color:#14A3A8;} .rp-item.rp-s3{border-top-color:#E8673F;} .rp-item.rp-s4{border-top-color:#C98A0F;}
+  .rp-item-head{display:grid;grid-template-columns:auto 1fr auto;gap:4mm;align-items:start;margin-bottom:2mm;break-inside:avoid;break-after:avoid;}
+  .rp-item-no{font-size:14pt;font-weight:700;color:#4B3FD1;background:#efedfc;border-radius:2mm;padding:1mm 3mm;}
+  .rp-item-title h3{font-size:11.5pt;margin:0 0 1mm;line-height:1.4;}
+  .rp-item-score{text-align:right;} .rp-item-score b{display:block;font-size:18pt;line-height:1.1;}
+  .rp-crit{border-collapse:collapse;font-size:9pt;margin-bottom:1mm;} .rp-crit td{padding:.6mm 2mm .6mm 0;}
+  .rp-list{margin:0 0 2mm;padding-left:5mm;font-size:9pt;} .rp-list li{margin-bottom:1mm;break-inside:avoid;}
+  .rp-ld{margin-top:3mm;break-inside:avoid;}
+  .rp-box{border:1px solid #e2e0ec;border-radius:2.5mm;padding:3mm 4mm;font-size:9pt;background:#fafafa;break-inside:avoid;}
+  .rp-box p{margin:0 0 1.5mm;}
+  .rp-box-t{font-weight:700;font-size:9.5pt;margin-bottom:1.5mm;}
+  .rp-box-green{border-left:3px solid #2FA572;background:#f3faf6;} .rp-box-green .rp-box-t{color:#26845b;}
+  .rp-box-violet{border-left:3px solid #8B5CF6;background:#f7f3ff;} .rp-box-violet .rp-box-t{color:#6d43d8;}
+
+  /* วิเคราะห์ */
+  .rp-quads{width:100%;border-collapse:separate;border-spacing:2mm;margin:0 -2mm 3mm;break-inside:avoid;}
+  .rp-quad{width:50%;vertical-align:top;border-radius:2.5mm;padding:3mm 4mm;font-size:9pt;}
+  .rp-quad ul{margin:0;padding-left:4.5mm;} .rp-quad li{margin-bottom:1mm;}
+  .rp-quad-t{font-weight:700;margin-bottom:1.5mm;}
+  .rp-q-S{background:#e3f6ec;} .rp-q-W{background:#fdf0e2;} .rp-q-O{background:#e7f1fd;} .rp-q-T{background:#fdecec;}
+  .rp-q-SO{background:#e5f4f1;} .rp-q-WO{background:#f2f0ec;} .rp-q-ST{background:#eef3ec;} .rp-q-WT{background:#fbeee8;}
+  .rp-fw{font-size:8.5pt;columns:2;column-gap:6mm;margin:0 0 2mm;padding-left:0;list-style:none;} .rp-fw li{margin-bottom:1mm;break-inside:avoid;} .rp-fw b{color:#4B3FD1;}
+
+  /* ลงนาม */
+  .rp-sign{display:grid;grid-template-columns:1fr 1fr;gap:12mm;margin-top:16mm;text-align:center;font-size:10pt;break-inside:avoid;}
+  .rp-sign-line{border-bottom:1px dotted #555;height:12mm;margin:0 10mm 2mm;}
 }
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
@@ -1095,6 +1212,36 @@ table.syn-table td.num{text-align:center;white-space:nowrap;}
 <div id="printReportContainer" class="print-only"></div>
 
 <footer class="appfoot">Digital Strategic Evaluation System — ออกแบบสำหรับการทบทวนแผนยุทธศาสตร์ พ.ศ. 2566-2570 เพื่อจัดทำแผนฉบับใหม่ พ.ศ. 2571-2575</footer>
+<div class="rp-modal" id="reportModal" role="dialog" aria-modal="true" aria-labelledby="rpTitle">
+  <div class="rp-modal-card">
+    <h3 id="rpTitle">📄 สร้างรายงาน PDF</h3>
+    <p>เลือกเนื้อหาที่ต้องการ ระบบจะจัดหน้ารายงานขนาด A4 พร้อมปก สารบัญ และเลขหน้า แล้วเปิดหน้าต่างพิมพ์ให้บันทึกเป็น PDF</p>
+    <div class="rp-tip">ในหน้าต่างพิมพ์: เลือกปลายทาง <b>&ldquo;บันทึกเป็น PDF&rdquo;</b> · กระดาษ <b>A4</b> · <b>ปิด</b> &ldquo;ส่วนหัวและส่วนท้าย&rdquo; (Headers and footers) · ข้อมูลในรายงานเป็นข้อมูลที่โหลดล่าสุด หากต้องการข้อมูลล่าสุดให้กด &ldquo;รีเฟรช&rdquo; ก่อน</div>
+    <div class="field-label">ขอบเขตรายงาน</div>
+    <select id="rpStrategy" class="meta-input" style="margin-bottom:12px;">
+      <option value="all">ทุกยุทธศาสตร์ (4 ยุทธศาสตร์ 23 กลยุทธ์)</option>
+      <option value="1">เฉพาะยุทธศาสตร์ที่ 1</option><option value="2">เฉพาะยุทธศาสตร์ที่ 2</option>
+      <option value="3">เฉพาะยุทธศาสตร์ที่ 3</option><option value="4">เฉพาะยุทธศาสตร์ที่ 4</option>
+    </select>
+    <div class="field-label">เนื้อหา</div>
+    <div class="rp-opts">
+      <label class=""><input type="checkbox" data-rp-opt="summary" checked><span>1. บทสรุปผู้บริหาร<small>ตัวเลขสำคัญ ข้อค้นพบ อันดับกลยุทธ์ และสรุปมติ</small></span></label>
+      <label class=""><input type="checkbox" data-rp-opt="method" checked><span>2. กรอบและวิธีการประเมิน<small>เกณฑ์ OECD-DAC น้ำหนัก มาตรวัด และการแปลผล</small></span></label>
+      <label class=""><input type="checkbox" data-rp-opt="overview" checked><span>3. ภาพรวมผลการประเมิน<small>Heatmap และตารางสรุปรายยุทธศาสตร์/รายกลยุทธ์</small></span></label>
+      <label class=""><input type="checkbox" data-rp-opt="items" checked><span>4. ผลการประเมินรายกลยุทธ์<small>คะแนน ตัวชี้วัด งบประมาณ โครงการ หลักฐาน บทเรียน และมติ</small></span></label>
+      <label class="sub"><input type="checkbox" data-rp-opt="evalDetail" checked><span>คะแนนรายผู้ประเมิน พร้อมเหตุผล</span></label>
+      <label class="sub"><input type="checkbox" data-rp-opt="comments" checked><span>ความคิดเห็นของทีม</span></label>
+      <label class=""><input type="checkbox" data-rp-opt="analysis" checked><span>5. มติและการวิเคราะห์เพื่อแผนใหม่<small>มติเทียบระบบ SWOT, TOWS และความสอดคล้องเชิงนโยบาย</small></span></label>
+      <label class=""><input type="checkbox" data-rp-opt="proposals" checked><span>6. ข้อเสนอกลยุทธ์ใหม่</span></label>
+      <label class=""><input type="checkbox" data-rp-opt="appendix" checked><span>ภาคผนวก<small>บันทึกทีม รายชื่อผู้ประเมิน ประวัติการแก้ไข และช่องลงนาม</small></span></label>
+    </div>
+    <div class="rp-modal-foot">
+      <button class="btn-light" data-close-report>ยกเลิก</button>
+      <button class="btn-light" id="btnReportAll">เลือกทั้งหมด</button>
+      <button class="btn-light btn-light-solid" id="btnBuildReport">สร้างรายงาน PDF</button>
+    </div>
+  </div>
+</div>
 <div class="toast" id="toast">บันทึกข้อมูลแล้ว</div>
 <div class="success-popup" id="successPopup">
   <div class="success-popup-card">
@@ -3301,125 +3448,391 @@ document.getElementById('btnLogout').addEventListener('click', async ()=>{
 /* ================================================================ */
 /* EXPORT / RESET                                                    */
 /* ================================================================ */
-function buildReportHtml(){
-  const items = DATA.items;
+/* ================================================================ */
+/* รายงาน PDF ฉบับเต็ม (สร้าง HTML สำหรับพิมพ์ แล้วให้เบราว์เซอร์บันทึกเป็น PDF) */
+/* ================================================================ */
+const REPORT_DEFAULT_OPTS = {summary:true, method:true, overview:true, items:true, evalDetail:true, comments:true, analysis:true, proposals:true, appendix:true, strategy:'all'};
+function rpNl(t){ return escapeHtml(t || '').replace(/\n/g, '<br>'); }
+function rpThaiDate(d){ try{ return (d || new Date()).toLocaleDateString('th-TH', {year:'numeric', month:'long', day:'numeric'}); }catch(e){ return new Date().toISOString().slice(0,10); } }
+function rpBadge(rk, text){ return `<span class="rp-badge rp-${rk}">${escapeHtml(text)}</span>`; }
+const RECO_SHORT = {red:'ตัดออก', orange:'ปรับเปลี่ยนสาระสำคัญ', yellow:'ปรับปรุงเล็กน้อย/คงไว้', green:'คงไว้และขยายผล', grey:'ยังไม่ประเมิน'};
+function rpRecoBadge(avg){ const rk = getRecoKey(avg); return rpBadge(rk, RECO_SHORT[rk]); }
+function rpCols(ws){ return '<colgroup>' + ws.map(w=>`<col style="width:${w}%">`).join('') + '</colgroup>'; }
+function rpDecisionBadge(d){ return d && DECISIONS[d] ? `<span class="rp-badge rp-${DECISIONS[d].color}">${escapeHtml(DECISIONS[d].label)}</span>` : '<span class="rp-muted">ยังไม่มีมติ</span>'; }
+function rpEmpty(t){ return `<p class="rp-empty">${escapeHtml(t)}</p>`; }
+function rpItemLabel(it){ return `${it.strategyId}.${it.num}`; }
+function rpBar(pct, color){ const w = Math.max(0, Math.min(100, pct || 0)); return `<span class="rp-bar"><span style="width:${w}%;background:${color};"></span></span>`; }
+function rpIndCell(type, v){
+  if(v===null || v===undefined || v==='') return '<span class="rp-muted">–</span>';
+  if(type === 'binary') return Number(v) >= 1 ? 'มี' : 'ไม่มี';
+  return escapeHtml(Number(v).toLocaleString('th-TH'));
+}
+function rpPlanStats(items){
   const evaluated = items.filter(it=>computeItemAvg(it.id)!==null);
-  const counts = {red:0,orange:0,yellow:0,green:0,grey:0};
+  const counts = {red:0, orange:0, yellow:0, green:0, grey:0};
   items.forEach(it=>{ counts[getRecoKey(computeItemAvg(it.id))]++; });
-  const overallAvg = evaluated.length ? evaluated.reduce((a,it)=>a+computeItemAvg(it.id),0)/evaluated.length : null;
+  const avg = evaluated.length ? evaluated.reduce((a,it)=>a+computeItemAvg(it.id),0)/evaluated.length : null;
+  let planned = 0, actual = 0, hasBudget = 0, progSum = 0, indAch = 0, indData = 0, indTotal = 0, nProj = 0;
+  const dec = {}; Object.keys(DECISIONS).forEach(k=>dec[k]=0); let decided = 0, differs = 0;
+  const evaluators = {};
+  items.forEach(it=>{
+    const st = evalState[it.id] || {};
+    const p = sumYearly(st.budget && st.budget.planned), a = sumYearly(st.budget && st.budget.actual);
+    if(p!==null){ planned += p; actual += (a||0); hasBudget++; }
+    progSum += (st.progress && st.progress.percent) || 0;
+    const ind = indicatorSummary(it.id); indAch += ind.achieved; indData += ind.withData; indTotal += ind.total;
+    nProj += (st.projects||[]).length;
+    const d = st.decision && st.decision.decision;
+    if(d && dec[d]!==undefined){ dec[d]++; decided++; const sys = itemRecoDecision(it.id); if(sys && sys!==d) differs++; }
+    (st.evaluations||[]).forEach(ev=>{ const key = ev.evaluatorUid || ev.evaluator; if(!key) return; (evaluators[key] = evaluators[key] || {name: ev.evaluator || 'ไม่ระบุชื่อ', items: new Set()}).items.add(it.id); });
+  });
+  const critAvg = {};
+  CRIT_KEYS.forEach(k=>{ const vals = items.map(it=>critAverages(it.id)[k]).filter(v=>v!==null); critAvg[k] = vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : null; });
+  return {evaluated: evaluated.length, total: items.length, counts, avg, planned, actual, hasBudget, rate: planned ? actual/planned*100 : null,
+    progress: items.length ? progSum/items.length : 0, indAch, indData, indTotal, nProj, dec, decided, differs, evaluators, critAvg};
+}
+function rpDistBar(counts, total){
+  const order = ['green','yellow','orange','red','grey'];
+  const segs = order.filter(k=>counts[k]).map(k=>`<span class="rp-seg" style="width:${counts[k]/total*100}%;background:${RECO_COLOR_HEX[k]};">${counts[k]}</span>`).join('');
+  const legend = order.map(k=>`<span class="rp-leg"><i style="background:${RECO_COLOR_HEX[k]}"></i>${RECO[k].label} <b>${counts[k]}</b></span>`).join('');
+  return `<div class="rp-dist">${segs}</div><div class="rp-legend">${legend}</div>`;
+}
 
-  let html = `
-    <div class="report-cover">
-      <div class="report-eyebrow">DIGITAL STRATEGIC EVALUATION SYSTEM</div>
-      <h1>รายงานผลการประเมินแผนยุทธศาสตร์</h1>
-      <p class="report-sub">มูลนิธิการศึกษาทางไกลผ่านดาวเทียม ในพระบรมราชูปถัมภ์ · กรอบประเมิน OECD-DAC</p>
-      <p class="report-sub">เพื่อจัดทำแผนยุทธศาสตร์ พ.ศ. 2571-2575</p>
-      <p class="report-date">จัดทำเมื่อ ${new Date().toLocaleString('th-TH')}</p>
+function rpCover(opts, S){
+  const scope = opts.strategy === 'all' ? 'ครอบคลุม 4 ยุทธศาสตร์ 23 กลยุทธ์' : `เฉพาะยุทธศาสตร์ที่ ${opts.strategy}: ${STRATEGY_NAME_BY_ID[Number(opts.strategy)]}`;
+  return `
+  <section class="rp-cover">
+    <div class="rp-cover-band">
+      <div class="rp-cover-eyebrow">DIGITAL STRATEGIC EVALUATION SYSTEM (DSES)</div>
+      <h1>รายงานผลการประเมินแผนยุทธศาสตร์<br>พ.ศ. 2566-2570</h1>
+      <div class="rp-cover-sub">เพื่อเป็นข้อมูลประกอบการจัดทำแผนยุทธศาสตร์ พ.ศ. 2571-2575</div>
     </div>
-
-    <div class="report-section">
-      <h2>สรุปภาพรวม</h2>
-      <table class="report-table">
-        <tr><td>คะแนนเฉลี่ยรวมทั้งแผน</td><td>${overallAvg===null?'ยังไม่มีข้อมูล':overallAvg.toFixed(2)+' / 5.00'}</td></tr>
-        <tr><td>กลยุทธ์ที่ประเมินแล้ว</td><td>${evaluated.length} / ${items.length}</td></tr>
-        <tr><td>ควรตัดออก (Discontinue)</td><td>${counts.red}</td></tr>
-        <tr><td>ควรปรับเปลี่ยนสาระสำคัญ (Major Revision)</td><td>${counts.orange}</td></tr>
-        <tr><td>ควรปรับปรุงเล็กน้อย/คงไว้ (Minor Revision)</td><td>${counts.yellow}</td></tr>
-        <tr><td>ควรคงไว้และขยายผล (Retain &amp; Scale-up)</td><td>${counts.green}</td></tr>
-        <tr><td>ยังไม่ได้ประเมิน</td><td>${counts.grey}</td></tr>
+    <div class="rp-cover-body">
+      <div class="rp-cover-org">มูลนิธิการศึกษาทางไกลผ่านดาวเทียม<br>ในพระบรมราชูปถัมภ์</div>
+      <div class="rp-cover-kpis">
+        <div><b>${fmt(S.avg)}</b><span>คะแนนเฉลี่ยทั้งแผน (เต็ม 5)</span></div>
+        <div><b>${S.evaluated}/${S.total}</b><span>กลยุทธ์ที่ประเมินแล้ว</span></div>
+        <div><b>${S.decided}/${S.total}</b><span>กลยุทธ์ที่มีมติแล้ว</span></div>
+        <div><b>${Object.keys(S.evaluators).length}</b><span>ผู้ประเมิน (คน)</span></div>
+      </div>
+      <table class="rp-meta">
+        <tr><td>กรอบการประเมิน</td><td>OECD-DAC 6 ด้าน (Relevance, Coherence, Effectiveness, Efficiency, Impact, Sustainability)</td></tr>
+        <tr><td>ขอบเขตรายงาน</td><td>${escapeHtml(scope)}</td></tr>
+        <tr><td>ข้อมูล ณ วันที่</td><td>${rpThaiDate()} เวลา ${new Date().toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'})} น.</td></tr>
+        <tr><td>จัดทำโดย</td><td>${escapeHtml(actorName())}${connected ? ' (ข้อมูลจากฐานข้อมูลกลาง Firebase)' : ' (ข้อมูลในเครื่อง — โหมดออฟไลน์)'}</td></tr>
       </table>
     </div>
-  `;
-
-  DATA.strategies.forEach(s=>{
-    const stratItems = items.filter(it=>it.strategyId===s.id);
-    html += `<div class="report-strategy">
-      <h2>ยุทธศาสตร์ที่ ${s.id}: ${escapeHtml(s.name)}</h2>
-      <p class="report-goal">เป้าหมาย: ${escapeHtml(s.goal)}</p>`;
-
-    stratItems.forEach(it=>{
-      const st = evalState[it.id] || {evaluations:[], indicators:[], budget:{planned:{},actual:{}}, progress:{status:'not_started',percent:0}, evidence:[]};
-      const avg = computeItemAvg(it.id);
-      const rk = getRecoKey(avg);
-      const evals = st.evaluations || [];
-      const inds = getIndicatorsForItem(it, st);
-      const b = st.budget || {planned:{}, actual:{}, note:''};
-      const p = st.progress || {status:'not_started', percent:0, note:''};
-      const totalPlanned = sumYearly(b.planned), totalActual = sumYearly(b.actual);
-      const variance = budgetVariancePct(b);
-
-      html += `<div class="report-item">
-        <h3>กลยุทธ์ที่ ${it.num}: ${escapeHtml(it.text)}</h3>
-        <p class="report-meta">ผู้รับผิดชอบ: ${escapeHtml(it.owner)} &nbsp;|&nbsp; คะแนนเฉลี่ย: <b>${fmt(avg)}</b> &nbsp;|&nbsp; ข้อเสนอแนะ: <span class="report-badge ${rk}">${RECO[rk].label}</span></p>`;
-
-      // Evaluations
-      html += `<div class="report-subhead">คะแนนประเมิน OECD-DAC (${evals.length} ผู้ประเมิน)</div>`;
-      if(evals.length){
-        html += `<table class="report-table small"><tr><th>ผู้ประเมิน</th><th>วันที่</th>` +
-          CRIT_LABELS.map(c=>`<th>${escapeHtml(c.th)}</th>`).join('') + `<th>เฉลี่ย</th><th>เหตุผล</th></tr>`;
-        evals.forEach(ev=>{
-          html += `<tr><td>${escapeHtml(ev.evaluator)}</td><td>${escapeHtml(ev.date)}</td>` +
-            CRIT_KEYS.map(k=>`<td>${ev.scores[k] ?? '—'}</td>`).join('') +
-            `<td>${fmt(avgOfScores(ev.scores))}</td><td>${escapeHtml(ev.reason||'')}</td></tr>`;
-        });
-        html += `</table>`;
-      } else {
-        html += `<p class="report-empty">ยังไม่มีการประเมิน</p>`;
-      }
-
-      // Indicators
-      html += `<div class="report-subhead">ตัวชี้วัดผลจริง</div>`;
-      if(inds.length){
-        html += `<table class="report-table small"><tr><th>ตัวชี้วัด</th><th>โครงการ/กิจกรรม</th>` +
-          YEARS.map(y=>`<th>เป้า ${y}</th>`).join('') + YEARS.map(y=>`<th>จริง ${y}</th>`).join('') + `<th>% บรรลุ</th></tr>`;
-        inds.forEach(ind=>{
-          const ach = indicatorAchievementPct(ind);
-          html += `<tr><td>${escapeHtml(ind.text)}</td><td>${escapeHtml(ind.project||'—')}</td>` +
-            YEARS.map(y=>`<td>${ind.targetYearly[y] ?? '—'}</td>`).join('') +
-            YEARS.map(y=>`<td>${ind.yearly[y] ?? '—'}</td>`).join('') +
-            `<td>${ach===null?'—':ach.pct.toFixed(0)+'% (ปี '+ach.year+')'}</td></tr>`;
-        });
-        html += `</table>`;
-      }
-
-      // Budget & Progress
-      html += `<div class="report-subhead">งบประมาณรายปี (บาท) และความคืบหน้า</div>`;
-      html += `<table class="report-table small"><tr><th></th>` + YEARS.map(y=>`<th>${y}</th>`).join('') + `<th>รวม</th></tr>` +
-        `<tr><td>ตามแผน</td>` + YEARS.map(y=>`<td>${b.planned[y]!=null?fmtMoney(b.planned[y]):'—'}</td>`).join('') + `<td>${totalPlanned!=null?fmtMoney(totalPlanned):'—'}</td></tr>` +
-        `<tr><td>ใช้จริง</td>` + YEARS.map(y=>`<td>${b.actual[y]!=null?fmtMoney(b.actual[y]):'—'}</td>`).join('') + `<td>${totalActual!=null?fmtMoney(totalActual):'—'}</td></tr>` +
-        `</table>`;
-      html += `<p class="report-meta">ส่วนต่างงบประมาณรวม: ${variance===null?'ยังไม่มีข้อมูลเพียงพอ':variance.toFixed(1)+'%'} &nbsp;|&nbsp; สถานะ: ${statusLabel(p.status)} (${p.percent||0}%)</p>`;
-
-      // Evidence
-      if((st.evidence||[]).length){
-        html += `<div class="report-subhead">หลักฐานอ้างอิง</div><ul class="report-list">` +
-          st.evidence.map(ev=>`<li>${escapeHtml(ev.label||'หลักฐาน')}${ev.url?': '+escapeHtml(ev.url):''}</li>`).join('') + `</ul>`;
-      }
-
-      html += `</div>`; // .report-item
-    });
-    html += `</div>`; // .report-strategy
+  </section>`;
+}
+function rpToc(opts){
+  const parts = [];
+  if(opts.summary) parts.push('บทสรุปผู้บริหาร');
+  if(opts.method) parts.push('กรอบและวิธีการประเมิน');
+  if(opts.overview) parts.push('ภาพรวมผลการประเมิน');
+  if(opts.items) parts.push('ผลการประเมินรายกลยุทธ์');
+  if(opts.analysis) parts.push('มติคณะกรรมการและการวิเคราะห์เพื่อแผนใหม่');
+  if(opts.proposals) parts.push('ข้อเสนอกลยุทธ์ใหม่');
+  if(opts.appendix) parts.push('ภาคผนวก');
+  return `<section class="rp-toc"><h2 class="rp-toc-title">สารบัญ</h2><ol>${parts.map(p=>`<li>${p}</li>`).join('')}</ol>
+    <div class="rp-note">หมายเหตุ: คะแนนเฉลี่ยคำนวณแบบถ่วงน้ำหนักตามที่ตั้งค่าในระบบ ข้อเสนอแนะของระบบใช้ประกอบการพิจารณาเท่านั้น มติสุดท้ายเป็นของคณะกรรมการ</div></section>`;
+}
+function rpSummary(items, S){
+  const critSorted = CRIT_KEYS.map((k,i)=>({k, th: CRIT_LABELS[i].th, v: S.critAvg[k]})).filter(c=>c.v!==null).sort((a,b)=>a.v-b.v);
+  const weakest = critSorted[0], strongest = critSorted[critSorted.length-1];
+  const withAvg = items.map(it=>({it, avg: computeItemAvg(it.id)})).filter(x=>x.avg!==null);
+  const low = [...withAvg].sort((a,b)=>a.avg-b.avg).slice(0,5), high = [...withAvg].sort((a,b)=>b.avg-a.avg).slice(0,5);
+  const gaps = alignmentFrameworks.filter(f=>{ let filled = 0, hi = 0; items.forEach(it=>{ const v = (evalState[it.id]?.alignment||{})[f.key]; if(v!==null && v!==undefined && v!==''){ filled++; if(Number(v)===2) hi++; } }); return filled >= 5 && hi === 0; });
+  const pts = [];
+  if(S.evaluated) pts.push(`ประเมินแล้ว <b>${S.evaluated}</b> จาก ${S.total} กลยุทธ์ คะแนนเฉลี่ยรวม <b>${fmt(S.avg)}</b> จาก 5.00 โดยระบบแนะนำให้ &ldquo;คงไว้และขยายผล&rdquo; <b>${S.counts.green}</b> กลยุทธ์ และ &ldquo;ตัดออก/ปรับเปลี่ยนสาระสำคัญ&rdquo; <b>${S.counts.red + S.counts.orange}</b> กลยุทธ์`);
+  else pts.push('ยังไม่มีการกรอกคะแนนประเมิน');
+  if(weakest && strongest && weakest.k !== strongest.k) pts.push(`มิติที่แข็งแรงที่สุดคือ <b>${strongest.th}</b> (${strongest.v.toFixed(2)}) และมิติที่ควรพัฒนามากที่สุดคือ <b>${weakest.th}</b> (${weakest.v.toFixed(2)})`);
+  if(S.hasBudget) pts.push(`งบประมาณรวมตามแผน ${fmtMoney(S.planned)} บาท ใช้จริง ${fmtMoney(S.actual)} บาท อัตราเบิกจ่ายรวม <b>${S.rate===null?'—':S.rate.toFixed(1)+'%'}</b>`);
+  if(S.indData) pts.push(`ตัวชี้วัดที่มีข้อมูลผลจริงแล้ว ${S.indData} จาก ${S.indTotal} ตัว บรรลุเป้าหมาย <b>${S.indAch}</b> ตัว (${(S.indAch/S.indData*100).toFixed(0)}%)`);
+  pts.push(`ความคืบหน้าเฉลี่ยของแผน <b>${S.progress.toFixed(0)}%</b>${S.nProj ? ` · บันทึกโครงการ ${S.nProj} โครงการ` : ''}`);
+  if(S.decided) pts.push(`คณะกรรมการมีมติแล้ว <b>${S.decided}</b> กลยุทธ์${S.differs ? ` โดย ${S.differs} กลยุทธ์มีมติต่างจากข้อเสนอแนะของระบบ (ระบุเหตุผลไว้ในส่วนที่ 5)` : ''}`);
+  if(gaps.length) pts.push(`พบช่องว่างเชิงนโยบาย: ยังไม่มีกลยุทธ์ที่สอดคล้องสูงกับ ${gaps.map(g=>'&ldquo;'+escapeHtml(g.name)+'&rdquo;').join(', ')}`);
+  const rankList = arr => arr.length ? `<ol class="rp-rank">${arr.map(x=>`<li><span>${rpItemLabel(x.it)} ${escapeHtml(x.it.text)}</span><b style="color:${RECO_COLOR_HEX[getRecoKey(x.avg)]}">${x.avg.toFixed(2)}</b></li>`).join('')}</ol>` : rpEmpty('ยังไม่มีข้อมูล');
+  return `
+  <section class="rp-section rp-break">
+    <h2 class="rp-h1"><span>1</span>บทสรุปผู้บริหาร</h2>
+    <div class="rp-kpi-grid">
+      <div class="rp-kpi"><span>คะแนนเฉลี่ยทั้งแผน</span><b>${fmt(S.avg)}</b><em>จาก 5.00</em></div>
+      <div class="rp-kpi"><span>กลยุทธ์ที่ประเมินแล้ว</span><b>${S.evaluated}/${S.total}</b><em>${S.counts.grey} ยังไม่ประเมิน</em></div>
+      <div class="rp-kpi"><span>อัตราเบิกจ่ายรวม</span><b>${S.rate===null ? '—' : S.rate.toFixed(0)+'%'}</b><em>${fmtMoney(S.actual)} / ${fmtMoney(S.planned)} บาท</em></div>
+      <div class="rp-kpi"><span>ตัวชี้วัดบรรลุเป้าหมาย</span><b>${S.indAch}/${S.indData}</b><em>มีข้อมูล ${S.indData}/${S.indTotal} ตัว</em></div>
+    </div>
+    <h3 class="rp-h3">ข้อค้นพบสำคัญ</h3>
+    <ul class="rp-points">${pts.map(p=>`<li>${p}</li>`).join('')}</ul>
+    <h3 class="rp-h3">สัดส่วนข้อเสนอแนะของระบบ</h3>
+    ${rpDistBar(S.counts, S.total)}
+    <div class="rp-two">
+      <div><h3 class="rp-h3 rp-red-t">5 อันดับที่ควรพิจารณาตัดออก/ปรับเปลี่ยนก่อน</h3>${rankList(low)}</div>
+      <div><h3 class="rp-h3 rp-green-t">5 อันดับที่ควรคงไว้และขยายผล</h3>${rankList(high)}</div>
+    </div>
+    <h3 class="rp-h3">สรุปมติคณะกรรมการ (มีมติแล้ว ${S.decided}/${S.total} กลยุทธ์)</h3>
+    <div class="rp-chips">${Object.keys(DECISIONS).map(k=>`<span>${rpDecisionBadge(k)} <b>${S.dec[k]}</b></span>`).join('')}</div>
+  </section>`;
+}
+function rpMethod(){
+  const wsum = CRIT_KEYS.reduce((a,k)=>a+(Number(weights[k])||0),0) || 1;
+  const crit = CRIT_KEYS.map((k,i)=>`<tr><td><b>${escapeHtml(CRIT_LABELS[i].th)}</b><div class="rp-muted">${escapeHtml(CRIT_LABELS[i].en)}</div></td><td>${escapeHtml(CRIT_LABELS[i].desc)}</td><td class="c">${weights[k] ?? 1}<div class="rp-muted">${((Number(weights[k])||0)/wsum*100).toFixed(0)}%</div></td></tr>`).join('');
+  const scale = DATA.scale.map(s=>`<tr><td class="c"><b>${s.score}</b></td><td>${escapeHtml(s.level)}</td><td>${escapeHtml(s.desc)}</td></tr>`).join('');
+  return `
+  <section class="rp-section rp-break">
+    <h2 class="rp-h1"><span>2</span>กรอบและวิธีการประเมิน</h2>
+    <p>การประเมินใช้กรอบ OECD-DAC 6 ด้าน ผู้ประเมินแต่ละคนให้คะแนน 1-5 ในแต่ละด้านต่อกลยุทธ์ ระบบเฉลี่ยคะแนนรายด้านจากผู้ประเมินทุกคน แล้วคำนวณคะแนนเฉลี่ยของกลยุทธ์แบบถ่วงน้ำหนัก จากนั้นแปลงเป็นข้อเสนอแนะเบื้องต้น เพื่อให้คณะกรรมการพิจารณาร่วมกับตัวชี้วัด งบประมาณ โครงการ และบทเรียน ก่อนลงมติ</p>
+    <h3 class="rp-h3">หลักเกณฑ์และน้ำหนัก</h3>
+    <table class="rp-table rp-compact"><thead><tr><th style="width:22%">หลักเกณฑ์</th><th>ความหมาย</th><th class="c" style="width:12%">น้ำหนัก</th></tr></thead><tbody>${crit}</tbody></table>
+    <div class="rp-two">
+      <div><h3 class="rp-h3">มาตรวัดคะแนน</h3>
+        <table class="rp-table rp-compact"><thead><tr><th class="c" style="width:12%">คะแนน</th><th style="width:28%">ระดับ</th><th>ความหมาย</th></tr></thead><tbody>${scale}</tbody></table></div>
+      <div><h3 class="rp-h3">การแปลผลคะแนนเฉลี่ย</h3>
+        <table class="rp-table"><thead><tr><th>ช่วงคะแนน</th><th>ข้อเสนอแนะ</th></tr></thead><tbody>
+          <tr><td>น้อยกว่า 2.50</td><td>${rpBadge('red', RECO.red.label)}</td></tr>
+          <tr><td>2.50 - 3.49</td><td>${rpBadge('orange', RECO.orange.label)}</td></tr>
+          <tr><td>3.50 - 4.19</td><td>${rpBadge('yellow', RECO.yellow.label)}</td></tr>
+          <tr><td>4.20 ขึ้นไป</td><td>${rpBadge('green', RECO.green.label)}</td></tr></tbody></table>
+        <h3 class="rp-h3">ประเภทตัวชี้วัด</h3>
+        <ul class="rp-points rp-small">
+          <li><b>ยิ่งมากยิ่งดี</b> — % บรรลุ = ผลจริง ÷ เป้าหมาย</li>
+          <li><b>ยิ่งน้อยยิ่งดี</b> — % บรรลุ = เป้าหมาย ÷ ผลจริง</li>
+          <li><b>มี/ไม่มี</b> — บรรลุเมื่อผลจริงปีล่าสุดเป็น &ldquo;มี&rdquo;</li>
+          <li>ใช้ปีล่าสุดที่มีข้อมูลคู่กัน และจำกัดสูงสุด 150%</li></ul>
+        <h3 class="rp-h3">การแปลผลงบประมาณ</h3>
+        <ul class="rp-points rp-small"><li>ต่างจากแผนไม่เกิน ±10% ถือว่าใกล้เคียงแผน</li><li>ใช้เกินแผนหรือต่ำกว่าแผนมาก ต้องตรวจสอบสาเหตุ (เช่น เบิกจ่ายล่าช้า)</li></ul>
+      </div>
+    </div>
+  </section>`;
+}
+function rpOverview(items, strategies){
+  // heatmap ยุทธศาสตร์ × เกณฑ์
+  let heat = `<table class="rp-table rp-heat"><thead><tr><th>หลักเกณฑ์</th>${strategies.map(s=>`<th class="c">ยุทธศาสตร์ ${s.id}</th>`).join('')}<th class="c">เฉลี่ย</th></tr></thead><tbody>`;
+  CRIT_KEYS.forEach((k,ci)=>{
+    const vals = strategies.map(s=>{ const v = items.filter(it=>it.strategyId===s.id).map(it=>critAverages(it.id)[k]).filter(x=>x!==null); return v.length ? v.reduce((a,b)=>a+b,0)/v.length : null; });
+    const ok = vals.filter(v=>v!==null); const row = ok.length ? ok.reduce((a,b)=>a+b,0)/ok.length : null;
+    heat += `<tr><td>${escapeHtml(CRIT_LABELS[ci].th)}</td>${vals.map(v=>`<td class="c" style="background:${v===null?'#f4f4f6':heatColor(v)}">${fmt(v)}</td>`).join('')}<td class="c" style="font-weight:700;background:${row===null?'#f4f4f6':heatColor(row)}">${fmt(row)}</td></tr>`;
   });
+  heat += '</tbody></table>';
+  const rows = strategies.map(s=>{
+    const its = items.filter(it=>it.strategyId===s.id);
+    const S = rpPlanStats(its);
+    return `<tr><td><b>ยุทธศาสตร์ที่ ${s.id}</b><div>${escapeHtml(s.name)}</div></td>
+      <td class="c">${S.evaluated}/${S.total}</td><td class="c"><b style="color:${RECO_COLOR_HEX[getRecoKey(S.avg)]}">${fmt(S.avg)}</b></td>
+      <td class="c">${['green','yellow','orange','red'].map(k=>`<span class="rp-dot" style="background:${RECO_COLOR_HEX[k]}">${S.counts[k]}</span>`).join('')}</td>
+      <td class="c">${S.rate===null?'—':S.rate.toFixed(0)+'%'}</td><td class="c">${S.progress.toFixed(0)}%</td>
+      <td class="c">${S.indAch}/${S.indData}</td><td class="c">${S.decided}/${S.total}</td></tr>`;
+  }).join('');
+  const itemRows = items.map(it=>{
+    const st = evalState[it.id] || {}; const avg = computeItemAvg(it.id); const ind = indicatorSummary(it.id); const v = budgetVariancePct(st.budget);
+    return `<tr><td class="c">${rpItemLabel(it)}</td><td>${escapeHtml(it.text)}</td><td class="c"><b style="color:${RECO_COLOR_HEX[getRecoKey(avg)]}">${fmt(avg)}</b></td>
+      <td>${rpRecoBadge(avg)}</td><td class="c">${ind.withData ? ind.achieved+'/'+ind.withData : '—'}</td><td class="c">${v===null?'—':(100+v).toFixed(0)+'%'}</td>
+      <td class="c">${(st.progress&&st.progress.percent)||0}%</td><td>${rpDecisionBadge(st.decision && st.decision.decision)}</td></tr>`;
+  }).join('');
+  return `
+  <section class="rp-section rp-break">
+    <h2 class="rp-h1"><span>3</span>ภาพรวมผลการประเมิน</h2>
+    <h3 class="rp-h3">คะแนนเฉลี่ยรายยุทธศาสตร์ × หลักเกณฑ์ OECD-DAC</h3>
+    ${heat}
+    <h3 class="rp-h3">สรุปรายยุทธศาสตร์</h3>
+    <table class="rp-table"><thead><tr><th>ยุทธศาสตร์</th><th class="c">ประเมินแล้ว</th><th class="c">คะแนน</th><th class="c">ข้อเสนอแนะ (คงไว้+ขยาย / ปรับเล็กน้อย / ปรับสาระ / ตัด)</th><th class="c">เบิกจ่าย</th><th class="c">คืบหน้า</th><th class="c">ตัวชี้วัดบรรลุ</th><th class="c">มีมติ</th></tr></thead><tbody>${rows}</tbody></table>
+    <h3 class="rp-h3">สรุปรายกลยุทธ์</h3>
+    <table class="rp-table rp-compact rp-fixed">${rpCols([5,37,7,15,8,8,7,13])}<thead><tr><th class="c">ที่</th><th>กลยุทธ์</th><th class="c">คะแนน</th><th>ข้อเสนอแนะของระบบ</th><th class="c">ตัวชี้วัดบรรลุ</th><th class="c">เบิกจ่าย</th><th class="c">คืบหน้า</th><th>มติ</th></tr></thead><tbody>${itemRows}</tbody></table>
+  </section>`;
+}
+function rpItem(it, opts){
+  const st = evalState[it.id] || {};
+  const avg = computeItemAvg(it.id);
+  const ca = critAverages(it.id);
+  const evals = st.evaluations || [];
+  const inds = getIndicatorsForItem(it, st);
+  const b = st.budget || {planned:{}, actual:{}, note:''};
+  const p = st.progress || {status:'not_started', percent:0, note:''};
+  const L = st.lessons || {}; const D = st.decision || {};
+  const appr = st.approval && st.approval.approved;
+  const parts = [];
 
-  if(proposals.length){
-    html += `<div class="report-section"><h2>ข้อเสนอกลยุทธ์ใหม่ สำหรับแผน พ.ศ. 2571-2575</h2>`;
-    proposals.forEach(p=>{
-      const stratLabel = p.relatedStrategy==='new' ? 'ยุทธศาสตร์ใหม่' : ('ยุทธศาสตร์ที่ '+p.relatedStrategy);
-      html += `<div class="report-item"><h3>${escapeHtml(p.title)}</h3>
-        <p class="report-meta">${escapeHtml(stratLabel)} | ความสำคัญ: ${escapeHtml(p.priority)} | เสนอโดย ${escapeHtml(p.submittedBy||'ไม่ระบุชื่อ')} | ${escapeHtml(p.date||'')}</p>
-        <p>${escapeHtml(p.description)}</p></div>`;
-    });
-    html += `</div>`;
+  // คะแนนรายด้าน
+  parts.push(`<div class="rp-sub">คะแนนรายหลักเกณฑ์ (เฉลี่ยจากผู้ประเมิน ${evals.length} คน)</div>` + (evals.length ? `
+    <table class="rp-crit">${CRIT_KEYS.map((k,i)=>`<tr><td>${escapeHtml(CRIT_LABELS[i].th)}</td><td>${rpBar(ca[k]===null?0:ca[k]/5*100, ca[k]===null?'#ddd':RECO_COLOR_HEX[getRecoKey(ca[k])])}</td><td class="c"><b>${fmt(ca[k])}</b></td></tr>`).join('')}</table>` : rpEmpty('ยังไม่มีการประเมิน')));
+  if(opts.evalDetail && evals.length){
+    parts.push(`<div class="rp-sub">รายละเอียดคะแนนรายผู้ประเมิน</div>
+      <table class="rp-table rp-compact"><thead><tr><th>ผู้ประเมิน</th><th class="c">วันที่</th>${CRIT_LABELS.map(c=>`<th class="c">${escapeHtml(c.th)}</th>`).join('')}<th class="c">เฉลี่ย</th></tr></thead><tbody>
+      ${evals.map(ev=>`<tr><td>${escapeHtml(ev.evaluator||'ไม่ระบุชื่อ')}</td><td class="c">${escapeHtml(ev.date||'')}</td>${CRIT_KEYS.map(k=>`<td class="c">${ev.scores[k] ?? '–'}</td>`).join('')}<td class="c"><b>${fmt(avgOfScores(ev.scores))}</b></td></tr>
+        ${ev.reason ? `<tr class="rp-reason"><td colspan="${CRIT_KEYS.length+3}">เหตุผล: ${rpNl(ev.reason)}</td></tr>` : ''}`).join('')}</tbody></table>`);
   }
+  // ตัวชี้วัด
+  parts.push(`<div class="rp-sub">ตัวชี้วัดผลการดำเนินงาน (เป้าหมาย / ผลจริง)</div>
+    <table class="rp-table rp-compact rp-ind"><thead><tr><th>ตัวชี้วัด</th><th class="c">ประเภท</th>${YEARS.map(y=>`<th class="c">${y}</th>`).join('')}<th class="c">% บรรลุ</th></tr></thead><tbody>
+    ${inds.map(ind=>{
+      const type = indType(ind); const a = indicatorAchievementPct(ind);
+      const rk = a===null ? 'grey' : a.pct>=100 ? 'green' : a.pct>=50 ? 'yellow' : 'red';
+      return `<tr><td>${escapeHtml(ind.text)}${ind.unit ? ` <span class="rp-muted">(${escapeHtml(ind.unit)})</span>` : ''}${ind.project ? `<div class="rp-muted">โครงการ: ${escapeHtml(ind.project)}</div>` : ''}${ind.note ? `<div class="rp-muted">หมายเหตุ: ${escapeHtml(ind.note)}</div>` : ''}</td>
+        <td class="c rp-small">${escapeHtml(IND_TYPES[type])}</td>
+        ${YEARS.map(y=>`<td class="c rp-yr"><span>${rpIndCell(type, ind.targetYearly && ind.targetYearly[y])}</span><b>${rpIndCell(type, ind.yearly && ind.yearly[y])}</b></td>`).join('')}
+        <td class="c">${a===null ? '<span class="rp-muted">–</span>' : rpBadge(rk, type==='binary' ? (a.pct>=100?'บรรลุ':'ไม่บรรลุ') : a.pct.toFixed(0)+'%')}</td></tr>`;
+    }).join('')}</tbody></table>
+    <div class="rp-muted rp-small">ในแต่ละปี: บรรทัดบน = เป้าหมาย, บรรทัดล่าง (ตัวหนา) = ผลจริง</div>`);
+  // งบประมาณ + ความคืบหน้า
+  const tp = sumYearly(b.planned), ta = sumYearly(b.actual), v = budgetVariancePct(b);
+  parts.push(`<div class="rp-sub">งบประมาณ (บาท) และความคืบหน้า</div>
+    <table class="rp-table rp-compact"><thead><tr><th></th>${YEARS.map(y=>`<th class="c">${y}</th>`).join('')}<th class="c">รวม</th></tr></thead><tbody>
+      <tr><td>ตามแผน</td>${YEARS.map(y=>`<td class="r">${b.planned[y]!=null ? fmtMoney(b.planned[y]) : '–'}</td>`).join('')}<td class="r"><b>${tp!=null ? fmtMoney(tp) : '–'}</b></td></tr>
+      <tr><td>ใช้จริง</td>${YEARS.map(y=>`<td class="r">${b.actual[y]!=null ? fmtMoney(b.actual[y]) : '–'}</td>`).join('')}<td class="r"><b>${ta!=null ? fmtMoney(ta) : '–'}</b></td></tr>
+    </tbody></table>
+    <div class="rp-line" style="color:${budgetVarColor(v)}">${escapeHtml(budgetVarText(v))}</div>
+    ${b.note ? `<div class="rp-line rp-muted">หมายเหตุงบประมาณ: ${rpNl(b.note)}</div>` : ''}
+    <div class="rp-line">ความคืบหน้า: <b>${statusLabel(p.status)}</b> ${rpBar(p.percent, '#5B4BE0')} <b>${p.percent||0}%</b>${p.note ? ` <span class="rp-muted">— ${rpNl(p.note)}</span>` : ''}</div>`);
+  // โครงการ
+  const projs = st.projects || [];
+  if(projs.length) parts.push(`<div class="rp-sub">โครงการภายใต้กลยุทธ์ (${projs.length})</div>
+    <table class="rp-table rp-compact"><thead><tr><th>โครงการ</th><th class="c">ปีงบ</th><th class="c">สถานะ</th><th class="r">งบได้รับ</th><th class="r">ใช้จริง</th><th>ผลผลิต (จริง / เป้า)</th><th class="c">คะแนน</th><th>ข้อเสนอ</th></tr></thead><tbody>
+    ${projs.map(pr=>{ const pa = projectAvg(pr); return `<tr><td><b>${escapeHtml(pr.name)}</b>${pr.owner?`<div class="rp-muted">${escapeHtml(pr.owner)}</div>`:''}${pr.outcome?`<div class="rp-muted">ผลลัพธ์: ${escapeHtml(pr.outcome)}</div>`:''}</td>
+      <td class="c">${escapeHtml(pr.fiscalYear||'–')}</td><td class="c">${PROJECT_STATUS[pr.status]||'–'}</td><td class="r">${fmtMoney(pr.budgetPlanned)}</td><td class="r">${fmtMoney(pr.budgetActual)}</td>
+      <td>${escapeHtml(pr.outputActual||'–')} / ${escapeHtml(pr.outputTarget||'–')}${pr.outputPct!=null?` (${pr.outputPct}%)`:''}</td><td class="c">${pa===null?'–':pa.toFixed(2)}</td><td>${PROJECT_RECO[pr.recommendation]||'–'}</td></tr>`; }).join('')}</tbody></table>`);
+  // หลักฐาน
+  if((st.evidence||[]).length) parts.push(`<div class="rp-sub">หลักฐานอ้างอิง</div><ul class="rp-list">${st.evidence.map(ev=>`<li>${escapeHtml(ev.label||'หลักฐาน')}${ev.url?` — <span class="rp-url">${escapeHtml(ev.url)}</span>`:''}</li>`).join('')}</ul>`);
+  // ความเชื่อมโยง
+  const deps = (st.dependsOn||[]).map(id=>DATA.items.find(x=>x.id===id)).filter(Boolean);
+  const depBy = DATA.items.filter(x=>((evalState[x.id]||{}).dependsOn||[]).includes(it.id));
+  if(deps.length || depBy.length) parts.push(`<div class="rp-sub">ความเชื่อมโยงกับกลยุทธ์อื่น</div>
+    <div class="rp-line">ขึ้นอยู่กับ: ${deps.length ? deps.map(x=>rpItemLabel(x)).join(', ') : '–'} &nbsp;·&nbsp; ถูกพึ่งพาโดย: ${depBy.length ? depBy.map(x=>rpItemLabel(x)).join(', ') : '–'}</div>`);
+  // บทเรียน + มติ
+  const hasL = L.successFactors || L.problems || L.lessons;
+  parts.push(`<div class="rp-two rp-ld">
+    <div class="rp-box rp-box-green"><div class="rp-box-t">บทเรียนจากการดำเนินงาน</div>${hasL ? `
+      ${L.successFactors?`<p><b>ปัจจัยความสำเร็จ:</b> ${rpNl(L.successFactors)}</p>`:''}${L.problems?`<p><b>ปัญหา/อุปสรรค:</b> ${rpNl(L.problems)}</p>`:''}${L.lessons?`<p><b>บทเรียน/ข้อเสนอแนะ:</b> ${rpNl(L.lessons)}</p>`:''}` : rpEmpty('ยังไม่ได้บันทึก')}</div>
+    <div class="rp-box rp-box-violet"><div class="rp-box-t">มติคณะกรรมการ</div>
+      <p>${rpDecisionBadge(D.decision)}${D.decision==='merge' && D.mergeWith ? ` กับกลยุทธ์ ${escapeHtml((DATA.items.find(x=>x.id===D.mergeWith)||{}).strategyId + '.' + (DATA.items.find(x=>x.id===D.mergeWith)||{}).num)}` : ''}</p>
+      ${D.reason?`<p><b>เหตุผล:</b> ${rpNl(D.reason)}</p>`:''}${D.direction?`<p><b>แนวทางแผน 2571-2575:</b> ${rpNl(D.direction)}</p>`:''}
+      ${D.meetingRef?`<p class="rp-muted">${escapeHtml(D.meetingRef)}</p>`:''}</div>
+  </div>`);
+  // ความคิดเห็น
+  if(opts.comments && (st.comments||[]).length) parts.push(`<div class="rp-sub">ความคิดเห็น (${st.comments.length})</div><ul class="rp-list">${st.comments.map(c=>`<li><b>${escapeHtml(c.author)}</b> <span class="rp-muted">(${escapeHtml(ROLE_LABEL[c.role]||c.role||'')}${c.createdAt ? ', ' + escapeHtml(formatTimestamp(c.createdAt)) : ''})</span>: ${rpNl(c.text)}</li>`).join('')}</ul>`);
 
-  return html;
+  return `
+  <article class="rp-item rp-s${it.strategyId}">
+    <header class="rp-item-head">
+      <div class="rp-item-no">${rpItemLabel(it)}</div>
+      <div class="rp-item-title">
+        <h3>${escapeHtml(it.text)}</h3>
+        <div class="rp-muted">ผู้รับผิดชอบ: ${escapeHtml(it.owner)} · ระยะเวลา: ${escapeHtml(it.period)}${appr ? ` · <span class="rp-approved">✓ อนุมัติ/ล็อกผลแล้ว${st.approval.approvedBy ? ' โดย ' + escapeHtml(st.approval.approvedBy) : ''}</span>` : ''}</div>
+      </div>
+      <div class="rp-item-score"><b style="color:${RECO_COLOR_HEX[getRecoKey(avg)]}">${fmt(avg)}</b>${rpRecoBadge(avg)}</div>
+    </header>
+    ${parts.join('')}
+  </article>`;
 }
+function rpItems(items, strategies, opts){
+  return `<section class="rp-section rp-break"><h2 class="rp-h1"><span>4</span>ผลการประเมินรายกลยุทธ์</h2>` +
+    strategies.map((s, i)=>`
+    <div class="rp-strategy ${i ? 'rp-break' : ''}">
+      <div class="rp-strategy-head rp-s${s.id}"><div>ยุทธศาสตร์ที่ ${s.id}</div><h2>${escapeHtml(s.name)}</h2><p>เป้าประสงค์: ${escapeHtml(s.goal)}</p></div>
+      ${items.filter(it=>it.strategyId===s.id).map(it=>rpItem(it, opts)).join('')}
+    </div>`).join('') + `</section>`;
+}
+function rpAnalysis(items){
+  const syn = items.map(it=>{
+    const st = evalState[it.id] || {}; const D = st.decision || {}; const avg = computeItemAvg(it.id);
+    const sys = itemRecoDecision(it.id); const differs = D.decision && sys && D.decision !== sys;
+    return `<tr><td class="c">${rpItemLabel(it)}</td><td>${escapeHtml(it.text)}</td><td class="c">${fmt(avg)}</td><td>${rpRecoBadge(avg)}</td>
+      <td>${rpDecisionBadge(D.decision)}${differs ? '<div class="rp-flag">ต่างจากระบบ</div>' : ''}</td><td>${rpNl(D.reason)}</td><td>${rpNl(D.direction)}</td></tr>`;
+  }).join('');
+  const quad = defs => {
+    const keys = Object.keys(defs);
+    const cell = q => { const xs = analysisItems.filter(a=>a.quadrant===q); return `<td class="rp-quad rp-q-${q}"><div class="rp-quad-t">${escapeHtml(defs[q].label)}</div><ul>${xs.map(a=>`<li>${escapeHtml(a.text)}</li>`).join('') || '<li class="rp-muted">–</li>'}</ul></td>`; };
+    return `<table class="rp-quads"><tr>${cell(keys[0])}${cell(keys[1])}</tr><tr>${cell(keys[2])}${cell(keys[3])}</tr></table>`;
+  };
+  const fws = alignmentFrameworks;
+  const sym = v => v===null||v===undefined||v==='' ? '<span class="rp-muted">–</span>' : Number(v)===2 ? '<span class="rp-al rp-al2">●</span>' : Number(v)===1 ? '<span class="rp-al rp-al1">◐</span>' : '<span class="rp-al rp-al0">○</span>';
+  const alRows = items.map(it=>{ const a = (evalState[it.id]||{}).alignment || {}; const sc = alignmentScoreOf(it.id);
+    return `<tr><td class="c">${rpItemLabel(it)}</td><td>${escapeHtml(it.text.length>70 ? it.text.slice(0,70)+'…' : it.text)}</td>${fws.map(f=>`<td class="c">${sym(a[f.key])}</td>`).join('')}<td class="c"><b>${sc===null?'–':sc.toFixed(0)+'%'}</b></td></tr>`; }).join('');
+  const colHigh = fws.map(f=>items.filter(it=>Number(((evalState[it.id]||{}).alignment||{})[f.key])===2).length);
+  return `
+  <section class="rp-section rp-break">
+    <h2 class="rp-h1"><span>5</span>มติคณะกรรมการและการวิเคราะห์เพื่อแผนใหม่</h2>
+    <h3 class="rp-h3">5.1 มติรายกลยุทธ์เทียบกับข้อเสนอแนะของระบบ</h3>
+    <table class="rp-table rp-compact rp-fixed">${rpCols([5,27,7,13,13,17.5,17.5])}<thead><tr><th class="c">ที่</th><th>กลยุทธ์</th><th class="c">คะแนน</th><th>ระบบแนะนำ</th><th>มติ</th><th>เหตุผลประกอบมติ</th><th>แนวทางแผน 2571-2575</th></tr></thead><tbody>${syn}</tbody></table>
+    <h3 class="rp-h3 rp-break-avoid">5.2 การวิเคราะห์ SWOT</h3>${quad(SWOT_Q)}
+    <h3 class="rp-h3 rp-break-avoid">5.3 TOWS Matrix — ทางเลือกเชิงกลยุทธ์</h3>${quad(TOWS_Q)}
+    <h3 class="rp-h3">5.4 ความสอดคล้องเชิงนโยบาย</h3>
+    <ol class="rp-fw">${fws.map((f,i)=>`<li><b>N${i+1}</b> ${escapeHtml(f.name)}</li>`).join('')}</ol>
+    <table class="rp-table rp-compact rp-fixed">${rpCols([5, Math.max(30, 87 - fws.length*6.5)].concat(fws.map(()=>6.5)).concat([8]))}<thead><tr><th class="c">ที่</th><th>กลยุทธ์</th>${fws.map((f,i)=>`<th class="c">N${i+1}</th>`).join('')}<th class="c">รวม</th></tr></thead><tbody>${alRows}
+      <tr class="rp-total"><td colspan="2">จำนวนกลยุทธ์ที่สอดคล้องสูง</td>${colHigh.map(n=>`<td class="c ${n===0?'rp-gap':''}">${n}</td>`).join('')}<td></td></tr></tbody></table>
+    <div class="rp-muted rp-small">● สอดคล้องสูง &nbsp; ◐ บางส่วน &nbsp; ○ ไม่สอดคล้อง &nbsp; – ยังไม่ประเมิน · ช่องสีแดงในแถวล่าง = ยังไม่มีกลยุทธ์ที่สอดคล้องสูง (ช่องว่างเชิงนโยบาย)</div>
+  </section>`;
+}
+function rpProposals(){
+  const pl = {high:'สูง', medium:'กลาง', low:'ต่ำ'};
+  const order = {high:0, medium:1, low:2};
+  const list = [...proposals].sort((a,b)=>(order[a.priority]??3)-(order[b.priority]??3));
+  return `
+  <section class="rp-section rp-break">
+    <h2 class="rp-h1"><span>6</span>ข้อเสนอกลยุทธ์ใหม่ สำหรับแผน พ.ศ. 2571-2575</h2>
+    ${list.length ? `<table class="rp-table"><thead><tr><th class="c" style="width:5%">ที่</th><th style="width:28%">ข้อเสนอ</th><th>รายละเอียด</th><th style="width:16%">ยุทธศาสตร์</th><th class="c" style="width:9%">ความสำคัญ</th><th style="width:14%">ผู้เสนอ</th></tr></thead><tbody>
+      ${list.map((p,i)=>`<tr><td class="c">${i+1}</td><td><b>${escapeHtml(p.title)}</b></td><td>${rpNl(p.description)}</td><td>${p.relatedStrategy==='new' ? 'ยุทธศาสตร์ใหม่' : 'ยุทธศาสตร์ที่ ' + escapeHtml(p.relatedStrategy)}</td>
+        <td class="c">${rpBadge(p.priority==='high'?'red':p.priority==='medium'?'yellow':'grey', pl[p.priority]||p.priority||'–')}</td><td>${escapeHtml(p.submittedBy||'–')}<div class="rp-muted">${escapeHtml(p.date||'')}</div></td></tr>`).join('')}</tbody></table>` : rpEmpty('ยังไม่มีข้อเสนอกลยุทธ์ใหม่')}
+  </section>`;
+}
+function rpAppendix(S){
+  const evs = Object.values(S.evaluators).sort((a,b)=>a.name.localeCompare(b.name,'th'));
+  const audit = (auditLog||[]).slice(0, 40);
+  return `
+  <section class="rp-section rp-break">
+    <h2 class="rp-h1"><span>ภ</span>ภาคผนวก</h2>
+    <h3 class="rp-h3">ก. บันทึกมติ/ข้อสรุปเชิงคุณภาพของทีมวางแผน</h3>
+    ${teamNotes ? `<div class="rp-box">${rpNl(teamNotes)}</div>` : rpEmpty('ยังไม่มีบันทึก')}
+    <h3 class="rp-h3">ข. รายชื่อผู้ประเมิน</h3>
+    ${evs.length ? `<table class="rp-table rp-narrow"><thead><tr><th class="c">ที่</th><th>ชื่อผู้ประเมิน</th><th class="c">จำนวนกลยุทธ์ที่ประเมิน</th></tr></thead><tbody>${evs.map((e,i)=>`<tr><td class="c">${i+1}</td><td>${escapeHtml(e.name)}</td><td class="c">${e.items.size}</td></tr>`).join('')}</tbody></table>` : rpEmpty('ยังไม่มีผู้ประเมิน')}
+    <h3 class="rp-h3">ค. ประวัติการเปลี่ยนแปลงล่าสุด${audit.length ? ` (${audit.length} รายการ)` : ''}</h3>
+    ${audit.length ? `<table class="rp-table rp-compact"><thead><tr><th style="width:16%">วันที่-เวลา</th><th class="c" style="width:8%">กลยุทธ์</th><th style="width:14%">ประเภท</th><th>รายละเอียด</th><th style="width:16%">ผู้ดำเนินการ</th></tr></thead><tbody>
+      ${audit.map(a=>`<tr><td>${escapeHtml(formatTimestamp(a.timestamp))}</td><td class="c">${escapeHtml(a.itemId||'–')}</td><td>${escapeHtml(FIELD_LABEL[a.field]||a.field)}</td><td>${escapeHtml(a.summary)}</td><td>${escapeHtml(a.actor||'–')}</td></tr>`).join('')}</tbody></table>` : rpEmpty(connected ? 'ยังไม่มีประวัติ' : 'โหมดออฟไลน์ไม่บันทึกประวัติการเปลี่ยนแปลง')}
+    <div class="rp-sign">
+      <div><div class="rp-sign-line"></div><div>(......................................................)</div><div>ผู้จัดทำรายงาน</div><div>วันที่ ........./........./.........</div></div>
+      <div><div class="rp-sign-line"></div><div>(......................................................)</div><div>ผู้บริหาร / ผู้รับรองรายงาน</div><div>วันที่ ........./........./.........</div></div>
+    </div>
+  </section>`;
+}
+function buildReportHtml(opts){
+  opts = Object.assign({}, REPORT_DEFAULT_OPTS, opts || {});
+  const strategies = opts.strategy === 'all' ? DATA.strategies : DATA.strategies.filter(s=>String(s.id) === String(opts.strategy));
+  const sIds = strategies.map(s=>s.id);
+  const items = DATA.items.filter(it=>sIds.includes(it.strategyId));
+  const S = rpPlanStats(items);
+  let html = rpCover(opts, S) + rpToc(opts);
+  if(opts.summary) html += rpSummary(items, S);
+  if(opts.method) html += rpMethod();
+  if(opts.overview) html += rpOverview(items, strategies);
+  if(opts.items) html += rpItems(items, strategies, opts);
+  if(opts.analysis) html += rpAnalysis(items);
+  if(opts.proposals) html += rpProposals();
+  if(opts.appendix) html += rpAppendix(S);
+  return `<div class="rp-doc">${html}</div>`;
+}
+
 function exportPdfReport(){
-  const container = document.getElementById('printReportContainer');
-  if(!container){ showToast('ไม่พบส่วนแสดงรายงาน', true); return; }
-  container.innerHTML = buildReportHtml();
-  window.print();
+  const modal = document.getElementById('reportModal');
+  if(!modal){ showToast('ไม่พบหน้าต่างตั้งค่ารายงาน', true); return; }
+  modal.classList.add('show');
 }
+function closeReportModal(){ document.getElementById('reportModal').classList.remove('show'); }
+document.getElementById('reportModal').addEventListener('click', (e)=>{
+  if(e.target.id === 'reportModal' || e.target.closest('[data-close-report]')) closeReportModal();
+  if(e.target.closest('#btnReportAll')){ document.querySelectorAll('#reportModal [data-rp-opt]').forEach(c=>{ c.checked = true; }); }
+});
+document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') { const m = document.getElementById('reportModal'); if(m && m.classList.contains('show')) closeReportModal(); } });
+document.getElementById('btnBuildReport').addEventListener('click', ()=>{
+  const opts = {strategy: document.getElementById('rpStrategy').value};
+  document.querySelectorAll('#reportModal [data-rp-opt]').forEach(c=>{ opts[c.dataset.rpOpt] = c.checked; });
+  const container = document.getElementById('printReportContainer');
+  container.innerHTML = buildReportHtml(opts);
+  closeReportModal();
+  const titleBefore = document.title;
+  document.title = 'รายงานผลการประเมินแผนยุทธศาสตร์_' + todayStr(); // ใช้เป็นชื่อไฟล์ PDF ตั้งต้น
+  setTimeout(()=>{
+    window.print();
+    setTimeout(()=>{ document.title = titleBefore; }, 500);
+  }, 200);
+});
 
 function exportExcel(){
   const wb = XLSX.utils.book_new();
@@ -4322,35 +4735,6 @@ function appendMethodologySheets(wb){
     al.push([it.strategyId, it.num, it.text, ...alignmentFrameworks.map(f=>{ const v = a[f.key]; return (v===null||v===undefined||v==='') ? '' : ALIGN_LEVELS[String(v)]; }), sc===null?'':Number(sc.toFixed(0))]); });
   sheet(al, [8,8,40, ...alignmentFrameworks.map(()=>18), 10], 'ความสอดคล้องนโยบาย');
 }
-
-/* ---------- รายงาน PDF: ส่วนเพิ่มเติม ---------- */
-const __buildReportHtmlBase = buildReportHtml;
-buildReportHtml = function(){
-  let html = __buildReportHtmlBase();
-  const decRows = DATA.items.map(it=>{
-    const st = evalState[it.id] || {}; const D = st.decision || {}; const avg = computeItemAvg(it.id);
-    return `<tr><td>${it.strategyId}.${it.num} ${escapeHtml(it.text)}</td><td>${fmt(avg)}</td><td>${RECO[getRecoKey(avg)].label}</td><td>${D.decision ? DECISIONS[D.decision].label : '—'}</td><td>${escapeHtml(D.reason||'')}</td><td>${escapeHtml(D.direction||'')}</td></tr>`;
-  }).join('');
-  html += `<div class="report-section"><h2>สรุปมติคณะกรรมการรายกลยุทธ์</h2>
-    <table class="report-table"><tr><th>กลยุทธ์</th><th>คะแนน</th><th>ระบบแนะนำ</th><th>มติ</th><th>เหตุผล</th><th>แนวทางแผน 2571-2575</th></tr>${decRows}</table></div>`;
-  const lesRows = DATA.items.filter(it=>{ const L = (evalState[it.id]||{}).lessons; return L && (L.successFactors||L.problems||L.lessons); }).map(it=>{
-    const L = evalState[it.id].lessons;
-    return `<tr><td>${it.strategyId}.${it.num} ${escapeHtml(it.text)}</td><td>${escapeHtml(L.successFactors)}</td><td>${escapeHtml(L.problems)}</td><td>${escapeHtml(L.lessons)}</td></tr>`;
-  }).join('');
-  if(lesRows) html += `<div class="report-section"><h2>บทเรียนจากการดำเนินงาน</h2><table class="report-table"><tr><th>กลยุทธ์</th><th>ปัจจัยความสำเร็จ</th><th>ปัญหา/อุปสรรค</th><th>บทเรียน/ข้อเสนอแนะ</th></tr>${lesRows}</table></div>`;
-  const projRows = [];
-  DATA.items.forEach(it=>((evalState[it.id]||{}).projects||[]).forEach(p=>{ const avg = projectAvg(p);
-    projRows.push(`<tr><td>${it.strategyId}.${it.num}</td><td>${escapeHtml(p.name)}</td><td>${escapeHtml(p.fiscalYear)}</td><td>${fmtMoney(p.budgetPlanned)} / ${fmtMoney(p.budgetActual)}</td><td>${escapeHtml(p.outputActual)}${p.outputTarget?' (เป้า '+escapeHtml(p.outputTarget)+')':''}</td><td>${avg===null?'—':avg.toFixed(2)}</td><td>${PROJECT_RECO[p.recommendation]||'—'}</td></tr>`); }));
-  if(projRows.length) html += `<div class="report-section"><h2>ผลการดำเนินงานรายโครงการ</h2><table class="report-table"><tr><th>กลยุทธ์</th><th>โครงการ</th><th>ปีงบ</th><th>งบได้รับ/ใช้จริง</th><th>ผลผลิต</th><th>คะแนน</th><th>ข้อเสนอ</th></tr>${projRows.join('')}</table></div>`;
-  if(analysisItems.length){
-    const block = defs => Object.keys(defs).map(q=>{ const xs = analysisItems.filter(a=>a.quadrant===q); return `<td style="vertical-align:top;"><b>${defs[q].label}</b><ul class="report-list">${xs.map(a=>`<li>${escapeHtml(a.text)}</li>`).join('') || '<li>—</li>'}</ul></td>`; });
-    const s = block(SWOT_Q), t = block(TOWS_Q);
-    html += `<div class="report-section"><h2>การวิเคราะห์ SWOT และ TOWS Matrix</h2>
-      <table class="report-table"><tr>${s[0]}${s[1]}</tr><tr>${s[2]}${s[3]}</tr></table>
-      <table class="report-table"><tr>${t[0]}${t[1]}</tr><tr>${t[2]}${t[3]}</tr></table></div>`;
-  }
-  return html;
-};
 
 /* ================================================================ */
 /* ผู้ใช้/บทบาท · หน้ารออนุมัติ · แถบเตือนออฟไลน์ · สำรองข้อมูล            */

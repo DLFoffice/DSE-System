@@ -628,6 +628,27 @@ table.ref-table th,table.audit-table th{background:var(--grad-main);color:#fff;f
 .tag,.chip-score,.badge,.priority-badge,.field-tag{font-size:13px;}
 .stat-note,.rank-meta,.proposal-meta,.eval-entry-date{font-size:13px;}
 .ind-card input,.ind-years-row input,table.budget-year-table input,.weight-item input{font-size:15px;padding:8px 10px;}
+
+/* ---- ความปลอดภัย/สถานะผู้ใช้ ---- */
+.offline-banner{display:flex;flex-direction:column;gap:2px;background:var(--amber-soft);border:1px solid #F3D3A3;color:#7a4a10;border-radius:14px;padding:12px 16px;margin-bottom:20px;font-size:14.5px;animation:rise .5s var(--ease) both;}
+.offline-banner.error{background:var(--red-soft);border-color:#F2C2C4;color:#8a2a2f;}
+.offline-banner b{font-weight:700;}
+.signup-note{margin-top:14px;background:var(--primary-soft);color:var(--primary);border-radius:10px;padding:10px 12px;font-size:13.5px;line-height:1.6;}
+.pending-icon{font-size:40px;text-align:center;margin:4px 0 8px;animation:pop 1.6s var(--ease) infinite;}
+.pending-title{text-align:center;font-weight:700;font-size:17px;margin-bottom:6px;color:var(--ink);}
+.tab-count{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--pink);color:#fff;font-size:12px;font-weight:700;margin-left:4px;}
+.role-chip{font-size:13px;font-weight:600;padding:3px 10px;border-radius:999px;white-space:nowrap;}
+.role-chip.role-pending{background:var(--surface-2);color:var(--grey);}
+.role-chip.role-contributor{background:var(--orange-soft);color:var(--orange);}
+.role-chip.role-evaluator{background:var(--green-soft);color:var(--green);}
+.role-chip.role-executive{background:var(--primary-soft);color:var(--primary);}
+.users-table td{vertical-align:middle;}
+.users-table select{min-width:190px;}
+.rules-pre{background:#1E1B3A;color:#DCD8FF;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;line-height:1.55;padding:14px 16px;border-radius:12px;white-space:pre;overflow-x:auto;margin:0;max-height:420px;}
+.eval-entry-mine{border-color:#CFC8FA;background:linear-gradient(160deg,#F5F3FF,#fff);}
+.tag-mine{background:var(--primary-soft);color:var(--primary);font-weight:600;margin-left:6px;}
+.eval-entry-top .tag{margin-left:6px;}
+button[disabled]{opacity:.65;cursor:progress;}
 /* ---- รายงานสำหรับพิมพ์ / ส่งออก PDF ---- */
 .print-only{display:none;}
 @media print{
@@ -675,7 +696,7 @@ table.ref-table th,table.audit-table th{background:var(--grad-main);color:#fff;f
     <h1 class="auth-title">ระบบประเมินผลยุทธศาสตร์ดิจิทัล</h1>
     <p class="auth-sub">กรุณาเข้าสู่ระบบเพื่อใช้งาน — ระบบนี้แบ่งสิทธิ์การใช้งานตามบทบาท</p>
 
-    <div class="auth-tabs">
+    <div class="auth-tabs" id="authTabs">
       <button class="auth-tab-btn active" data-authtab="signin">เข้าสู่ระบบ</button>
       <button class="auth-tab-btn" data-authtab="signup">สมัครสมาชิกใหม่</button>
     </div>
@@ -695,13 +716,16 @@ table.ref-table th,table.audit-table th{background:var(--grad-main);color:#fff;f
       <input type="email" id="signupEmail" class="meta-input" placeholder="you@example.com">
       <div class="field-label" style="margin-top:10px;">รหัสผ่าน (อย่างน้อย 6 ตัวอักษร)</div>
       <input type="password" id="signupPassword" class="meta-input" placeholder="••••••••">
-      <div class="field-label" style="margin-top:10px;">บทบาทของคุณ</div>
-      <select id="signupRole" class="meta-input">
-        <option value="evaluator">ผู้ประเมิน (Evaluator) — ให้คะแนน กรอกตัวชี้วัด งบประมาณ ความคืบหน้า</option>
-        <option value="contributor">ผู้เสนอความเห็น (Contributor) — ดูข้อมูลและแสดงความคิดเห็นได้ ไม่แก้ไขคะแนน</option>
-        <option value="executive">ผู้บริหาร (Executive/Approver) — ดูภาพรวม อนุมัติ/ล็อกผลประเมิน</option>
-      </select>
+      <div class="signup-note">บัญชีใหม่จะอยู่ในสถานะ <b>รออนุมัติ</b> ผู้บริหารของระบบจะเป็นผู้กำหนดบทบาท (ผู้ประเมิน / ผู้เสนอความเห็น / ผู้บริหาร) ให้ก่อนจึงจะเข้าดูข้อมูลได้</div>
       <button class="btn-light btn-light-solid" id="btnSignup" style="width:100%;margin-top:16px;">สมัครสมาชิก</button>
+    </div>
+
+    <div id="authPanelPending" class="auth-panel">
+      <div class="pending-icon">⏳</div>
+      <div class="pending-title">บัญชีของคุณอยู่ระหว่างรออนุมัติ</div>
+      <p class="auth-sub" id="pendingText"></p>
+      <button class="btn-light btn-light-solid" id="btnPendingRecheck" style="width:100%;">ตรวจสอบสถานะอีกครั้ง</button>
+      <button class="btn-light" id="btnPendingLogout" style="width:100%;margin-top:8px;">ออกจากระบบ</button>
     </div>
 
     <div id="authError" class="auth-error" style="display:none;"></div>
@@ -738,10 +762,13 @@ table.ref-table th,table.audit-table th{background:var(--grad-main);color:#fff;f
     <button class="tab-btn" data-tab="master">ข้อมูลยุทธศาสตร์</button>
     <button class="tab-btn" data-tab="rubric">เกณฑ์การให้คะแนน</button>
     <button class="tab-btn" data-tab="about">คำแนะนำการใช้งาน</button>
+    <button class="tab-btn" data-tab="users" id="tabUsers" style="display:none;">จัดการผู้ใช้</button>
   </div>
 </div>
 
 <div class="container">
+  <div id="offlineBanner" class="offline-banner" style="display:none;"></div>
+
 
   <!-- ============ DASHBOARD ============ -->
   <div class="view active" id="view-dashboard">
@@ -883,6 +910,19 @@ table.ref-table th,table.audit-table th{background:var(--grad-main);color:#fff;f
     </table>
   </div>
 
+  <!-- ============ USERS (ผู้บริหาร) ============ -->
+  <div class="view" id="view-users">
+    <h2 class="section-title">จัดการผู้ใช้และบทบาท</h2>
+    <p class="section-sub">ผู้สมัครใหม่ทุกคนเริ่มที่สถานะ &ldquo;รออนุมัติ&rdquo; และยังดูข้อมูลไม่ได้ — กำหนดบทบาทให้เฉพาะคนที่เกี่ยวข้อง และเปลี่ยนเป็น &ldquo;รออนุมัติ&rdquo; เพื่อระงับสิทธิ์ของผู้ที่ไม่เกี่ยวข้องแล้ว</p>
+    <div id="usersContainer"></div>
+    <div class="card pad" style="margin-top:16px;">
+      <h2 class="section-title" style="font-size:17px;">Firestore Security Rules ที่ระบบนี้ต้องใช้</h2>
+      <p class="section-sub">คัดลอกไปวางที่ Firebase Console › Firestore Database › Rules แล้วกด Publish — กฎชุดนี้บังคับสิทธิ์ตามบทบาท การล็อกหลังอนุมัติ และการผูกผลประเมินกับบัญชีที่ฝั่งเซิร์ฟเวอร์ (หน้าเว็บอย่างเดียวป้องกันไม่ได้)</p>
+      <button class="btn-light" id="btnCopyRules" style="margin-bottom:10px;">📋 คัดลอก Rules</button>
+      <pre class="rules-pre" data-rules-block></pre>
+    </div>
+  </div>
+
   <!-- ============ ABOUT ============ -->
   <div class="view" id="view-about">
     <h2 class="section-title">คำแนะนำการใช้งานระบบ</h2>
@@ -901,38 +941,11 @@ table.ref-table th,table.audit-table th{background:var(--grad-main);color:#fff;f
         <div class="about-step"><div class="about-step-num">2</div><div class="about-step-text">ในเมนูซ้าย เลือก &ldquo;Build &gt; Firestore Database&rdquo; แล้วกด &ldquo;Create database&rdquo; เลือกโหมด <b>Production mode</b> (จะตั้งค่า Security Rules เองในขั้นตอนถัดไป) เลือก location ที่ใกล้ที่สุด (เช่น asia-southeast1)</div></div>
         <div class="about-step"><div class="about-step-num">3</div><div class="about-step-text">ในเมนูซ้าย เลือก &ldquo;Build &gt; Authentication&rdquo; กด &ldquo;Get started&rdquo; แล้วเปิดใช้งานผู้ให้บริการ <b>Email/Password</b> (จำเป็นสำหรับระบบล็อกอิน — ถ้าไม่เปิดขั้นตอนนี้ สมัครสมาชิก/เข้าสู่ระบบจะไม่ทำงาน)</div></div>
         <div class="about-step"><div class="about-step-num">4</div><div class="about-step-text">ไปที่แท็บ &ldquo;Rules&rdquo; ของ Firestore แล้ววางกฎด้านล่างนี้แทนของเดิม แล้วกด &ldquo;Publish&rdquo; (กฎนี้บังคับสิทธิ์ตามบทบาท: ต้องล็อกอินก่อนถึงจะอ่านข้อมูลได้ และเฉพาะผู้ประเมิน/ผู้บริหารเท่านั้นที่แก้ไขคะแนน/ตัวชี้วัด/งบประมาณได้ ส่วนการอนุมัติทำได้เฉพาะผู้บริหาร):
-          <div style="background:#1e1e2e;color:#d4d4e8;font-family:monospace;font-size:12.5px;padding:12px 14px;border-radius:8px;margin-top:8px;white-space:pre-wrap;">rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    function signedIn() { return request.auth != null; }
-    function myRole() {
-      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
-    }
-    function isEvaluator() { return signedIn() && (myRole() == 'evaluator' || myRole() == 'executive'); }
-    function isExecutive() { return signedIn() && myRole() == 'executive'; }
-
-    match /users/{uid} {
-      allow read: if signedIn();
-      allow create: if signedIn() && request.auth.uid == uid;
-      allow update: if isExecutive();
-    }
-    match /evaluations/{id}   { allow read: if signedIn(); allow write: if isEvaluator(); }
-    match /indicators/{id}    { allow read: if signedIn(); allow write: if isEvaluator(); }
-    match /budgets/{id}       { allow read: if signedIn(); allow write: if isEvaluator(); }
-    match /progress/{id}      { allow read: if signedIn(); allow write: if isEvaluator(); }
-    match /evidence/{id}      { allow read: if signedIn(); allow write: if isEvaluator(); }
-    match /dependencies/{id}  { allow read: if signedIn(); allow write: if isEvaluator(); }
-    match /approvals/{id}     { allow read: if signedIn(); allow write: if isExecutive(); }
-    match /comments/{id}      { allow read: if signedIn(); allow create: if signedIn(); allow update, delete: if isExecutive(); }
-    match /proposals/{id}     { allow read: if signedIn(); allow write: if signedIn(); }
-    match /auditLog/{id}      { allow read: if signedIn(); allow create: if signedIn(); }
-    match /meta/{id}          { allow read: if signedIn(); allow write: if isEvaluator(); }
-  }
-}</div>
-          <div style="font-size:14px;color:var(--red);margin-top:6px;">⚠️ ต้องล็อกอินก่อนจึงจะเข้าถึงข้อมูลได้ (ต่างจากเดิมที่เปิดให้ใครก็ได้อ่าน/เขียน) — บทบาทจะถูกตรวจสอบจากเอกสารในคอลเลกชัน <code>users</code> ซึ่งกำหนดตอนสมัครสมาชิกครั้งแรกเท่านั้น ผู้ใช้แก้ไขบทบาทตัวเองภายหลังไม่ได้ (ต้องให้ผู้บริหารแก้ในคอนโซล Firebase โดยตรง)</div>
+          <div data-rules-block style="background:#1e1e2e;color:#d4d4e8;font-family:monospace;font-size:12.5px;padding:12px 14px;border-radius:8px;margin-top:8px;white-space:pre-wrap;"></div>
+          <div style="font-size:14px;color:var(--red);margin-top:6px;">⚠️ ต้องล็อกอินก่อนจึงจะเข้าถึงข้อมูลได้ (ต่างจากเดิมที่เปิดให้ใครก็ได้อ่าน/เขียน) — บทบาทจะถูกตรวจสอบจากเอกสารในคอลเลกชัน <code>users</code> ผู้สมัครใหม่จะเป็น &ldquo;รออนุมัติ&rdquo; เสมอ และมีเพียงผู้บริหารที่เปลี่ยนบทบาทได้ (ผู้บริหารคนแรกต้องตั้งค่า <code>role</code> เป็น <code>executive</code> ในคอนโซล Firebase)</div>
         </div></div>
         <div class="about-step"><div class="about-step-num">5</div><div class="about-step-text">กลับไปหน้าโปรเจกต์หลัก กดไอคอนเฟือง &ldquo;Project settings&rdquo; เลื่อนลงไปที่ &ldquo;Your apps&rdquo; กด &ldquo;Add app&rdquo; เลือกไอคอนเว็บ (&lt;/&gt;) ตั้งชื่อแอปแล้วกด &ldquo;Register app&rdquo; ระบบจะแสดงโค้ด <code>firebaseConfig</code> ให้คัดลอก</div></div>
-        <div class="about-step"><div class="about-step-num">6</div><div class="about-step-text">วางค่าที่คัดลอกมาทั้งหมด (ทั้งก้อน <code>{ apiKey: ..., ... }</code> ไม่ต้องแก้ไขรูปแบบ) ลงในช่องด้านล่าง แล้วกด &ldquo;บันทึกและเชื่อมต่อ&rdquo; จากนั้นจะต้องสมัครสมาชิก/เข้าสู่ระบบก่อนใช้งานจริง (เลือกบทบาทได้อิสระตอนสมัครสมาชิก — หากต้องการเปลี่ยนบทบาทของใครในภายหลัง ให้แก้ไขค่า <code>role</code> ในเอกสารคอลเลกชัน <code>users</code> โดยตรงผ่านหน้า Firebase Console)</div></div>
+        <div class="about-step"><div class="about-step-num">6</div><div class="about-step-text">วางค่าที่คัดลอกมาทั้งหมด (ทั้งก้อน <code>{ apiKey: ..., ... }</code> ไม่ต้องแก้ไขรูปแบบ) ลงในช่องด้านล่าง แล้วกด &ldquo;บันทึกและเชื่อมต่อ&rdquo; จากนั้นจะต้องสมัครสมาชิก/เข้าสู่ระบบก่อนใช้งานจริง (บัญชีใหม่จะอยู่ในสถานะรออนุมัติ — ผู้บริหารกำหนดบทบาทให้ได้ในแท็บ &ldquo;จัดการผู้ใช้&rdquo;)</div></div>
         <textarea id="firebaseConfigInput" class="reason-input" style="min-height:110px;font-family:monospace;font-size:14.5px;margin:6px 0 10px;" placeholder='{ apiKey: "AIzaSy...", authDomain: "xxx.firebaseapp.com", projectId: "xxx", storageBucket: "xxx.appspot.com", messagingSenderId: "...", appId: "..." }'></textarea>
         <div style="display:flex;gap:8px;flex-wrap:wrap;">
           <button class="btn-light btn-light-solid" id="btnGasSave">บันทึกและเชื่อมต่อ</button>
@@ -943,7 +956,7 @@ service cloud.firestore {
     </div>
 
     <div class="notice">
-      <b>ระบบนี้แบ่งสิทธิ์ตามบทบาท (Role-Based Access):</b> เมื่อเชื่อมต่อ Firebase แล้ว ทุกคนต้องสมัครสมาชิก/เข้าสู่ระบบก่อนใช้งาน มี 3 บทบาท — <b>ผู้ประเมิน</b> (ให้คะแนน กรอกตัวชี้วัด/งบประมาณ/ความคืบหน้าได้) <b>ผู้เสนอความเห็น</b> (ดูข้อมูลและแสดงความคิดเห็นได้ แก้ไขคะแนนไม่ได้) และ <b>ผู้บริหาร</b> (ทำได้ทุกอย่างของผู้ประเมิน บวกอนุมัติ/ล็อกผลประเมินเพื่อป้องกันการแก้ไขโดยไม่ตั้งใจ) <span style="color:var(--red);font-weight:600;">ผู้สมัครสมาชิกเลือกบทบาทของตัวเองได้อิสระโดยไม่มีรหัสยืนยัน</span> — หากต้องการควบคุมว่าใครเป็นผู้บริหารได้บ้าง ให้ตรวจสอบและปรับแก้บทบาทของผู้ใช้แต่ละคนในคอลเลกชัน <code>users</code> ผ่านหน้า Firebase Console เป็นระยะ ประวัติการเปลี่ยนแปลง (แท็บ &ldquo;ประวัติการเปลี่ยนแปลง&rdquo;) บันทึกไว้ว่าใครแก้ไขอะไรเมื่อไหร่
+      <b>ระบบนี้แบ่งสิทธิ์ตามบทบาท (Role-Based Access):</b> เมื่อเชื่อมต่อ Firebase แล้ว ทุกคนต้องสมัครสมาชิก/เข้าสู่ระบบก่อนใช้งาน มี 3 บทบาท — <b>ผู้ประเมิน</b> (ให้คะแนน กรอกตัวชี้วัด/งบประมาณ/ความคืบหน้าได้) <b>ผู้เสนอความเห็น</b> (ดูข้อมูลและแสดงความคิดเห็นได้ แก้ไขคะแนนไม่ได้) และ <b>ผู้บริหาร</b> (ทำได้ทุกอย่างของผู้ประเมิน บวกอนุมัติ/ล็อกผลประเมินเพื่อป้องกันการแก้ไขโดยไม่ตั้งใจ) <b>ผู้สมัครใหม่ทุกคนจะอยู่ในสถานะ &ldquo;รออนุมัติ&rdquo;</b> และยังดูข้อมูลไม่ได้ จนกว่าผู้บริหารจะกำหนดบทบาทให้ในแท็บ &ldquo;จัดการผู้ใช้&rdquo; ผลประเมินผูกกับบัญชีผู้ใช้ (1 คน 1 ชุดต่อกลยุทธ์) และกลยุทธ์ที่อนุมัติแล้วจะถูกล็อกที่ฝั่งเซิร์ฟเวอร์ ประวัติการเปลี่ยนแปลง (แท็บ &ldquo;ประวัติการเปลี่ยนแปลง&rdquo;) บันทึกไว้ว่าใครแก้ไขอะไรเมื่อไหร่
     </div>
 
     <div class="card pad" style="margin-bottom:20px;">
@@ -1003,7 +1016,88 @@ const EMBEDDED_FIREBASE_CONFIG = {
   measurementId: "G-031NF274V1"
 };
 
-const ROLE_LABEL = {evaluator:'ผู้ประเมิน', contributor:'ผู้เสนอความเห็น', executive:'ผู้บริหาร'};
+/* ---- ที่เก็บข้อมูลในเครื่อง (โหมดออฟไลน์): ใช้ localStorage ของเบราว์เซอร์ ---- */
+(function(){
+  if(window.storage && typeof window.storage.get === 'function') return;
+  window.storage = {
+    async get(key){ return {value: localStorage.getItem(key)}; },
+    async set(key, value){ localStorage.setItem(key, value); return true; },
+    async delete(key){ localStorage.removeItem(key); return true; }
+  };
+})();
+
+/* ---- Firestore Security Rules ที่ระบบนี้ต้องใช้ (แสดงในแท็บจัดการผู้ใช้/คำแนะนำ) ---- */
+const FIRESTORE_RULES = `rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function userPath() { return /databases/$(database)/documents/users/$(request.auth.uid); }
+    function hasProfile() { return signedIn() && exists(userPath()); }
+    function myRole() { return get(userPath()).data.role; }
+    function isMember() { return hasProfile() && myRole() in ['contributor', 'evaluator', 'executive']; }
+    function isEvaluator() { return hasProfile() && myRole() in ['evaluator', 'executive']; }
+    function isExecutive() { return hasProfile() && myRole() == 'executive'; }
+    function approvalPath(itemId) { return /databases/$(database)/documents/approvals/$(itemId); }
+    function notLocked(itemId) { return !exists(approvalPath(itemId)) || get(approvalPath(itemId)).data.approved != true; }
+    function canWriteItem(itemId) { return isExecutive() || (isEvaluator() && notLocked(itemId)); }
+
+    // ผู้ใช้: สมัครใหม่ได้เฉพาะสถานะ "pending" — เปลี่ยนบทบาทได้เฉพาะผู้บริหาร
+    match /users/{uid} {
+      allow read: if isMember() || (signedIn() && request.auth.uid == uid);
+      allow create: if signedIn() && request.auth.uid == uid && request.resource.data.role == 'pending';
+      allow update: if isExecutive();
+      allow delete: if false;
+    }
+
+    // ผลประเมิน: 1 คน 1 ชุดต่อกลยุทธ์ (id = itemId__uid) แก้/ลบได้เฉพาะของตัวเอง และเฉพาะกลยุทธ์ที่ยังไม่อนุมัติ
+    match /evaluations/{id} {
+      allow read: if isMember();
+      allow create, update: if canWriteItem(request.resource.data.itemId)
+        && request.resource.data.evaluatorUid == request.auth.uid
+        && id == request.resource.data.itemId + '__' + request.auth.uid;
+      allow delete: if isExecutive()
+        || (resource.data.evaluatorUid == request.auth.uid && canWriteItem(resource.data.itemId));
+    }
+
+    match /indicators/{id}       { allow read: if isMember(); allow write: if canWriteItem(id.split('_')[0]); }
+    match /budgets/{itemId}      { allow read: if isMember(); allow write: if canWriteItem(itemId); }
+    match /progress/{itemId}     { allow read: if isMember(); allow write: if canWriteItem(itemId); }
+    match /dependencies/{itemId} { allow read: if isMember(); allow write: if canWriteItem(itemId); }
+
+    match /evidence/{id} {
+      allow read: if isMember();
+      allow create: if canWriteItem(request.resource.data.itemId) && request.resource.data.addedByUid == request.auth.uid;
+      allow update: if isExecutive();
+      allow delete: if isExecutive()
+        || (resource.data.addedByUid == request.auth.uid && canWriteItem(resource.data.itemId));
+    }
+
+    match /approvals/{itemId} { allow read: if isMember(); allow write: if isExecutive(); }
+
+    match /comments/{id} {
+      allow read: if isMember();
+      allow create: if isMember() && request.resource.data.authorUid == request.auth.uid;
+      allow update, delete: if isExecutive();
+    }
+
+    match /proposals/{id} {
+      allow read: if isMember();
+      allow create: if isMember() && request.resource.data.submittedByUid == request.auth.uid;
+      allow update, delete: if isExecutive() || resource.data.submittedByUid == request.auth.uid;
+    }
+
+    // ประวัติการเปลี่ยนแปลง: เพิ่มได้เฉพาะในชื่อตัวเอง ห้ามแก้/ลบ
+    match /auditLog/{id} {
+      allow read: if isMember();
+      allow create: if isMember() && request.resource.data.actorUid == request.auth.uid;
+      allow update, delete: if false;
+    }
+
+    match /meta/{id} { allow read: if isMember(); allow write: if isEvaluator(); }
+  }
+}`;
+
+const ROLE_LABEL = {pending:'รออนุมัติ / ไม่มีสิทธิ์', evaluator:'ผู้ประเมิน', contributor:'ผู้เสนอความเห็น', executive:'ผู้บริหาร'};
 
 const CRIT_KEYS = ['rel','coh','eff','effy','imp','sus'];
 const YEARS = ['2566','2567','2568','2569','2570'];
@@ -1025,11 +1119,13 @@ let proposals = [];
 let auditLog = [];
 let weights = Object.assign({}, DEFAULT_WEIGHTS);
 let teamNotes = "";
+let teamNotesBaseline = ""; // ค่าบันทึกทีมตอนโหลด ใช้ตรวจว่ามีคนอื่นแก้ระหว่างนั้นหรือไม่
 const LOCAL_KEY = 'dses_v2_local_state';
 const FIREBASE_CONFIG_KEY = 'dses_firebase_config';
 let firebaseConfig = null;
 let db = null;
 let authInst = null;
+let cloudLoadFailed = false; // ล็อกอินแล้วแต่โหลดข้อมูลกลางไม่ได้ -> อ่านอย่างเดียว
 let connected = false;      // Firebase (Firestore) พร้อมใช้งานหรือไม่
 let currentUser = null;     // {uid, email, displayName, role} — null = ยังไม่ได้ล็อกอิน (โหมดออฟไลน์ถือเป็น evaluator เต็มสิทธิ์)
 let openSubtabs = {}; // itemId -> current subtab name (default 'score')
@@ -1037,8 +1133,8 @@ let openSubtabs = {}; // itemId -> current subtab name (default 'score')
 /* ---------------- สิทธิ์การใช้งานตามบทบาท ---------------- */
 function isSignedIn(){ return currentUser !== null; }
 function currentRole(){ return currentUser ? currentUser.role : 'evaluator'; }
-function canEdit(){ return currentRole() === 'evaluator' || currentRole() === 'executive'; }
-function canApprove(){ return currentRole() === 'executive'; }
+function canEdit(){ if(cloudLoadFailed) return false; return currentRole() === 'evaluator' || currentRole() === 'executive'; }
+function canApprove(){ if(cloudLoadFailed) return false; return currentRole() === 'executive'; }
 function canEditItem(itemId){
   if(canApprove()) return true; // ผู้บริหารแก้ไขได้เสมอแม้จะอนุมัติแล้ว
   if(!canEdit()) return false;
@@ -1046,6 +1142,45 @@ function canEditItem(itemId){
   return !(st && st.approval && st.approval.approved);
 }
 function actorName(){ return currentUser ? (currentUser.displayName || currentUser.email) : 'ผู้ใช้งาน (ออฟไลน์)'; }
+function myUid(){ return currentUser && currentUser.uid ? currentUser.uid : null; }
+function isCloudUser(){ return connected && !!myUid(); }
+function evalDocId(itemId){ return itemId + '__' + myUid(); }
+function canDeleteEval(itemId, ev){
+  if(canApprove()) return true;
+  if(!canEditItem(itemId)) return false;
+  return isCloudUser() ? (!!ev.evaluatorUid && ev.evaluatorUid === myUid()) : true;
+}
+function canDeleteEvidence(itemId, ev){
+  if(canApprove()) return true;
+  if(!canEditItem(itemId)) return false;
+  return isCloudUser() ? (!!ev.addedByUid && ev.addedByUid === myUid()) : true;
+}
+function canDeleteProposal(p){
+  if(cloudLoadFailed) return false;
+  if(canApprove()) return true;
+  return isCloudUser() ? (!!p.submittedByUid && p.submittedByUid === myUid()) : true;
+}
+function canReset(){
+  if(cloudLoadFailed) return false;
+  if(currentUser && currentUser.uid) return canApprove();
+  return true; // โหมดออฟไลน์ล้วน (ข้อมูลอยู่ในเครื่องนี้เครื่องเดียว)
+}
+function friendlyError(e){
+  const code = e && e.code ? String(e.code) : '';
+  if(code.includes('permission-denied')) return 'ไม่มีสิทธิ์ดำเนินการนี้ (บทบาทของคุณไม่อนุญาต หรือกลยุทธ์นี้ถูกอนุมัติ/ล็อกแล้ว)';
+  if(code.includes('unavailable')) return 'เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ กรุณาตรวจสอบอินเทอร์เน็ต';
+  return (e && e.message) || String(e);
+}
+function sameNum(a, b){
+  const na = (a===null || a===undefined || a==='') ? null : Number(a);
+  const nb = (b===null || b===undefined || b==='') ? null : Number(b);
+  return na === nb;
+}
+function sameText(a, b){ return String(a ?? '') === String(b ?? ''); }
+function toNumOrNull(v){ return (v===null || v===undefined || v==='') ? null : Number(v); }
+function mapToNums(obj){ const out = {}; Object.keys(obj).forEach(k=>{ out[k] = toNumOrNull(obj[k]); }); return out; }
+function emptyYears(){ return Object.fromEntries(YEARS.map(y=>[y, null])); }
+const IND_FIELD_TH = {unit:'หน่วย', project:'โครงการ/กิจกรรม', note:'หมายเหตุ'};
 
 
 /* ---------------- Utilities ---------------- */
@@ -1203,7 +1338,7 @@ async function firestoreLoadAll(){
   evalSnap.forEach(doc=>{
     const d = doc.data();
     if(!evalsByItem[d.itemId]) evalsByItem[d.itemId] = [];
-    evalsByItem[d.itemId].push({evalId: doc.id, evaluator: d.evaluator||'', date: d.date||'', scores: d.scores||{}, reason: d.reason||''});
+    evalsByItem[d.itemId].push({evalId: doc.id, evaluator: d.evaluator||'', evaluatorUid: d.evaluatorUid||'', date: d.date||'', scores: d.scores||{}, reason: d.reason||''});
   });
 
   const indByItem = {};
@@ -1232,7 +1367,7 @@ async function firestoreLoadAll(){
   evidenceSnap.forEach(doc=>{
     const d = doc.data();
     if(!evidByItem[d.itemId]) evidByItem[d.itemId] = [];
-    evidByItem[d.itemId].push({evidenceId: doc.id, label: d.label||'', url: d.url||''});
+    evidByItem[d.itemId].push({evidenceId: doc.id, label: d.label||'', url: d.url||'', addedByUid: d.addedByUid||''});
   });
 
   const proposalsList = [];
@@ -1252,7 +1387,7 @@ async function firestoreLoadAll(){
     const d = doc.data();
     if(!commentsByItem[d.itemId]) commentsByItem[d.itemId] = [];
     const ts = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate().toISOString() : (d.createdAt || '');
-    commentsByItem[d.itemId].push({commentId: doc.id, author: d.author||'', role: d.role||'', text: d.text||'', createdAt: ts});
+    commentsByItem[d.itemId].push({commentId: doc.id, author: d.author||'', authorUid: d.authorUid||'', role: d.role||'', text: d.text||'', createdAt: ts});
   });
   commentsByItem && Object.keys(commentsByItem).forEach(k=>{
     commentsByItem[k].sort((a,b)=> (a.createdAt||'') < (b.createdAt||'') ? -1 : 1);
@@ -1272,7 +1407,8 @@ async function firestoreLoadAll(){
     itemId: it.id, strategyId: it.strategyId, strategyName: STRATEGY_NAME_BY_ID[it.strategyId],
     num: it.num, text: it.text, owner: it.owner,
     evaluations: evalsByItem[it.id] || [],
-    indicators: indByItem[it.id] || it.indicators.map((t,idx)=>{
+    indicators: it.indicators.map((t,idx)=>{
+      if(indByItem[it.id] && indByItem[it.id][idx]) return indByItem[it.id][idx]; // ตัวที่บันทึกแล้ว / ตัวที่ยังไม่บันทึกใช้ค่าว่าง
       const yearly = {}, targetYearly = {}; YEARS.forEach(y=>{ yearly[y]=null; targetYearly[y]=null; });
       return {index: idx, text: t, yearly, targetYearly, unit: '', project: '', note: ''};
     }),
@@ -1289,20 +1425,12 @@ async function firestoreLoadAll(){
 
 async function firestoreLogAudit(itemId, field, summary, actor){
   try{
-    await db.collection('auditLog').add({timestamp: fsTimestamp(), itemId: itemId||'', field, summary, actor: actor || 'ไม่ระบุชื่อ'});
+    await db.collection('auditLog').add({timestamp: fsTimestamp(), itemId: itemId||'', field, summary, actor: actorName(), actorUid: myUid()});
   }catch(e){ /* ประวัติบันทึกไม่สำเร็จไม่ควรทำให้การบันทึกหลักล้มเหลว */ }
 }
 
-async function firestoreAddEvaluation(itemId, payload){
-  const item = DATA.items.find(it=>it.id===itemId);
-  await db.collection('evaluations').add({
-    itemId, strategyId: item.strategyId, strategyName: STRATEGY_NAME_BY_ID[item.strategyId], num: item.num, text: item.text, owner: item.owner,
-    evaluator: payload.evaluator||'', date: payload.date||'', scores: payload.scores||{}, reason: payload.reason||'', submittedAt: fsTimestamp()
-  });
-  const vals = CRIT_KEYS.map(k=>payload.scores[k]).filter(v=>v!==undefined && v!==null && v!=='');
-  const avgTxt = vals.length===6 ? (vals.reduce((a,b)=>a+Number(b),0)/6).toFixed(2) : 'ไม่ครบ';
-  await firestoreLogAudit(itemId, 'evaluation', 'เพิ่มคะแนนประเมินโดย ' + (payload.evaluator||'ไม่ระบุชื่อ') + ' (เฉลี่ย ' + avgTxt + ')', payload.evaluator);
-}
+
+
 async function firestoreDeleteEvaluation(itemId, evalId){
   const snap = await db.collection('evaluations').doc(evalId).get();
   const evaluator = snap.exists ? snap.data().evaluator : '';
@@ -1312,56 +1440,14 @@ async function firestoreDeleteEvaluation(itemId, evalId){
 
 function indicatorDocId(itemId, index){ return itemId + '_' + index; }
 
-async function firestoreSaveIndicator(itemId, index, payload){
-  const item = DATA.items.find(it=>it.id===itemId);
-  const docId = indicatorDocId(itemId, index);
-  const data = {itemId, index: Number(index), text: item.indicators[index] || '', updatedAt: fsTimestamp()};
-  if(payload.unit !== undefined) data.unit = payload.unit;
-  if(payload.project !== undefined) data.project = payload.project;
-  if(payload.note !== undefined) data.note = payload.note;
-  const existing = (payload.yearly || payload.targetYearly) ? await db.collection('indicators').doc(docId).get() : null;
-  if(payload.yearly){
-    const yearly = existing.exists && existing.data().yearly ? Object.assign({}, existing.data().yearly) : {};
-    YEARS.forEach(y=>{ if(payload.yearly[y]!==undefined) yearly[y] = payload.yearly[y]===''?null:Number(payload.yearly[y]); });
-    data.yearly = yearly;
-  }
-  if(payload.targetYearly){
-    const targetYearly = existing.exists && existing.data().targetYearly ? Object.assign({}, existing.data().targetYearly) : {};
-    YEARS.forEach(y=>{ if(payload.targetYearly[y]!==undefined) targetYearly[y] = payload.targetYearly[y]===''?null:Number(payload.targetYearly[y]); });
-    data.targetYearly = targetYearly;
-  }
-  await db.collection('indicators').doc(docId).set(data, {merge:true});
-  await firestoreLogAudit(itemId, 'indicator', 'อัปเดตผลตัวชี้วัดที่ ' + (Number(index)+1), payload.actor||'');
-}
 
-async function firestoreSaveBudget(itemId, payload){
-  const data = {updatedAt: fsTimestamp()};
-  if(payload.note !== undefined) data.note = payload.note;
-  const existing = (payload.planned || payload.actual) ? await db.collection('budgets').doc(itemId).get() : null;
-  if(payload.planned){
-    const planned = existing && existing.exists && existing.data().planned ? Object.assign({}, existing.data().planned) : {};
-    YEARS.forEach(y=>{ if(payload.planned[y]!==undefined) planned[y] = payload.planned[y]===''?null:Number(payload.planned[y]); });
-    data.planned = planned;
-  }
-  if(payload.actual){
-    const actual = existing && existing.exists && existing.data().actual ? Object.assign({}, existing.data().actual) : {};
-    YEARS.forEach(y=>{ if(payload.actual[y]!==undefined) actual[y] = payload.actual[y]===''?null:Number(payload.actual[y]); });
-    data.actual = actual;
-  }
-  await db.collection('budgets').doc(itemId).set(data, {merge:true});
-  await firestoreLogAudit(itemId, 'budget', 'อัปเดตงบประมาณรายปี', payload.actor||'');
-}
-async function firestoreSaveProgress(itemId, payload){
-  const data = {updatedAt: fsTimestamp()};
-  if(payload.status !== undefined) data.status = payload.status;
-  if(payload.percent !== undefined) data.percent = Number(payload.percent) || 0;
-  if(payload.note !== undefined) data.note = payload.note;
-  await db.collection('progress').doc(itemId).set(data, {merge:true});
-  await firestoreLogAudit(itemId, 'progress', 'อัปเดตความคืบหน้าเป็น ' + (payload.percent!==undefined ? payload.percent+'%' : '') + ' (' + statusLabel(payload.status) + ')', payload.actor||'');
-}
+
+
+
+
 
 async function firestoreAddEvidence(itemId, payload){
-  const ref = await db.collection('evidence').add({itemId, label: payload.label||'', url: payload.url||'', addedAt: fsTimestamp()});
+  const ref = await db.collection('evidence').add({itemId, label: payload.label||'', url: payload.url||'', addedBy: actorName(), addedByUid: myUid(), addedAt: fsTimestamp()});
   await firestoreLogAudit(itemId, 'evidence', 'เพิ่มหลักฐาน: ' + (payload.label || payload.url || ''), payload.actor||'');
   return ref.id;
 }
@@ -1382,10 +1468,21 @@ async function firestoreDeleteProposal(proposalId){
   await firestoreLogAudit('', 'proposal', 'ลบข้อเสนอ: ' + title, '');
 }
 
-async function firestoreUpdateNotes(notes){
-  await db.collection('meta').doc('settings').set({teamNotes: notes}, {merge:true});
+async function firestoreUpdateNotes(notes, base, force){
+  const ref = db.collection('meta').doc('settings');
+  await db.runTransaction(async (tx)=>{
+    const snap = await tx.get(ref);
+    const server = snap.exists ? (snap.data().teamNotes || '') : '';
+    if(!force && server !== (base || '')){
+      const err = new Error('มีผู้อื่นแก้ไขบันทึกทีมแล้ว');
+      err.conflicts = true; err.serverNotes = server;
+      throw err;
+    }
+    tx.set(ref, {teamNotes: notes, teamNotesUpdatedBy: actorName(), teamNotesUpdatedAt: fsTimestamp()}, {merge:true});
+  });
   await firestoreLogAudit('', 'notes', 'แก้ไขบันทึกมติของทีม', '');
 }
+
 async function firestoreUpdateWeights(w){
   await db.collection('meta').doc('settings').set({weights: w}, {merge:true});
   await firestoreLogAudit('', 'weights', 'ปรับน้ำหนักเกณฑ์การให้คะแนน', '');
@@ -1393,7 +1490,7 @@ async function firestoreUpdateWeights(w){
 
 /* ---- ความคิดเห็น / อนุมัติ / ความเชื่อมโยงเชิงยุทธศาสตร์ ---- */
 async function firestoreAddComment(itemId, text){
-  const ref = await db.collection('comments').add({itemId, author: actorName(), role: currentRole(), text, createdAt: fsTimestamp()});
+  const ref = await db.collection('comments').add({itemId, author: actorName(), authorUid: myUid(), role: currentRole(), text, createdAt: fsTimestamp()});
   await firestoreLogAudit(itemId, 'comment', 'แสดงความคิดเห็นโดย ' + actorName(), actorName());
   return ref.id;
 }
@@ -1401,41 +1498,43 @@ async function firestoreSetApproval(itemId, approved){
   await db.collection('approvals').doc(itemId).set({approved, approvedBy: actorName(), approvedAt: fsTimestamp()}, {merge:true});
   await firestoreLogAudit(itemId, 'approval', (approved?'อนุมัติ':'ยกเลิกการอนุมัติ') + 'โดย ' + actorName(), actorName());
 }
-async function firestoreSaveDependencies(itemId, dependsOn){
-  await db.collection('dependencies').doc(itemId).set({dependsOn}, {merge:true});
-  await firestoreLogAudit(itemId, 'dependency', 'ปรับความเชื่อมโยงกับกลยุทธ์อื่น (' + dependsOn.length + ' รายการ)', actorName());
+async function firestoreChangeDependency(itemId, depId, add){
+  const FV = firebase.firestore.FieldValue;
+  // ใช้ arrayUnion/arrayRemove เพื่อไม่ให้ทับรายการที่ผู้อื่นเพิ่งเพิ่ม/ลบไปพร้อมกัน
+  await db.collection('dependencies').doc(itemId).set({dependsOn: add ? FV.arrayUnion(depId) : FV.arrayRemove(depId)}, {merge:true});
+  await firestoreLogAudit(itemId, 'dependency', (add ? 'เพิ่ม' : 'ลบ') + 'ความเชื่อมโยงกับกลยุทธ์ ' + depId, actorName());
 }
 
-/* ---- Firebase Authentication ---- */
 async function loadUserProfile(user){
   try{
-    const doc = await db.collection('users').doc(user.uid).get();
-    currentUser = {
-      uid: user.uid, email: user.email,
-      displayName: (doc.exists && doc.data().displayName) || user.email,
-      role: (doc.exists && doc.data().role) || 'contributor'
-    };
+    const ref = db.collection('users').doc(user.uid);
+    const doc = await ref.get();
+    if(!doc.exists){
+      // โปรไฟล์หาย (เช่น สมัครแล้วเขียนโปรไฟล์ไม่สำเร็จ) -> สร้างใหม่ในสถานะรออนุมัติ
+      try{ await ref.set({email: user.email, displayName: user.email, role: 'pending', createdAt: fsTimestamp()}); }catch(e){}
+    }
+    const d = doc.exists ? doc.data() : {};
+    currentUser = {uid: user.uid, email: user.email, displayName: d.displayName || user.email, role: d.role || 'pending'};
   }catch(e){
-    currentUser = {uid: user.uid, email: user.email, displayName: user.email, role: 'contributor'};
+    currentUser = {uid: user.uid, email: user.email, displayName: user.email, role: 'pending'};
   }
 }
+
 let suppressAuthListener = false; // ป้องกัน race: onAuthStateChanged อาจยิงก่อนที่ signUp() จะเขียนโปรไฟล์ผู้ใช้เสร็จ
-async function signUp(email, password, displayName, role){
+async function signUp(email, password, displayName){
   suppressAuthListener = true;
   try{
     const cred = await authInst.createUserWithEmailAndPassword(email, password);
-    await db.collection('users').doc(cred.user.uid).set({email, displayName, role, createdAt: fsTimestamp()});
-    currentUser = {uid: cred.user.uid, email, displayName, role};
-    connected = true;
-    try{ applyData(await firestoreLoadAll()); }
-    catch(e){ connected = false; await loadLocalFallback(); }
-    updateConnectionUI();
-    renderAllTabs(); renderMaster(); renderRubric(); renderAbout();
-    showMainApp();
+    // บัญชีใหม่ทุกบัญชีเริ่มที่ "รออนุมัติ" เสมอ — ผู้บริหารเป็นผู้กำหนดบทบาทให้ภายหลัง
+    await db.collection('users').doc(cred.user.uid).set({email, displayName, role: 'pending', createdAt: fsTimestamp()});
+    currentUser = {uid: cred.user.uid, email, displayName, role: 'pending'};
+    connected = false;
+    showPendingScreen();
   } finally {
     suppressAuthListener = false;
   }
 }
+
 async function signIn(email, password){
   await authInst.signInWithEmailAndPassword(email, password);
 }
@@ -1443,73 +1542,126 @@ async function signOutUser(){
   await authInst.signOut();
 }
 
-/** บันทึกทั้งหมดของกลยุทธ์เดียวในการเขียนชุดเดียว (atomic batch): การประเมิน (ถ้ามี) + ตัวชี้วัดทุกตัว + งบประมาณ + ความคืบหน้า */
-async function firestoreSaveAllForItem(itemId, {evaluation, indicators, budget, progress}){
+/** บันทึกเฉพาะช่องที่แก้ไขจริงของกลยุทธ์เดียวใน transaction เดียว
+ *  ถ้าช่องที่จะบันทึกถูกผู้อื่นแก้ไปแล้วหลังจากที่เราโหลด จะโยน error ที่มี .conflicts (ยกเว้น force=true) */
+async function firestoreSaveAllForItem(itemId, {evaluation, changes}, force){
   const item = DATA.items.find(it=>it.id===itemId);
-
-  // อ่านค่า yearly/targetYearly/planned/actual เดิมก่อน (batch เขียนอย่างเดียว อ่านไม่ได้) เพื่อ merge ให้ถูกต้อง
-  const indDocs = (indicators||[]).map(ip => ({ip, ref: db.collection('indicators').doc(indicatorDocId(itemId, ip.index))}));
-  const existingIndSnaps = await Promise.all(indDocs.map(d => d.ref.get()));
+  const indRefs = changes.indicators.map(ch=>db.collection('indicators').doc(indicatorDocId(itemId, ch.index)));
   const budgetRef = db.collection('budgets').doc(itemId);
-  const existingBudgetSnap = budget ? await budgetRef.get() : null;
+  const progressRef = db.collection('progress').doc(itemId);
+  const stamp = () => ({updatedAt: fsTimestamp(), updatedBy: actorName(), updatedByUid: myUid()});
 
-  const batch = db.batch();
+  await db.runTransaction(async (tx)=>{
+    const indSnaps = [];
+    for(const r of indRefs) indSnaps.push(await tx.get(r));
+    const budgetSnap = changes.budget ? await tx.get(budgetRef) : null;
+    const progressSnap = changes.progress ? await tx.get(progressRef) : null;
 
-  let evalRef = null;
-  if(evaluation){
-    evalRef = db.collection('evaluations').doc();
-    batch.set(evalRef, {
-      itemId, strategyId: item.strategyId, strategyName: STRATEGY_NAME_BY_ID[item.strategyId], num: item.num, text: item.text, owner: item.owner,
-      evaluator: evaluation.evaluator||'', date: evaluation.date||'', scores: evaluation.scores||{}, reason: evaluation.reason||'', submittedAt: fsTimestamp()
+    // ตรวจว่าค่าบนเซิร์ฟเวอร์ยังเท่ากับค่าที่เราเห็นตอนโหลดหรือไม่ (เฉพาะช่องที่เรากำลังจะแก้)
+    const conflicts = [];
+    changes.indicators.forEach((ch, i)=>{
+      const d = indSnaps[i].exists ? indSnaps[i].data() : {};
+      const label = 'ตัวชี้วัดที่ ' + (ch.index + 1);
+      Object.keys(ch.fields).forEach(f=>{ if(!sameText(d[f], ch.base[f])) conflicts.push(label + ' – ' + (IND_FIELD_TH[f] || f)); });
+      Object.keys(ch.targetYearly).forEach(y=>{ if(!sameNum(d.targetYearly && d.targetYearly[y], ch.base.targetYearly && ch.base.targetYearly[y])) conflicts.push(label + ' – เป้าหมายปี ' + y); });
+      Object.keys(ch.yearly).forEach(y=>{ if(!sameNum(d.yearly && d.yearly[y], ch.base.yearly && ch.base.yearly[y])) conflicts.push(label + ' – ผลจริงปี ' + y); });
     });
-  }
+    if(changes.budget){
+      const d = budgetSnap.exists ? budgetSnap.data() : {};
+      const b = changes.budget;
+      if('note' in b.fields && !sameText(d.note, b.base.note)) conflicts.push('หมายเหตุงบประมาณ');
+      Object.keys(b.planned).forEach(y=>{ if(!sameNum(d.planned && d.planned[y], b.base.planned && b.base.planned[y])) conflicts.push('งบตามแผนปี ' + y); });
+      Object.keys(b.actual).forEach(y=>{ if(!sameNum(d.actual && d.actual[y], b.base.actual && b.base.actual[y])) conflicts.push('งบใช้จริงปี ' + y); });
+    }
+    if(changes.progress){
+      const d = progressSnap.exists ? progressSnap.data() : {};
+      const p = changes.progress;
+      if('status' in p.fields && !sameText(d.status || 'not_started', p.base.status || 'not_started')) conflicts.push('สถานะความคืบหน้า');
+      if('percent' in p.fields && !sameNum(d.percent || 0, p.base.percent || 0)) conflicts.push('% ความคืบหน้า');
+      if('note' in p.fields && !sameText(d.note, p.base.note)) conflicts.push('หมายเหตุความคืบหน้า');
+    }
+    if(conflicts.length && !force){
+      const err = new Error('มีผู้อื่นแก้ไขข้อมูลเดียวกัน');
+      err.conflicts = conflicts;
+      throw err;
+    }
 
-  indDocs.forEach((d, i)=>{
-    const ip = d.ip;
-    const existing = existingIndSnaps[i];
-    const data = {itemId, index: Number(ip.index), text: item.indicators[ip.index] || '', updatedAt: fsTimestamp()};
-    if(ip.unit !== undefined) data.unit = ip.unit;
-    if(ip.project !== undefined) data.project = ip.project;
-    if(ip.note !== undefined) data.note = ip.note;
-    if(ip.yearly){
-      const yearly = existing.exists && existing.data().yearly ? Object.assign({}, existing.data().yearly) : {};
-      YEARS.forEach(y=>{ if(ip.yearly[y]!==undefined) yearly[y] = ip.yearly[y]===''?null:Number(ip.yearly[y]); });
-      data.yearly = yearly;
+    if(evaluation){
+      tx.set(db.collection('evaluations').doc(evalDocId(itemId)), {
+        itemId, strategyId: item.strategyId, strategyName: STRATEGY_NAME_BY_ID[item.strategyId], num: item.num, text: item.text, owner: item.owner,
+        evaluator: actorName(), evaluatorUid: myUid(), date: evaluation.date || '', scores: evaluation.scores || {}, reason: evaluation.reason || '',
+        submittedAt: fsTimestamp()
+      });
     }
-    if(ip.targetYearly){
-      const targetYearly = existing.exists && existing.data().targetYearly ? Object.assign({}, existing.data().targetYearly) : {};
-      YEARS.forEach(y=>{ if(ip.targetYearly[y]!==undefined) targetYearly[y] = ip.targetYearly[y]===''?null:Number(ip.targetYearly[y]); });
-      data.targetYearly = targetYearly;
+    changes.indicators.forEach((ch, i)=>{
+      const data = Object.assign({itemId, index: ch.index, text: item.indicators[ch.index] || ''}, stamp(), ch.fields);
+      if(Object.keys(ch.yearly).length) data.yearly = mapToNums(ch.yearly);
+      if(Object.keys(ch.targetYearly).length) data.targetYearly = mapToNums(ch.targetYearly);
+      tx.set(indRefs[i], data, {merge:true}); // merge แบบลึก: เขียนเฉพาะปีที่แก้ ปีอื่นไม่ถูกทับ
+    });
+    if(changes.budget){
+      const b = changes.budget;
+      const data = Object.assign(stamp(), b.fields);
+      if(Object.keys(b.planned).length) data.planned = mapToNums(b.planned);
+      if(Object.keys(b.actual).length) data.actual = mapToNums(b.actual);
+      tx.set(budgetRef, data, {merge:true});
     }
-    batch.set(d.ref, data, {merge:true});
+    if(changes.progress){
+      const f = changes.progress.fields;
+      const data = stamp();
+      if('status' in f) data.status = f.status;
+      if('percent' in f) data.percent = Math.max(0, Math.min(100, Number(f.percent) || 0));
+      if('note' in f) data.note = f.note;
+      tx.set(progressRef, data, {merge:true});
+    }
   });
 
-  if(budget){
-    const data = {updatedAt: fsTimestamp()};
-    if(budget.note !== undefined) data.note = budget.note;
-    if(budget.planned){
-      const planned = existingBudgetSnap.exists && existingBudgetSnap.data().planned ? Object.assign({}, existingBudgetSnap.data().planned) : {};
-      YEARS.forEach(y=>{ if(budget.planned[y]!==undefined) planned[y] = budget.planned[y]===''?null:Number(budget.planned[y]); });
-      data.planned = planned;
-    }
-    if(budget.actual){
-      const actual = existingBudgetSnap.exists && existingBudgetSnap.data().actual ? Object.assign({}, existingBudgetSnap.data().actual) : {};
-      YEARS.forEach(y=>{ if(budget.actual[y]!==undefined) actual[y] = budget.actual[y]===''?null:Number(budget.actual[y]); });
-      data.actual = actual;
-    }
-    batch.set(budgetRef, data, {merge:true});
-  }
-  if(progress){
-    const data = {updatedAt: fsTimestamp()};
-    if(progress.status !== undefined) data.status = progress.status;
-    if(progress.percent !== undefined) data.percent = Number(progress.percent) || 0;
-    if(progress.note !== undefined) data.note = progress.note;
-    batch.set(db.collection('progress').doc(itemId), data, {merge:true});
-  }
+  const parts = [];
+  if(evaluation) parts.push('คะแนนประเมิน');
+  if(changes.indicators.length) parts.push('ตัวชี้วัด ' + changes.indicators.length + ' ตัว');
+  if(changes.budget) parts.push('งบประมาณ');
+  if(changes.progress) parts.push('ความคืบหน้า');
+  await firestoreLogAudit(itemId, 'saveAll', 'บันทึก: ' + parts.join(', ') + (force ? ' (ยืนยันเขียนทับค่าที่ผู้อื่นแก้)' : ''), '');
+}
 
-  await batch.commit();
-  await firestoreLogAudit(itemId, 'saveAll', 'บันทึกทั้งหมด (คะแนนประเมิน/ตัวชี้วัด/งบประมาณ/ความคืบหน้า) ในครั้งเดียว', '');
-  return {evalId: evalRef ? evalRef.id : null};
+/** โหลดข้อมูลล่าสุดของกลยุทธ์เดียวจากเซิร์ฟเวอร์ (ใช้หลังบันทึก เพื่อเห็นค่าที่ผู้อื่นแก้ในช่องอื่นด้วย) */
+async function reloadItemFromServer(itemId){
+  const item = DATA.items.find(it=>it.id===itemId);
+  const [evalSnap, indSnap, bSnap, pSnap] = await Promise.all([
+    db.collection('evaluations').where('itemId', '==', itemId).get(),
+    db.collection('indicators').where('itemId', '==', itemId).get(),
+    db.collection('budgets').doc(itemId).get(),
+    db.collection('progress').doc(itemId).get()
+  ]);
+  const st = evalState[itemId];
+  st.evaluations = [];
+  evalSnap.forEach(doc=>{
+    const d = doc.data();
+    st.evaluations.push({evalId: doc.id, evaluator: d.evaluator||'', evaluatorUid: d.evaluatorUid||'', date: d.date||'', scores: d.scores||{}, reason: d.reason||''});
+  });
+  const byIdx = {};
+  indSnap.forEach(doc=>{
+    const d = doc.data();
+    byIdx[d.index] = {
+      index: d.index, text: d.text,
+      yearly: Object.fromEntries(YEARS.map(y=>[y, numOrNull(d.yearly ? d.yearly[y] : null)])),
+      targetYearly: Object.fromEntries(YEARS.map(y=>[y, numOrNull(d.targetYearly ? d.targetYearly[y] : null)])),
+      unit: d.unit||'', project: d.project||'', note: d.note||''
+    };
+  });
+  st.indicators = item.indicators.map((t, idx)=> byIdx[idx] || {index: idx, text: t, yearly: emptyYears(), targetYearly: emptyYears(), unit: '', project: '', note: ''});
+  if(bSnap.exists){
+    const d = bSnap.data();
+    st.budget = {
+      planned: Object.fromEntries(YEARS.map(y=>[y, numOrNull(d.planned ? d.planned[y] : null)])),
+      actual: Object.fromEntries(YEARS.map(y=>[y, numOrNull(d.actual ? d.actual[y] : null)])),
+      note: d.note || ''
+    };
+  }
+  if(pSnap.exists){
+    const d = pSnap.data();
+    st.progress = {status: d.status || 'not_started', percent: d.percent || 0, note: d.note || ''};
+  }
 }
 
 async function firestoreResetAll(){
@@ -1544,33 +1696,40 @@ async function firestoreResetAll(){
   await firestoreLogAudit('', 'reset', 'ล้างข้อมูลการประเมิน/ตัวชี้วัด/งบประมาณ/ความคืบหน้าทั้งหมด', '');
 }
 
+function itemToState(it){
+  return {
+    evaluations: (it.evaluations||[]).map(e=>({evalId:e.evalId, evaluator:e.evaluator||'', evaluatorUid:e.evaluatorUid||'', date:e.date||'', scores:e.scores||{}, reason:e.reason||''})),
+    indicators: (it.indicators||[]).map(ind=>{
+      const yearly = {}, targetYearly = {};
+      YEARS.forEach(y => { yearly[y] = numOrNull(ind.yearly ? ind.yearly[y] : null); targetYearly[y] = numOrNull(ind.targetYearly ? ind.targetYearly[y] : null); });
+      return {index:ind.index, text:ind.text, yearly, targetYearly, unit:ind.unit||'', project:ind.project||'', note:ind.note||''};
+    }),
+    budget: {
+      planned: Object.fromEntries(YEARS.map(y=>[y, numOrNull(it.budget && it.budget.planned ? it.budget.planned[y] : null)])),
+      actual: Object.fromEntries(YEARS.map(y=>[y, numOrNull(it.budget && it.budget.actual ? it.budget.actual[y] : null)])),
+      note: (it.budget && it.budget.note) || ''
+    },
+    progress: {status: (it.progress && it.progress.status) || 'not_started', percent: (it.progress && it.progress.percent) || 0, note: (it.progress && it.progress.note) || ''},
+    evidence: (it.evidence||[]).map(ev=>({evidenceId:ev.evidenceId, label:ev.label||'', url:ev.url||'', addedByUid:ev.addedByUid||''})),
+    comments: (it.comments||[]).map(c=>({commentId:c.commentId, author:c.author||'', authorUid:c.authorUid||'', role:c.role||'', text:c.text||'', createdAt:c.createdAt||''})),
+    approval: {approved: !!(it.approval && it.approval.approved), approvedBy: (it.approval && it.approval.approvedBy) || '', approvedAt: (it.approval && it.approval.approvedAt) || ''},
+    dependsOn: Array.isArray(it.dependsOn) ? it.dependsOn.slice() : []
+  };
+}
 function applyData(data){
   evalState = {};
-  (data.items||[]).forEach(it=>{
-    evalState[it.itemId] = {
-      evaluations: (it.evaluations||[]).map(e=>({evalId:e.evalId, evaluator:e.evaluator||'', date:e.date||'', scores:e.scores||{}, reason:e.reason||''})),
-      indicators: (it.indicators||[]).map(ind=>{
-        const yearly = {}, targetYearly = {};
-        YEARS.forEach(y => { yearly[y] = numOrNull(ind.yearly ? ind.yearly[y] : null); targetYearly[y] = numOrNull(ind.targetYearly ? ind.targetYearly[y] : null); });
-        return {index:ind.index, text:ind.text, yearly, targetYearly, unit:ind.unit||'', project:ind.project||'', note:ind.note||''};
-      }),
-      budget: {
-        planned: Object.fromEntries(YEARS.map(y=>[y, numOrNull(it.budget && it.budget.planned ? it.budget.planned[y] : null)])),
-        actual: Object.fromEntries(YEARS.map(y=>[y, numOrNull(it.budget && it.budget.actual ? it.budget.actual[y] : null)])),
-        note: (it.budget && it.budget.note) || ''
-      },
-      progress: {status: (it.progress && it.progress.status) || 'not_started', percent: (it.progress && it.progress.percent) || 0, note: (it.progress && it.progress.note) || ''},
-      evidence: (it.evidence||[]).map(ev=>({evidenceId:ev.evidenceId, label:ev.label||'', url:ev.url||''})),
-      comments: (it.comments||[]).map(c=>({commentId:c.commentId, author:c.author||'', role:c.role||'', text:c.text||'', createdAt:c.createdAt||''})),
-      approval: {approved: !!(it.approval && it.approval.approved), approvedBy: (it.approval && it.approval.approvedBy) || '', approvedAt: (it.approval && it.approval.approvedAt) || ''},
-      dependsOn: Array.isArray(it.dependsOn) ? it.dependsOn.slice() : []
-    };
-  });
+  (data.items||[]).forEach(it=>{ evalState[it.itemId] = itemToState(it); });
   proposals = data.proposals || [];
   auditLog = data.auditLog || [];
   weights = Object.assign({}, DEFAULT_WEIGHTS, data.weights || {});
   teamNotes = data.notes || '';
+  teamNotesBaseline = teamNotes;
 }
+function defaultLocalStateAsData(){
+  const local = defaultLocalState();
+  return {items: DATA.items.map(it => Object.assign({itemId: it.id}, local.items[it.id])), proposals: [], auditLog: [], weights: DEFAULT_WEIGHTS, notes: ''};
+}
+
 function numOrNull(v){ return (v===null || v===undefined || v==='') ? null : Number(v); }
 
 function defaultLocalState(){
@@ -1626,6 +1785,7 @@ function updateConnectionUI(){
     if(embeddedNotice) embeddedNotice.style.display = 'none';
   }
 
+  updateOfflineBanner();
   if(connected){
     dot.className = 'dot on';
     label.textContent = 'เชื่อมต่อ Firebase แล้ว';
@@ -1651,10 +1811,39 @@ function updateRoleUI(){
     badge.style.display = 'none';
     if(logoutBtn) logoutBtn.style.display = 'none';
   }
+  // ปุ่มล้างข้อมูล: เฉพาะผู้บริหาร (หรือโหมดออฟไลน์ล้วน)
+  const resetBtn = document.getElementById('btnReset');
+  if(resetBtn) resetBtn.style.display = canReset() ? '' : 'none';
+  // แท็บจัดการผู้ใช้: เฉพาะผู้บริหารที่เชื่อมต่อ Firebase
+  const usersTab = document.getElementById('tabUsers');
+  if(usersTab) usersTab.style.display = (isCloudUser() && canApprove()) ? '' : 'none';
+  if(usersTab && usersTab.style.display === 'none' && usersTab.classList.contains('active')){
+    const dash = document.querySelector('.tab-btn[data-tab="dashboard"]'); if(dash) dash.click();
+  }
+  refreshPendingBadge();
+  // บันทึกทีม: แก้ได้เฉพาะผู้ที่มีสิทธิ์แก้ไข
+  const notes = document.getElementById('teamNotes');
+  const notesBtn = document.getElementById('btnSaveNotes');
+  if(notes) notes.readOnly = !canEdit();
+  if(notesBtn) notesBtn.style.display = canEdit() ? '' : 'none';
+  // ผู้เสนอ: ใช้ชื่อบัญชีที่ล็อกอิน
+  const propBy = document.getElementById('propBy');
+  if(propBy){
+    if(isCloudUser()){ propBy.value = actorName(); propBy.readOnly = true; }
+    else { propBy.readOnly = false; }
+  }
 }
 function showAuthScreen(){
   const authEl = document.getElementById('authScreen');
   const shellEl = document.getElementById('appShell');
+  const tabs = document.getElementById('authTabs');
+  if(tabs) tabs.style.display = '';
+  const pendingPanel = document.getElementById('authPanelPending');
+  if(pendingPanel && pendingPanel.classList.contains('active')){
+    pendingPanel.classList.remove('active');
+    document.getElementById('authPanelSignin').classList.add('active');
+    document.querySelectorAll('.auth-tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.authtab === 'signin'));
+  }
   if(authEl) authEl.style.display = 'flex';
   if(shellEl) shellEl.style.display = 'none';
 }
@@ -1665,30 +1854,45 @@ function showMainApp(){
   if(shellEl) shellEl.style.display = 'block';
   updateRoleUI();
 }
+async function enterAppForUser(user){
+  await loadUserProfile(user);
+  if(currentRole() === 'pending'){ connected = false; showPendingScreen(); return; }
+  connected = true;
+  cloudLoadFailed = false;
+  try{ applyData(await firestoreLoadAll()); }
+  catch(e){
+    // โหลดจากฐานข้อมูลกลางไม่ได้ -> โหมดอ่านอย่างเดียว ไม่ให้บันทึกลงเครื่องแทน (กันข้อมูลแตกเป็นสองชุด)
+    connected = false;
+    cloudLoadFailed = true;
+    applyData(defaultLocalStateAsData());
+    showToast('โหลดข้อมูลจาก Firebase ไม่สำเร็จ: ' + friendlyError(e), true);
+  }
+  updateConnectionUI();
+  renderAllTabs(); renderMaster(); renderRubric(); renderAbout();
+  showMainApp();
+}
 function setupAuthListener(){
   authInst = firebase.auth();
   authInst.onAuthStateChanged(async (user)=>{
     if(suppressAuthListener) return; // signUp() กำลังจัดการ transition นี้เองอยู่แล้ว (ป้องกัน race)
     if(user){
-      await loadUserProfile(user);
-      connected = true;
-      try{ applyData(await firestoreLoadAll()); }
-      catch(e){ connected = false; await loadLocalFallback(); }
-      updateConnectionUI();
-      renderAllTabs(); renderMaster(); renderRubric(); renderAbout();
-      showMainApp();
+      await enterAppForUser(user);
     } else {
       currentUser = null;
+      connected = false;
       showAuthScreen();
     }
   });
 }
+
 async function tryConnectFirebase(config){
+  if(typeof firebase === 'undefined') throw new Error('โหลดไลบรารี Firebase ไม่สำเร็จ (ตรวจสอบอินเทอร์เน็ต)');
   fsInit(config);
-  await firestoreLoadAll(); // ทดสอบว่า config/rules ใช้งานได้จริงก่อน (จะโยน error ถ้าไม่ได้)
   firebaseConfig = config;
+  // ไม่อ่านข้อมูลก่อนล็อกอิน (กฎความปลอดภัยไม่อนุญาตอยู่แล้ว) — ให้ setupAuthListener() พาไปหน้าล็อกอิน/แอปหลักเอง
   setupAuthListener();
 }
+
 async function loadState(){
   let config = EMBEDDED_FIREBASE_CONFIG;
   if(!config){
@@ -1888,7 +2092,7 @@ function renderCommentsPanel(item, st){
 }
 
 function renderDependenciesPanel(item, st){
-  const depsEditable = canEdit();
+  const depsEditable = canEditItem(item.id);
   const currentDeps = st.dependsOn || [];
   const otherItems = DATA.items.filter(it=>it.id!==item.id);
   const dependedOnBy = DATA.items.filter(it=>{
@@ -1929,69 +2133,79 @@ function renderDependenciesPanel(item, st){
 function renderScorePanel(item, st){
   const editable = canEditItem(item.id);
   const evals = st.evaluations || [];
-  const list = evals.length ? evals.map(ev => `
-    <div class="eval-entry" data-evalid="${ev.evalId}">
+  const cloud = isCloudUser();
+  const myEval = cloud ? evals.find(ev=>ev.evaluatorUid && ev.evaluatorUid === myUid()) : null;
+  const list = evals.length ? evals.map(ev => {
+    const mine = cloud && ev.evaluatorUid && ev.evaluatorUid === myUid();
+    return `
+    <div class="eval-entry${mine ? ' eval-entry-mine' : ''}" data-evalid="${escapeHtml(ev.evalId)}">
       <div class="eval-entry-top">
         <div>
           <span class="eval-entry-name">${escapeHtml(ev.evaluator || 'ไม่ระบุชื่อ')}</span>
+          ${mine ? '<span class="tag tag-mine">ของคุณ</span>' : ''}
+          ${cloud && !ev.evaluatorUid ? '<span class="tag" title="บันทึกก่อนที่ระบบจะผูกผลประเมินกับบัญชีผู้ใช้">ข้อมูลเดิม</span>' : ''}
           <span class="eval-entry-date"> · ${escapeHtml(ev.date || '')}</span>
         </div>
         <div style="display:flex;align-items:center;gap:8px;">
           <span class="eval-entry-avg" style="color:${RECO_COLOR_HEX[getRecoKey(avgOfScores(ev.scores))]}">${fmt(avgOfScores(ev.scores))}</span>
-          ${editable ? `<button class="btn-tiny danger" data-del-eval="${ev.evalId}" data-item="${item.id}">ลบ</button>` : ''}
+          ${canDeleteEval(item.id, ev) ? `<button class="btn-tiny danger" data-del-eval="${escapeHtml(ev.evalId)}" data-item="${item.id}">ลบ</button>` : ''}
         </div>
       </div>
       <div class="eval-entry-chips">
         ${CRIT_KEYS.map((k,i)=>`<span class="chip-score">${escapeHtml(CRIT_LABELS[i].th)}: ${ev.scores[k] ?? '—'}</span>`).join('')}
       </div>
       ${ev.reason ? `<div class="eval-entry-reason">${escapeHtml(ev.reason)}</div>` : ''}
-    </div>`).join('')
+    </div>`;
+  }).join('')
     : `<div class="eval-empty">ยังไม่มีการประเมิน${editable ? ' — กด &ldquo;เพิ่มการประเมินใหม่&rdquo; ด้านล่างเพื่อเริ่มให้คะแนน' : ''}</div>`;
 
   if(!editable){
-    return `<div class="eval-list">${list}</div><p class="section-sub" style="margin:8px 0 0;">คุณไม่มีสิทธิ์เพิ่ม/แก้ไขคะแนนประเมิน (ดูได้อย่างเดียว) — ใช้แท็บ &ldquo;ความคิดเห็น&rdquo; เพื่อแสดงความเห็นแทนได้</p>`;
+    return `<div class="eval-list">${list}</div><p class="section-sub" style="margin:8px 0 0;">คุณไม่มีสิทธิ์เพิ่ม/แก้ไขคะแนนประเมินของกลยุทธ์นี้ (ดูได้อย่างเดียว) — ใช้แท็บ &ldquo;ความคิดเห็น&rdquo; เพื่อแสดงความเห็นแทนได้</p>`;
   }
 
+  const pre = myEval;
   return `
     <div class="eval-list">${list}</div>
     <div class="addeval-toggle-wrap">
-      <button class="btn-tiny success" data-addeval-toggle="${item.id}" style="padding:8px 14px;">+ เพิ่มการประเมินใหม่</button>
+      <button class="btn-tiny success" data-addeval-toggle="${item.id}" style="padding:8px 14px;">${pre ? '✎ แก้ไขการประเมินของฉัน' : '+ เพิ่มการประเมินใหม่'}</button>
     </div>
     <div class="addeval-form" id="addeval-${item.id}">
-      <div class="addeval-header">เพิ่มการประเมินใหม่ — กรุณาให้คะแนนครบทั้ง 6 ด้าน</div>
+      <div class="addeval-header">${pre ? 'แก้ไขการประเมินของคุณ' : 'เพิ่มการประเมินใหม่'} — กรุณาให้คะแนนครบทั้ง 6 ด้าน</div>
       <div class="meta-row" style="grid-template-columns:1fr 160px;margin-bottom:10px;">
         <div>
-          <div class="field-label">ชื่อผู้ประเมิน</div>
-          <input type="text" class="meta-input" data-new-field="evaluator" data-item="${item.id}" placeholder="ชื่อ-นามสกุล / ตำแหน่ง" value="${escapeHtml(actorName()!=='ผู้ใช้งาน (ออฟไลน์)'?actorName():'')}">
+          <div class="field-label">ชื่อผู้ประเมิน${cloud ? ' (ผูกกับบัญชีที่เข้าสู่ระบบ)' : ''}</div>
+          <input type="text" class="meta-input" data-new-field="evaluator" data-item="${item.id}" placeholder="ชื่อ-นามสกุล / ตำแหน่ง" value="${escapeHtml(cloud ? actorName() : '')}" ${cloud ? 'readonly' : ''}>
         </div>
         <div>
           <div class="field-label">วันที่</div>
-          <input type="date" class="meta-input" data-new-field="date" data-item="${item.id}" value="${todayStr()}">
+          <input type="date" class="meta-input" data-new-field="date" data-item="${item.id}" value="${escapeHtml((pre && pre.date) || todayStr())}">
         </div>
       </div>
       <div class="crit-grid">
         ${CRIT_KEYS.map((k,i)=>{
           const c = CRIT_LABELS[i];
+          const cur = pre ? Number(pre.scores[k]) : null;
           return `
           <div class="crit-block">
             <div class="crit-name">${escapeHtml(c.th)}</div>
             <div class="crit-en">${escapeHtml(c.en)}</div>
             <div class="score-row" data-newcrit="${k}" data-item="${item.id}">
-              ${[1,2,3,4,5].map(v=>`<button type="button" class="score-btn" data-val="${v}">${v}</button>`).join('')}
+              ${[1,2,3,4,5].map(v=>`<button type="button" class="score-btn${cur===v ? ' active' : ''}" data-val="${v}">${v}</button>`).join('')}
             </div>
           </div>`;
         }).join('')}
       </div>
       <div style="margin-bottom:10px;">
         <div class="field-label">เหตุผล / หลักฐานประกอบ</div>
-        <textarea class="reason-input" data-new-field="reason" data-item="${item.id}" placeholder="ระบุเหตุผลหรือหลักฐานประกอบการให้คะแนน"></textarea>
+        <textarea class="reason-input" data-new-field="reason" data-item="${item.id}" placeholder="ระบุเหตุผลหรือหลักฐานประกอบการให้คะแนน">${escapeHtml(pre ? pre.reason : '')}</textarea>
       </div>
       <div style="display:flex;gap:8px;">
         <button class="btn-light" data-cancel-eval="${item.id}">ยกเลิก</button>
       </div>
-      <p class="section-sub" style="margin:8px 0 0;">กรอกครบแล้วกดปุ่ม &ldquo;💾 บันทึกทั้งหมด&rdquo; ที่มุมขวาบนของการ์ดนี้ เพื่อบันทึกการประเมินพร้อมกับข้อมูลส่วนอื่นทั้งหมด</p>
+      <p class="section-sub" style="margin:8px 0 0;">${cloud ? 'ผู้ประเมิน 1 คนมีผลประเมินได้ 1 ชุดต่อกลยุทธ์ — บันทึกซ้ำจะเป็นการแก้ไขผลเดิมของคุณ · ' : ''}กรอกครบแล้วกดปุ่ม &ldquo;💾 บันทึกทั้งหมด&rdquo; ที่มุมขวาบนของการ์ดนี้</p>
     </div>`;
 }
+
 function avgOfScores(scores){
   const vals = CRIT_KEYS.map(k=>scores[k]).filter(v=>v!==null && v!==undefined && v!=='');
   if(vals.length < 6) return null;
@@ -2127,7 +2341,7 @@ function renderEvidencePanel(item, st){
         <b>${escapeHtml(ev.label || 'หลักฐาน')}</b>
         ${ev.url ? ` — <a class="evid-link" href="${escapeHtml(ev.url)}" target="_blank" rel="noopener">${escapeHtml(ev.url)}</a>` : ''}
       </div>
-      ${editable ? `<button class="btn-tiny danger" data-del-evidence="${ev.evidenceId}" data-item="${item.id}">ลบ</button>` : ''}
+      ${canDeleteEvidence(item.id, ev) ? `<button class="btn-tiny danger" data-del-evidence="${escapeHtml(ev.evidenceId)}" data-item="${item.id}">ลบ</button>` : ''}
     </div>`).join('')
     : `<div class="eval-empty">ยังไม่มีหลักฐานอ้างอิง</div>`;
   if(!editable){
@@ -2299,97 +2513,148 @@ document.getElementById('evalContainer').addEventListener('input', (e)=>{
   }
 });
 
-/* ---- Save All (บันทึกทั้งหมดของกลยุทธ์เดียวในคลิกเดียว) ---- */
-async function saveAllForItem(itemId){
-  const card = document.querySelector(`.item-card[data-item="${itemId}"]`);
-  if(!card) return;
-
-  // 1) ฟอร์มเพิ่มการประเมิน (ถ้าเปิดอยู่และกรอกครบ)
-  let evaluation = null;
+/** อ่านฟอร์มการประเมิน: คืน {evaluation} เมื่อกรอกครบและมีการเปลี่ยนแปลง, {incomplete:true} เมื่อกรอกไม่ครบ */
+function collectEvaluation(itemId){
   const form = document.getElementById('addeval-' + itemId);
-  if(form && form.classList.contains('show')){
-    const evaluator = form.querySelector('[data-new-field="evaluator"]').value.trim();
-    const date = form.querySelector('[data-new-field="date"]').value;
-    const reason = form.querySelector('[data-new-field="reason"]').value.trim();
-    const scores = {};
-    let anyFilled = !!evaluator;
-    let complete = true;
-    CRIT_KEYS.forEach(k=>{
-      const active = form.querySelector(`.score-row[data-newcrit="${k}"] .score-btn.active`);
-      if(active){ scores[k] = Number(active.dataset.val); anyFilled = true; } else complete = false;
-    });
-    if(anyFilled && (!evaluator || !complete)){
-      showToast('การประเมินใหม่กรอกไม่ครบ (ต้องมีชื่อผู้ประเมินและคะแนนทั้ง 6 ด้าน) จึงยังไม่บันทึกส่วนนี้ — ระบบจะบันทึกส่วนอื่นให้ก่อน', true);
-    } else if(anyFilled){
-      evaluation = {evaluator, date, scores, reason};
-    }
+  if(!form || !form.classList.contains('show')) return {evaluation: null};
+  const cloud = isCloudUser();
+  const evaluator = cloud ? actorName() : form.querySelector('[data-new-field="evaluator"]').value.trim();
+  const date = form.querySelector('[data-new-field="date"]').value;
+  const reason = form.querySelector('[data-new-field="reason"]').value.trim();
+  const scores = {};
+  let nScores = 0;
+  CRIT_KEYS.forEach(k=>{
+    const active = form.querySelector(`.score-row[data-newcrit="${k}"] .score-btn.active`);
+    if(active){ scores[k] = Number(active.dataset.val); nScores++; }
+  });
+  const touched = nScores > 0 || reason !== '' || (!cloud && evaluator !== '');
+  if(!touched) return {evaluation: null};
+  if(!evaluator || nScores < CRIT_KEYS.length) return {evaluation: null, incomplete: true};
+  const st = evalState[itemId];
+  const mine = cloud ? (st.evaluations||[]).find(ev=>ev.evaluatorUid === myUid()) : null;
+  if(mine && CRIT_KEYS.every(k=>Number(mine.scores[k]) === scores[k]) && (mine.reason||'') === reason && (mine.date||'') === date){
+    return {evaluation: null}; // เปิดฟอร์มแก้ไขแต่ไม่ได้เปลี่ยนอะไร
   }
+  return {evaluation: {evaluator, date, scores, reason}};
+}
 
-  // 2) ตัวชี้วัดทุกตัวของกลยุทธ์นี้ (เป้าหมายรายปี + ผลจริงรายปี)
-  const indicators = [];
+/** เทียบค่าในฟอร์มกับค่าที่โหลดมา แล้วคืนเฉพาะช่องที่ถูกแก้ไขจริง */
+function collectItemChanges(itemId, card){
+  const st = evalState[itemId];
+  const item = DATA.items.find(it=>it.id===itemId);
+  const baseInds = getIndicatorsForItem(item, st);
+  const changes = {indicators: [], budget: null, progress: null};
+
   card.querySelectorAll('.ind-card').forEach(indCard=>{
-    const payload = {index: Number(indCard.dataset.index), yearly: {}, targetYearly: {}};
-    indCard.querySelectorAll('[data-ind-field]').forEach(inp=>{ payload[inp.dataset.indField] = inp.value; });
-    indCard.querySelectorAll('[data-ind-year]').forEach(inp=>{ payload.yearly[inp.dataset.indYear] = inp.value; });
-    indCard.querySelectorAll('[data-ind-target-year]').forEach(inp=>{ payload.targetYearly[inp.dataset.indTargetYear] = inp.value; });
-    indicators.push(payload);
+    const index = Number(indCard.dataset.index);
+    const base = baseInds.find(i=>i.index===index) || {index, yearly: emptyYears(), targetYearly: emptyYears()};
+    const ch = {index, base, fields: {}, yearly: {}, targetYearly: {}};
+    indCard.querySelectorAll('[data-ind-field]').forEach(inp=>{ const f = inp.dataset.indField; if(!sameText(inp.value, base[f])) ch.fields[f] = inp.value; });
+    indCard.querySelectorAll('[data-ind-year]').forEach(inp=>{ const y = inp.dataset.indYear; if(!sameNum(inp.value, base.yearly && base.yearly[y])) ch.yearly[y] = inp.value; });
+    indCard.querySelectorAll('[data-ind-target-year]').forEach(inp=>{ const y = inp.dataset.indTargetYear; if(!sameNum(inp.value, base.targetYearly && base.targetYearly[y])) ch.targetYearly[y] = inp.value; });
+    if(Object.keys(ch.fields).length || Object.keys(ch.yearly).length || Object.keys(ch.targetYearly).length) changes.indicators.push(ch);
   });
 
-  // 3) งบประมาณรายปี + ความคืบหน้า
-  const budget = {planned: {}, actual: {}};
-  card.querySelectorAll('[data-budget-field]').forEach(inp=>{ budget[inp.dataset.budgetField] = inp.value; });
-  card.querySelectorAll('[data-budget-planned-year]').forEach(inp=>{ budget.planned[inp.dataset.budgetPlannedYear] = inp.value; });
-  card.querySelectorAll('[data-budget-actual-year]').forEach(inp=>{ budget.actual[inp.dataset.budgetActualYear] = inp.value; });
-  const progress = {};
-  card.querySelectorAll('[data-progress-field]').forEach(inp=>{ progress[inp.dataset.progressField] = inp.value; });
+  const bBase = st.budget || {planned: {}, actual: {}, note: ''};
+  const b = {base: bBase, fields: {}, planned: {}, actual: {}};
+  card.querySelectorAll('[data-budget-field]').forEach(inp=>{ const f = inp.dataset.budgetField; if(!sameText(inp.value, bBase[f])) b.fields[f] = inp.value; });
+  card.querySelectorAll('[data-budget-planned-year]').forEach(inp=>{ const y = inp.dataset.budgetPlannedYear; if(!sameNum(inp.value, bBase.planned && bBase.planned[y])) b.planned[y] = inp.value; });
+  card.querySelectorAll('[data-budget-actual-year]').forEach(inp=>{ const y = inp.dataset.budgetActualYear; if(!sameNum(inp.value, bBase.actual && bBase.actual[y])) b.actual[y] = inp.value; });
+  if(Object.keys(b.fields).length || Object.keys(b.planned).length || Object.keys(b.actual).length) changes.budget = b;
 
-  let newEvalId = null;
-  if(connected){
-    try{
-      const result = await firestoreSaveAllForItem(itemId, {evaluation, indicators, budget, progress});
-      newEvalId = result && result.evalId;
-    }catch(e){
-      showToast('บันทึกไม่สำเร็จ: ' + e.message, true);
-      return;
-    }
-  }
+  const pBase = st.progress || {status: 'not_started', percent: 0, note: ''};
+  const p = {base: pBase, fields: {}};
+  card.querySelectorAll('[data-progress-field]').forEach(inp=>{
+    const f = inp.dataset.progressField;
+    const same = f === 'percent' ? sameNum(Number(inp.value) || 0, Number(pBase.percent) || 0) : sameText(inp.value, pBase[f]);
+    if(!same) p.fields[f] = inp.value;
+  });
+  if(Object.keys(p.fields).length) changes.progress = p;
+  return changes;
+}
 
-  // อัปเดตสถานะฝั่งหน้าเว็บให้ตรงกับสิ่งที่เพิ่งบันทึก (เร็วกว่าการโหลดข้อมูลทั้งหมดใหม่)
+function applyChangesLocally(itemId, evaluation, changes){
   const st = evalState[itemId];
   if(evaluation){
-    st.evaluations.push({
-      evalId: newEvalId || (itemId+'_'+Date.now()+'_'+Math.random().toString(36).slice(2)),
-      evaluator: evaluation.evaluator, date: evaluation.date, scores: evaluation.scores, reason: evaluation.reason
-    });
+    if(isCloudUser()){
+      const id = evalDocId(itemId);
+      st.evaluations = st.evaluations.filter(e=>e.evalId !== id);
+      st.evaluations.push(Object.assign({evalId: id, evaluatorUid: myUid()}, evaluation));
+    } else {
+      st.evaluations.push(Object.assign({evalId: itemId + '_' + Date.now() + '_' + Math.random().toString(36).slice(2), evaluatorUid: ''}, evaluation));
+    }
   }
-  indicators.forEach(ip=>{
-    const ind = st.indicators.find(i=>i.index===ip.index);
-    if(!ind) return;
-    if(ip.unit!==undefined) ind.unit = ip.unit;
-    if(ip.project!==undefined) ind.project = ip.project;
-    if(ip.note!==undefined) ind.note = ip.note;
-    if(ip.yearly){
-      YEARS.forEach(y=>{ if(ip.yearly[y]!==undefined) ind.yearly[y] = ip.yearly[y]===''?null:Number(ip.yearly[y]); });
-    }
-    if(ip.targetYearly){
-      YEARS.forEach(y=>{ if(ip.targetYearly[y]!==undefined) ind.targetYearly[y] = ip.targetYearly[y]===''?null:Number(ip.targetYearly[y]); });
-    }
+  changes.indicators.forEach(ch=>{
+    let ind = st.indicators.find(i=>i.index === ch.index);
+    if(!ind){ ind = {index: ch.index, text: ch.base.text || '', yearly: emptyYears(), targetYearly: emptyYears(), unit: '', project: '', note: ''}; st.indicators.push(ind); }
+    Object.assign(ind, ch.fields);
+    Object.keys(ch.yearly).forEach(y=>{ ind.yearly[y] = toNumOrNull(ch.yearly[y]); });
+    Object.keys(ch.targetYearly).forEach(y=>{ ind.targetYearly[y] = toNumOrNull(ch.targetYearly[y]); });
   });
-  if(budget.note!==undefined) st.budget.note = budget.note;
-  YEARS.forEach(y=>{
-    if(budget.planned[y]!==undefined) st.budget.planned[y] = budget.planned[y]===''?null:Number(budget.planned[y]);
-    if(budget.actual[y]!==undefined) st.budget.actual[y] = budget.actual[y]===''?null:Number(budget.actual[y]);
-  });
-  if(progress.status!==undefined) st.progress.status = progress.status;
-  if(progress.percent!==undefined) st.progress.percent = Number(progress.percent)||0;
-  if(progress.note!==undefined) st.progress.note = progress.note;
+  if(changes.budget){
+    Object.assign(st.budget, changes.budget.fields);
+    Object.keys(changes.budget.planned).forEach(y=>{ st.budget.planned[y] = toNumOrNull(changes.budget.planned[y]); });
+    Object.keys(changes.budget.actual).forEach(y=>{ st.budget.actual[y] = toNumOrNull(changes.budget.actual[y]); });
+  }
+  if(changes.progress){
+    const f = changes.progress.fields;
+    if('status' in f) st.progress.status = f.status;
+    if('percent' in f) st.progress.percent = Math.max(0, Math.min(100, Number(f.percent) || 0));
+    if('note' in f) st.progress.note = f.note;
+  }
+}
 
-  if(!connected) await saveLocalFallback();
-  showSuccessPopup(connected ? 'บันทึกทั้งหมดสำเร็จ' : 'บันทึกทั้งหมดสำเร็จ (โหมดออฟไลน์)');
+/* ---- Save All: บันทึกเฉพาะช่องที่แก้ไขของกลยุทธ์นี้ในคลิกเดียว ---- */
+async function saveAllForItem(itemId, force){
+  const card = document.querySelector(`.item-card[data-item="${itemId}"]`);
+  if(!card) return;
+  if(!canEditItem(itemId)){ showToast('คุณไม่มีสิทธิ์แก้ไขกลยุทธ์นี้', true); return; }
 
-  if(evaluation) openSubtabs[itemId] = 'score';
-  refreshItemCard(itemId);
-  if(evaluation) updateStrategyProgress(itemId);
+  const ev = collectEvaluation(itemId);
+  if(ev.incomplete) showToast('การประเมินกรอกไม่ครบ (ต้องให้คะแนนครบทั้ง 6 ด้าน) จึงยังไม่บันทึกส่วนนี้', true);
+  const evaluation = ev.evaluation;
+  const changes = collectItemChanges(itemId, card);
+  if(!evaluation && !changes.indicators.length && !changes.budget && !changes.progress){
+    if(!ev.incomplete) showToast('ไม่มีข้อมูลที่เปลี่ยนแปลง');
+    return;
+  }
+
+  const btn = card.querySelector('[data-save-all]');
+  const btnLabel = btn ? btn.textContent : '';
+  if(btn){ btn.disabled = true; btn.textContent = 'กำลังบันทึก...'; }
+  try{
+    if(connected){
+      try{
+        await firestoreSaveAllForItem(itemId, {evaluation, changes}, !!force);
+      }catch(e){
+        if(e && e.conflicts){
+          const ok = confirm('ช่องต่อไปนี้ถูกผู้อื่นแก้ไขไปแล้ว หลังจากที่คุณเปิดหน้านี้:\n\n- ' + e.conflicts.join('\n- ') +
+            '\n\nกด OK เพื่อบันทึกทับด้วยค่าของคุณ\nกด Cancel เพื่อยกเลิก (ข้อมูลที่คุณกรอกยังอยู่ในหน้าจอ — จดค่าไว้แล้วกด "รีเฟรช" เพื่อดูค่าล่าสุด)');
+          if(ok){
+            if(btn){ btn.disabled = false; btn.textContent = btnLabel; }
+            return saveAllForItem(itemId, true);
+          }
+          showToast('ยังไม่ได้บันทึก — มีผู้อื่นแก้ไขข้อมูลเดียวกัน', true);
+          return;
+        }
+        showToast('บันทึกไม่สำเร็จ: ' + friendlyError(e), true);
+        return;
+      }
+    }
+
+    applyChangesLocally(itemId, evaluation, changes);
+    if(connected){
+      try{ await reloadItemFromServer(itemId); }catch(e){ /* ใช้ค่าที่เพิ่งบันทึกในเครื่องแทน */ }
+    } else {
+      await saveLocalFallback();
+    }
+    showSuccessPopup(connected ? 'บันทึกสำเร็จ' : 'บันทึกสำเร็จ (เฉพาะเครื่องนี้)');
+    if(evaluation) openSubtabs[itemId] = 'score';
+    refreshItemCard(itemId);
+    updateStrategyProgress(itemId);
+  } finally {
+    if(btn && btn.isConnected){ btn.disabled = false; btn.textContent = btnLabel; }
+  }
 }
 
 async function deleteEvaluationEntry(itemId, evalId){
@@ -2409,7 +2674,7 @@ async function addEvidenceEntry(itemId, payload){
     try{ newId = await firestoreAddEvidence(itemId, payload); showSuccessPopup('เพิ่มหลักฐานสำเร็จ'); }
     catch(e){ showToast('เพิ่มไม่สำเร็จ: ' + e.message, true); return; }
   }
-  evalState[itemId].evidence.push({evidenceId: newId || (itemId+'_'+Date.now()), label:payload.label, url:payload.url});
+  evalState[itemId].evidence.push({evidenceId: newId || (itemId+'_'+Date.now()), label:payload.label, url:payload.url, addedByUid: myUid() || ''});
   if(!connected){ await saveLocalFallback(); showSuccessPopup('เพิ่มหลักฐานสำเร็จ (โหมดออฟไลน์)'); }
   refreshItemCard(itemId);
 }
@@ -2430,7 +2695,7 @@ async function addCommentEntry(itemId, text){
     try{ newId = await firestoreAddComment(itemId, text); showSuccessPopup('ส่งความคิดเห็นสำเร็จ'); }
     catch(e){ showToast('ส่งความคิดเห็นไม่สำเร็จ: ' + e.message, true); return; }
   }
-  evalState[itemId].comments.push({commentId: newId || (itemId+'_'+Date.now()), author, role, text, createdAt: new Date().toISOString()});
+  evalState[itemId].comments.push({commentId: newId || (itemId+'_'+Date.now()), author, authorUid: myUid() || '', role, text, createdAt: new Date().toISOString()});
   if(!connected){ await saveLocalFallback(); showSuccessPopup('ส่งความคิดเห็นสำเร็จ (โหมดออฟไลน์)'); }
   refreshItemCard(itemId);
 }
@@ -2448,14 +2713,23 @@ async function toggleApprovalForItem(itemId, approved){
 }
 
 async function updateDependenciesForItem(itemId, newDeps){
-  if(!canEdit()){ showToast('คุณไม่มีสิทธิ์แก้ไขความเชื่อมโยง', true); return; }
+  if(!canEditItem(itemId)){ showToast('คุณไม่มีสิทธิ์แก้ไขความเชื่อมโยงของกลยุทธ์นี้', true); return; }
+  const current = evalState[itemId].dependsOn || [];
+  const added = newDeps.filter(d=>!current.includes(d));
+  const removed = current.filter(d=>!newDeps.includes(d));
   if(connected){
-    try{ await firestoreSaveDependencies(itemId, newDeps); }
-    catch(e){ showToast('บันทึกไม่สำเร็จ: ' + e.message, true); return; }
+    try{
+      for(const d of added) await firestoreChangeDependency(itemId, d, true);
+      for(const d of removed) await firestoreChangeDependency(itemId, d, false);
+      const snap = await db.collection('dependencies').doc(itemId).get();
+      evalState[itemId].dependsOn = snap.exists && Array.isArray(snap.data().dependsOn) ? snap.data().dependsOn : [];
+    }catch(e){ showToast('บันทึกไม่สำเร็จ: ' + friendlyError(e), true); return; }
+    showToast('บันทึกความเชื่อมโยงแล้ว');
+  } else {
+    evalState[itemId].dependsOn = newDeps;
+    await saveLocalFallback();
+    showToast('บันทึกความเชื่อมโยงแล้ว (เฉพาะเครื่องนี้)');
   }
-  evalState[itemId].dependsOn = newDeps;
-  if(!connected){ await saveLocalFallback(); showToast('บันทึกความเชื่อมโยงแล้ว (โหมดออฟไลน์)'); }
-  else showToast('บันทึกความเชื่อมโยงแล้ว');
   refreshItemCard(itemId);
 }
 
@@ -2492,7 +2766,7 @@ function renderDashboard(){
       const achievement = indicatorAchievementPct(ind);
       if(achievement!==null){ indWithData++; if(achievement.pct>=100) indAchieved++; }
     });
-    (st.evaluations||[]).forEach(ev=>{ if(ev.evaluator) evaluatorSet.add(ev.evaluator); });
+    (st.evaluations||[]).forEach(ev=>{ const key = ev.evaluatorUid || ev.evaluator; if(key) evaluatorSet.add(key); });
   });
   const avgProgress = progressCount ? (progressSum/progressCount) : 0;
 
@@ -2574,8 +2848,24 @@ document.getElementById('teamNotes').addEventListener('input', ()=>{
 document.getElementById('btnSaveNotes').addEventListener('click', async ()=>{
   teamNotes = document.getElementById('teamNotes').value;
   if(connected){
-    try{ await firestoreUpdateNotes(teamNotes); showSuccessPopup('บันทึกบันทึกทีมสำเร็จ'); }
-    catch(err){ showToast('บันทึกไม่สำเร็จ: ' + err.message, true); return; }
+    try{
+      await firestoreUpdateNotes(teamNotes, teamNotesBaseline, false);
+      teamNotesBaseline = teamNotes;
+      showSuccessPopup('บันทึกบันทึกทีมสำเร็จ');
+    }catch(err){
+      if(err && err.conflicts){
+        if(confirm('มีผู้อื่นแก้ไขบันทึกทีมหลังจากที่คุณเปิดหน้านี้\n\nกด OK เพื่อบันทึกทับด้วยฉบับของคุณ\nกด Cancel เพื่อรวมฉบับล่าสุดกับฉบับของคุณไว้ในช่อง ให้ตรวจแก้ก่อนบันทึกอีกครั้ง')){
+          try{ await firestoreUpdateNotes(teamNotes, err.serverNotes, true); teamNotesBaseline = teamNotes; showSuccessPopup('บันทึกบันทึกทีมสำเร็จ'); }
+          catch(e2){ showToast('บันทึกไม่สำเร็จ: ' + friendlyError(e2), true); return; }
+        } else {
+          document.getElementById('teamNotes').value = err.serverNotes + '\n\n----- ฉบับของคุณ (ยังไม่ได้บันทึก) -----\n' + teamNotes;
+          teamNotes = err.serverNotes;
+          teamNotesBaseline = err.serverNotes;
+          showToast('รวมข้อความแล้ว — ตรวจแก้แล้วกดบันทึกอีกครั้ง');
+          return;
+        }
+      } else { showToast('บันทึกไม่สำเร็จ: ' + friendlyError(err), true); return; }
+    }
   } else {
     await saveLocalFallback();
     showSuccessPopup('บันทึกบันทึกทีมสำเร็จ (โหมดออฟไลน์)');
@@ -2600,7 +2890,7 @@ function renderProposals(){
       </div>
       <div class="proposal-desc">${escapeHtml(p.description)}</div>
       <div class="proposal-meta">เกี่ยวข้องกับ: ${escapeHtml(stratLabel)} · เสนอโดย ${escapeHtml(p.submittedBy || 'ไม่ระบุชื่อ')} · ${escapeHtml(p.date || '')}</div>
-      <div style="margin-top:10px;"><button class="btn-tiny danger" data-del-proposal="${p.proposalId}">ลบข้อเสนอนี้</button></div>
+      ${canDeleteProposal(p) ? `<div style="margin-top:10px;"><button class="btn-tiny danger" data-del-proposal="${escapeHtml(p.proposalId)}">ลบข้อเสนอนี้</button></div>` : ''}
     </div>`;
   }).join('');
 }
@@ -2612,7 +2902,7 @@ document.getElementById('btnAddProposal').addEventListener('click', async ()=>{
   const submittedBy = document.getElementById('propBy').value.trim();
   const date = document.getElementById('propDate').value || todayStr();
   if(!title){ showToast('กรุณาระบุหัวข้อข้อเสนอ', true); return; }
-  const payload = {title, description, relatedStrategy, priority, submittedBy, date};
+  const payload = {title, description, relatedStrategy, priority, submittedBy: submittedBy || actorName(), submittedByUid: myUid() || '', date};
   let newId = null;
   if(connected){
     try{ newId = await firestoreAddProposal(payload); showSuccessPopup('เพิ่มข้อเสนอสำเร็จ'); }
@@ -2622,7 +2912,7 @@ document.getElementById('btnAddProposal').addEventListener('click', async ()=>{
   if(!connected){ await saveLocalFallback(); showSuccessPopup('เพิ่มข้อเสนอสำเร็จ (โหมดออฟไลน์)'); }
   document.getElementById('propTitle').value = '';
   document.getElementById('propDesc').value = '';
-  document.getElementById('propBy').value = '';
+  if(!isCloudUser()) document.getElementById('propBy').value = '';
   renderProposals();
 });
 document.getElementById('proposalsContainer').addEventListener('click', async (e)=>{
@@ -2642,7 +2932,7 @@ document.getElementById('proposalsContainer').addEventListener('click', async (e
 /* ================================================================ */
 /* AUDIT LOG TAB                                                     */
 /* ================================================================ */
-const FIELD_LABEL = {evaluation:'คะแนนประเมิน', indicator:'ตัวชี้วัด', budget:'งบประมาณ', progress:'ความคืบหน้า', evidence:'หลักฐาน', proposal:'ข้อเสนอใหม่', notes:'บันทึกทีม', weights:'น้ำหนักเกณฑ์', reset:'ล้างข้อมูล'};
+const FIELD_LABEL = {evaluation:'คะแนนประเมิน', indicator:'ตัวชี้วัด', budget:'งบประมาณ', progress:'ความคืบหน้า', evidence:'หลักฐาน', proposal:'ข้อเสนอใหม่', notes:'บันทึกทีม', weights:'น้ำหนักเกณฑ์', reset:'ล้างข้อมูล', comment:'ความคิดเห็น', approval:'การอนุมัติ', dependency:'ความเชื่อมโยง', saveAll:'บันทึกข้อมูล', user:'ผู้ใช้/บทบาท'};
 function renderAudit(){
   const el = document.getElementById('auditContainer');
   if(!connected){
@@ -2735,6 +3025,7 @@ document.getElementById('btnSaveWeights').addEventListener('click', async ()=>{
 /* ABOUT TAB + GAS SETTINGS                                          */
 /* ================================================================ */
 function renderAbout(){
+  document.querySelectorAll('[data-rules-block]').forEach(el=>{ el.textContent = FIRESTORE_RULES; });
   document.getElementById('aboutCriteriaList').innerHTML = DATA.criteria.map(c=>`
     <div style="margin-bottom:10px;font-size:15.5px;"><b style="color:var(--primary);">${escapeHtml(c.th)} (${escapeHtml(c.en)})</b> — ${escapeHtml(c.desc)}</div>`).join('');
 }
@@ -2815,10 +3106,9 @@ document.getElementById('btnSignup').addEventListener('click', async ()=>{
   const name = document.getElementById('signupName').value.trim();
   const email = document.getElementById('signupEmail').value.trim();
   const password = document.getElementById('signupPassword').value;
-  const role = document.getElementById('signupRole').value;
   if(!name || !email || !password){ showAuthError('กรุณากรอกข้อมูลให้ครบทุกช่อง'); return; }
   if(password.length < 6){ showAuthError('รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร'); return; }
-  try{ await signUp(email, password, name, role); }
+  try{ await signUp(email, password, name); }
   catch(e){ showAuthError('สมัครสมาชิกไม่สำเร็จ: ' + e.message); }
 });
 document.getElementById('btnLogout').addEventListener('click', async ()=>{
@@ -2964,7 +3254,7 @@ function exportExcel(){
     const ip = sumYearly(st.budget && st.budget.planned), ia = sumYearly(st.budget && st.budget.actual);
     if(ip!==null){ totalPlannedAll+=ip; totalActualAll+=(ia||0); hasBudgetAll++; }
     if(st.progress){ progressSumAll += (st.progress.percent||0); progressCountAll++; }
-    (st.evaluations||[]).forEach(ev=>{ if(ev.evaluator) evaluatorSetAll.add(ev.evaluator); });
+    (st.evaluations||[]).forEach(ev=>{ const key = ev.evaluatorUid || ev.evaluator; if(key) evaluatorSetAll.add(key); });
   });
   const overviewRows = [
     ['ระบบประเมินผลยุทธศาสตร์ดิจิทัล (DSES) — สรุปภาพรวม'],
@@ -3101,8 +3391,18 @@ document.getElementById('btnExportExcel').addEventListener('click', exportExcel)
 document.getElementById('btnExportPdf').addEventListener('click', exportPdfReport);
 
 document.getElementById('btnReset').addEventListener('click', async ()=>{
-  const scope = connected ? 'ใน Firebase ที่เชื่อมต่ออยู่' : 'ในเบราว์เซอร์นี้';
-  if(!confirm(`ยืนยันการล้างข้อมูลการประเมิน ตัวชี้วัด งบประมาณ และความคืบหน้าทั้งหมด ${scope}? (ข้อเสนอกลยุทธ์ใหม่จะไม่ถูกลบ) การกระทำนี้ไม่สามารถย้อนกลับได้`)) return;
+  if(!canReset()){ showToast('เฉพาะผู้บริหารเท่านั้นที่ล้างข้อมูลได้', true); return; }
+  const scope = connected ? 'ใน Firebase ที่เชื่อมต่ออยู่ (ทุกคนในทีมจะเห็นผล)' : 'ในเบราว์เซอร์นี้';
+  const word = prompt(`คุณกำลังจะล้างข้อมูลการประเมิน ตัวชี้วัด งบประมาณ ความคืบหน้า หลักฐาน และการอนุมัติทั้งหมด ${scope}\n(ข้อเสนอกลยุทธ์ใหม่จะไม่ถูกลบ) — การกระทำนี้ย้อนกลับไม่ได้\n\nระบบจะดาวน์โหลดไฟล์สำรอง (Excel และ JSON) ให้อัตโนมัติก่อนล้าง\n\nพิมพ์คำว่า  ล้างข้อมูล  เพื่อยืนยัน`);
+  if(word === null) return;
+  if(word.trim() !== 'ล้างข้อมูล'){ showToast('ยกเลิกแล้ว — คำยืนยันไม่ถูกต้อง', true); return; }
+  try{
+    if(connected) applyData(await firestoreLoadAll()); // สำรองจากข้อมูลล่าสุดบนเซิร์ฟเวอร์
+    exportExcel();
+    exportJsonBackup();
+  }catch(e){
+    if(!confirm('สร้างไฟล์สำรองไม่สำเร็จ (' + friendlyError(e) + ')\nต้องการล้างข้อมูลต่อโดยไม่มีไฟล์สำรองหรือไม่?')) return;
+  }
   if(connected){
     try{ await firestoreResetAll(); applyData(await firestoreLoadAll()); showToast('ล้างข้อมูลใน Firebase แล้ว'); }
     catch(e){ showToast('ล้างข้อมูลไม่สำเร็จ: ' + e.message, true); return; }
@@ -3115,6 +3415,130 @@ document.getElementById('btnReset').addEventListener('click', async ()=>{
     showToast('ล้างข้อมูลทั้งหมดแล้ว (โหมดออฟไลน์)');
   }
   renderAllTabs();
+});
+
+/* ================================================================ */
+/* ผู้ใช้/บทบาท · หน้ารออนุมัติ · แถบเตือนออฟไลน์ · สำรองข้อมูล            */
+/* ================================================================ */
+function showPendingScreen(){
+  showAuthScreen();
+  const tabs = document.getElementById('authTabs');
+  if(tabs) tabs.style.display = 'none';
+  document.querySelectorAll('.auth-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('authPanelPending').classList.add('active');
+  const t = document.getElementById('pendingText');
+  if(t) t.innerHTML = `บัญชี <b>${escapeHtml((currentUser && currentUser.email) || '')}</b> ยังไม่ได้รับสิทธิ์เข้าถึงข้อมูล กรุณาแจ้งผู้บริหารของระบบให้กำหนดบทบาทให้ในแท็บ &ldquo;จัดการผู้ใช้&rdquo; แล้วกดตรวจสอบสถานะอีกครั้ง`;
+}
+document.getElementById('btnPendingRecheck').addEventListener('click', async ()=>{
+  const user = authInst && authInst.currentUser;
+  if(!user){ showAuthScreen(); return; }
+  document.getElementById('authError').style.display = 'none';
+  await enterAppForUser(user);
+  if(currentRole() === 'pending') showAuthError('บัญชียังไม่ได้รับการอนุมัติ — กรุณาติดต่อผู้บริหารของระบบ');
+});
+document.getElementById('btnPendingLogout').addEventListener('click', async ()=>{
+  try{ await signOutUser(); }catch(e){ showAuthScreen(); }
+});
+
+const ROLE_OPTIONS = ['pending', 'contributor', 'evaluator', 'executive'];
+function updatePendingTabBadge(n){
+  const tab = document.getElementById('tabUsers');
+  if(tab) tab.innerHTML = 'จัดการผู้ใช้' + (n ? ` <span class="tab-count">${n}</span>` : '');
+}
+async function refreshPendingBadge(){
+  if(!(isCloudUser() && canApprove())) return;
+  try{
+    const snap = await db.collection('users').where('role', '==', 'pending').get();
+    updatePendingTabBadge(snap.size);
+  }catch(e){}
+}
+async function renderUsers(){
+  const el = document.getElementById('usersContainer');
+  if(!el) return;
+  if(!(isCloudUser() && canApprove())){
+    el.innerHTML = '<div class="card pad"><p class="section-sub" style="margin:0;">ส่วนนี้ใช้ได้เฉพาะผู้บริหารที่เชื่อมต่อ Firebase แล้ว</p></div>';
+    return;
+  }
+  el.innerHTML = '<div class="card pad"><p class="section-sub" style="margin:0;">กำลังโหลดรายชื่อผู้ใช้...</p></div>';
+  const users = [];
+  try{
+    const snap = await db.collection('users').get();
+    snap.forEach(d=>users.push(Object.assign({uid: d.id}, d.data())));
+  }catch(e){
+    el.innerHTML = `<div class="card pad"><p class="section-sub" style="margin:0;color:var(--red);">โหลดรายชื่อไม่สำเร็จ: ${escapeHtml(friendlyError(e))}</p></div>`;
+    return;
+  }
+  users.sort((a,b)=> ((a.role||'pending')==='pending' ? 0 : 1) - ((b.role||'pending')==='pending' ? 0 : 1)
+    || String(a.displayName || a.email || '').localeCompare(String(b.displayName || b.email || ''), 'th'));
+  updatePendingTabBadge(users.filter(u=>(u.role||'pending')==='pending').length);
+  const rows = users.map(u=>{
+    const role = u.role || 'pending';
+    const self = u.uid === myUid();
+    return `<tr>
+      <td><b>${escapeHtml(u.displayName || '—')}</b>${self ? ' <span class="tag">คุณ</span>' : ''}</td>
+      <td>${escapeHtml(u.email || '')}</td>
+      <td><span class="role-chip role-${escapeHtml(role)}">${escapeHtml(ROLE_LABEL[role] || role)}</span></td>
+      <td><select class="meta-input" data-user-role="${escapeHtml(u.uid)}" data-user-name="${escapeHtml(u.displayName || u.email || '')}" ${self ? 'disabled title="เปลี่ยนบทบาทของตัวเองไม่ได้ (ป้องกันการล็อกตัวเองออกจากระบบ)"' : ''}>
+        ${ROLE_OPTIONS.map(r=>`<option value="${r}" ${r===role ? 'selected' : ''}>${ROLE_LABEL[r]}</option>`).join('')}
+      </select></td>
+      <td>${self ? '' : `<button class="btn-tiny success" data-save-role="${escapeHtml(u.uid)}">บันทึก</button>`}</td>
+    </tr>`;
+  }).join('');
+  el.innerHTML = `<div class="card pad" style="overflow-x:auto;">
+    <table class="audit-table users-table"><tr><th>ชื่อ</th><th>อีเมล</th><th>บทบาทปัจจุบัน</th><th>เปลี่ยนเป็น</th><th></th></tr>${rows}</table>
+  </div>`;
+}
+document.getElementById('usersContainer').addEventListener('click', async (e)=>{
+  const btn = e.target.closest('[data-save-role]');
+  if(!btn) return;
+  const uid = btn.dataset.saveRole;
+  const sel = Array.from(document.querySelectorAll('[data-user-role]')).find(s=>s.dataset.userRole === uid);
+  if(!sel) return;
+  const role = sel.value;
+  const name = sel.dataset.userName;
+  if(role === 'executive' && !confirm(`ยืนยันให้ "${name}" เป็นผู้บริหาร?\nผู้บริหารอนุมัติ/ล็อกผลประเมิน ล้างข้อมูล และกำหนดบทบาทผู้อื่นได้`)) return;
+  try{
+    await db.collection('users').doc(uid).update({role, roleUpdatedBy: actorName(), roleUpdatedByUid: myUid(), roleUpdatedAt: fsTimestamp()});
+    await firestoreLogAudit('', 'user', `เปลี่ยนบทบาทของ ${name} เป็น ${ROLE_LABEL[role] || role}`, '');
+    showSuccessPopup('บันทึกบทบาทแล้ว');
+    renderUsers();
+  }catch(err){ showToast('บันทึกไม่สำเร็จ: ' + friendlyError(err), true); }
+});
+document.getElementById('btnCopyRules').addEventListener('click', async ()=>{
+  try{ await navigator.clipboard.writeText(FIRESTORE_RULES); showToast('คัดลอก Rules แล้ว'); }
+  catch(e){ showToast('คัดลอกไม่สำเร็จ — กรุณาเลือกข้อความแล้วคัดลอกเอง', true); }
+});
+document.getElementById('tabbar').addEventListener('click', (e)=>{
+  const btn = e.target.closest('.tab-btn');
+  if(btn && btn.dataset.tab === 'users') renderUsers();
+});
+
+function updateOfflineBanner(){
+  const banner = document.getElementById('offlineBanner');
+  if(!banner) return;
+  if(connected){ banner.style.display = 'none'; return; }
+  banner.style.display = 'flex';
+  banner.className = 'offline-banner' + (cloudLoadFailed ? ' error' : '');
+  banner.innerHTML = cloudLoadFailed
+    ? '<b>⚠️ โหลดข้อมูลจากฐานข้อมูลกลางไม่สำเร็จ</b><span>ระบบอยู่ในโหมดอ่านอย่างเดียวเพื่อป้องกันข้อมูลแตกเป็นสองชุด — ตรวจสอบอินเทอร์เน็ตแล้วโหลดหน้าใหม่</span>'
+    : '<b>⚠️ ไม่ได้เชื่อมต่อฐานข้อมูลกลาง</b><span>ข้อมูลที่บันทึกตอนนี้เก็บไว้ในเบราว์เซอร์เครื่องนี้เท่านั้น ทีมงานคนอื่นจะไม่เห็น และอาจหายถ้าล้างข้อมูลเบราว์เซอร์ — ควรกด &ldquo;ส่งออก Excel&rdquo; เก็บไว้เป็นระยะ</span>';
+}
+
+function exportJsonBackup(){
+  const payload = {exportedAt: new Date().toISOString(), exportedBy: actorName(), items: evalState, proposals, weights, notes: teamNotes};
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'DSES_สำรองข้อมูล_' + todayStr() + '.json';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+}
+
+// เตือนก่อนปิด/ออกจากหน้า ถ้ายังมีข้อมูลที่ยังไม่ได้บันทึก
+window.addEventListener('beforeunload', (e)=>{
+  const dirty = Array.from(document.querySelectorAll('.unsaved-note')).some(n=>n.style.display === 'inline');
+  if(dirty){ e.preventDefault(); e.returnValue = ''; }
 });
 
 /* ================================================================ */

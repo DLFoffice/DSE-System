@@ -789,6 +789,34 @@ table.np-kpi th,table.np-kpi td:nth-child(2),table.np-kpi td:nth-child(3){white-
 .trace-green{color:var(--green);} .trace-orange{color:var(--orange);} .trace-red{color:var(--red);} .trace-grey{color:var(--ink-faint);}
 .trace-lists{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px;}
 @media (max-width:900px){.trace-lists{grid-template-columns:1fr;}}
+/* ---- popup กลางหน้าจอ ---- */
+.ui-dlg-backdrop{position:fixed;inset:0;z-index:400;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(29,28,36,.38);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);opacity:0;transition:opacity .2s var(--ease);}
+.ui-dlg-backdrop.show{opacity:1;}
+.ui-dlg{--c:var(--primary);--cs:var(--primary-soft);background:#fff;border-radius:22px;box-shadow:0 30px 80px -20px rgba(29,28,36,.45);width:100%;max-width:440px;padding:26px 26px 20px;text-align:center;transform:translateY(14px) scale(.94);transition:transform .35s var(--ease-spring);position:relative;overflow:hidden;}
+.ui-dlg::before{content:'';position:absolute;left:0;right:0;top:0;height:5px;background:var(--c);}
+.ui-dlg-backdrop.show .ui-dlg{transform:none;}
+.ui-dlg.ui-danger{--c:var(--red);--cs:var(--red-soft);}
+.ui-dlg.ui-warning{--c:var(--orange);--cs:var(--orange-soft);}
+.ui-dlg.ui-error{--c:var(--red);--cs:var(--red-soft);}
+.ui-dlg.ui-info,.ui-dlg.ui-question{--c:var(--primary);--cs:var(--primary-soft);}
+.ui-dlg-icon{width:60px;height:60px;border-radius:50%;margin:4px auto 12px;display:flex;align-items:center;justify-content:center;background:var(--cs);color:var(--c);animation:uiPop .5s var(--ease-spring) .05s both;}
+.ui-dlg.ui-danger .ui-dlg-icon,.ui-dlg.ui-error .ui-dlg-icon{animation:uiPop .5s var(--ease-spring) .05s both, uiShake .45s ease .4s;}
+@keyframes uiPop{from{transform:scale(.4);opacity:0;}to{transform:none;opacity:1;}}
+@keyframes uiShake{0%,100%{transform:translateX(0);}25%{transform:translateX(-4px);}75%{transform:translateX(4px);}}
+.ui-dlg-title{margin:0 0 8px;font-size:19px;font-weight:700;color:var(--ink);}
+.ui-dlg-msg{font-size:15px;color:var(--ink-soft);line-height:1.7;white-space:pre-line;max-height:46vh;overflow:auto;text-align:center;}
+.ui-dlg-input{margin-top:14px;text-align:center;font-size:16px;}
+.ui-dlg-hint{font-size:13px;color:var(--ink-soft);margin-top:6px;} .ui-dlg-hint b{color:var(--red);}
+.ui-dlg-actions{display:flex;gap:10px;justify-content:center;margin-top:20px;flex-wrap:wrap;}
+.ui-dlg-actions button{min-width:120px;padding:11px 18px;border-radius:12px;font-size:15px;}
+.ui-dlg .ui-dlg-ok{background:var(--c);border-color:var(--c);color:#fff;}
+.ui-dlg.ui-info .ui-dlg-ok,.ui-dlg.ui-question .ui-dlg-ok{background:var(--grad-main);border-color:transparent;}
+.ui-dlg .ui-dlg-ok:hover{filter:brightness(1.07);box-shadow:0 10px 22px -10px var(--c);}
+.ui-dlg .ui-dlg-ok:disabled{opacity:.45;cursor:not-allowed;box-shadow:none;filter:none;}
+/* ข้อความแจ้งสั้น ๆ แสดงกลางจอ */
+.toast{top:50%;bottom:auto;left:50%;transform:translate(-50%,-40%) scale(.92);display:flex;align-items:center;gap:10px;padding:14px 22px;border-radius:16px;font-size:15px;background:rgba(29,28,36,.88) !important;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);max-width:min(90vw,460px);text-align:left;z-index:350;}
+.toast.show{transform:translate(-50%,-50%) scale(1);}
+.toast .toast-icon{display:inline-flex;color:#B9B2FF;} .toast .toast-icon svg{width:22px;height:22px;}
 /* ---- รายงานสำหรับพิมพ์ / ส่งออก PDF ---- */
 .print-only{display:none;}
 
@@ -2839,7 +2867,7 @@ document.getElementById('evalContainer').addEventListener('click', async (e)=>{
   // delete evaluation
   const delEval = e.target.closest('[data-del-eval]');
   if(delEval){
-    if(!confirm('ยืนยันการลบการประเมินนี้?')) return;
+    if(!await uiConfirm('ยืนยันการลบการประเมินนี้?')) return;
     await deleteEvaluationEntry(delEval.dataset.item, delEval.dataset.delEval);
     return;
   }
@@ -2857,7 +2885,7 @@ document.getElementById('evalContainer').addEventListener('click', async (e)=>{
   // delete evidence
   const delEvid = e.target.closest('[data-del-evidence]');
   if(delEvid){
-    if(!confirm('ยืนยันการลบหลักฐานนี้?')) return;
+    if(!await uiConfirm('ยืนยันการลบหลักฐานนี้?')) return;
     await deleteEvidenceEntry(delEvid.dataset.item, delEvid.dataset.delEvidence);
     return;
   }
@@ -3057,7 +3085,7 @@ async function saveAllForItem(itemId, force){
         await firestoreSaveAllForItem(itemId, {evaluation, changes}, !!force);
       }catch(e){
         if(e && e.conflicts){
-          const ok = confirm('ช่องต่อไปนี้ถูกผู้อื่นแก้ไขไปแล้ว หลังจากที่คุณเปิดหน้านี้:\n\n- ' + e.conflicts.join('\n- ') +
+          const ok = await uiConfirm('ช่องต่อไปนี้ถูกผู้อื่นแก้ไขไปแล้ว หลังจากที่คุณเปิดหน้านี้:\n\n- ' + e.conflicts.join('\n- ') +
             '\n\nกด OK เพื่อบันทึกทับด้วยค่าของคุณ\nกด Cancel เพื่อยกเลิก (ข้อมูลที่คุณกรอกยังอยู่ในหน้าจอ — จดค่าไว้แล้วกด "รีเฟรช" เพื่อดูค่าล่าสุด)');
           if(ok){
             if(btn){ btn.disabled = false; btn.textContent = btnLabel; }
@@ -3283,7 +3311,7 @@ document.getElementById('btnSaveNotes').addEventListener('click', async ()=>{
       showSuccessPopup('บันทึกบันทึกทีมสำเร็จ');
     }catch(err){
       if(err && err.conflicts){
-        if(confirm('มีผู้อื่นแก้ไขบันทึกทีมหลังจากที่คุณเปิดหน้านี้\n\nกด OK เพื่อบันทึกทับด้วยฉบับของคุณ\nกด Cancel เพื่อรวมฉบับล่าสุดกับฉบับของคุณไว้ในช่อง ให้ตรวจแก้ก่อนบันทึกอีกครั้ง')){
+        if(await uiConfirm('มีผู้อื่นแก้ไขบันทึกทีมหลังจากที่คุณเปิดหน้านี้\n\nกด OK เพื่อบันทึกทับด้วยฉบับของคุณ\nกด Cancel เพื่อรวมฉบับล่าสุดกับฉบับของคุณไว้ในช่อง ให้ตรวจแก้ก่อนบันทึกอีกครั้ง')){
           try{ await firestoreUpdateNotes(teamNotes, err.serverNotes, true); teamNotesBaseline = teamNotes; showSuccessPopup('บันทึกบันทึกทีมสำเร็จ'); }
           catch(e2){ showToast('บันทึกไม่สำเร็จ: ' + friendlyError(e2), true); return; }
         } else {
@@ -3347,7 +3375,7 @@ document.getElementById('btnAddProposal').addEventListener('click', async ()=>{
 document.getElementById('proposalsContainer').addEventListener('click', async (e)=>{
   const del = e.target.closest('[data-del-proposal]');
   if(!del) return;
-  if(!confirm('ยืนยันการลบข้อเสนอนี้?')) return;
+  if(!await uiConfirm('ยืนยันการลบข้อเสนอนี้?')) return;
   const id = del.dataset.delProposal;
   if(connected){
     try{ await firestoreDeleteProposal(id); showToast('ลบข้อเสนอแล้ว'); }
@@ -3541,7 +3569,7 @@ document.getElementById('btnSignup').addEventListener('click', async ()=>{
   catch(e){ showAuthError('สมัครสมาชิกไม่สำเร็จ: ' + e.message); }
 });
 document.getElementById('btnLogout').addEventListener('click', async ()=>{
-  if(!confirm('ยืนยันการออกจากระบบ?')) return;
+  if(!await uiConfirm('ยืนยันการออกจากระบบ?')) return;
   try{ await signOutUser(); }catch(e){ showToast('ออกจากระบบไม่สำเร็จ: ' + e.message, true); }
 });
 
@@ -4097,7 +4125,7 @@ document.getElementById('btnExportPdf').addEventListener('click', exportPdfRepor
 document.getElementById('btnReset').addEventListener('click', async ()=>{
   if(!canReset()){ showToast('เฉพาะผู้บริหารเท่านั้นที่ล้างข้อมูลได้', true); return; }
   const scope = connected ? 'ใน Firebase ที่เชื่อมต่ออยู่ (ทุกคนในทีมจะเห็นผล)' : 'ในเบราว์เซอร์นี้';
-  const word = prompt(`คุณกำลังจะล้างข้อมูลการประเมิน ตัวชี้วัด งบประมาณ ความคืบหน้า หลักฐาน และการอนุมัติทั้งหมด ${scope}\n(ข้อเสนอกลยุทธ์ใหม่จะไม่ถูกลบ) — การกระทำนี้ย้อนกลับไม่ได้\n\nระบบจะดาวน์โหลดไฟล์สำรอง (Excel และ JSON) ให้อัตโนมัติก่อนล้าง\n\nพิมพ์คำว่า  ล้างข้อมูล  เพื่อยืนยัน`);
+  const word = await uiPrompt(`คุณกำลังจะล้างข้อมูลการประเมิน ตัวชี้วัด งบประมาณ ความคืบหน้า หลักฐาน และการอนุมัติทั้งหมด ${scope}\n(ข้อเสนอกลยุทธ์ใหม่จะไม่ถูกลบ) — การกระทำนี้ย้อนกลับไม่ได้\n\nระบบจะดาวน์โหลดไฟล์สำรอง (Excel และ JSON) ให้อัตโนมัติก่อนล้าง`, {expect:'ล้างข้อมูล'});
   if(word === null) return;
   if(word.trim() !== 'ล้างข้อมูล'){ showToast('ยกเลิกแล้ว — คำยืนยันไม่ถูกต้อง', true); return; }
   try{
@@ -4105,7 +4133,7 @@ document.getElementById('btnReset').addEventListener('click', async ()=>{
     exportExcel();
     exportJsonBackup();
   }catch(e){
-    if(!confirm('สร้างไฟล์สำรองไม่สำเร็จ (' + friendlyError(e) + ')\nต้องการล้างข้อมูลต่อโดยไม่มีไฟล์สำรองหรือไม่?')) return;
+    if(!await uiConfirm('สร้างไฟล์สำรองไม่สำเร็จ (' + friendlyError(e) + ')\nต้องการล้างข้อมูลต่อโดยไม่มีไฟล์สำรองหรือไม่?')) return;
   }
   if(connected){
     try{ await firestoreResetAll(); applyData(await firestoreLoadAll()); showToast('ล้างข้อมูลใน Firebase แล้ว'); }
@@ -4377,7 +4405,7 @@ async function saveProject(itemId, form, force){
       await firestoreLogAudit(itemId, 'project', (projectId ? 'แก้ไข' : 'เพิ่ม') + 'โครงการ: ' + data.name, '');
     }catch(e){
       if(e && e.conflicts){
-        if(confirm('มีผู้อื่นแก้ไข' + e.conflicts[0] + ' หลังจากที่คุณเปิดฟอร์ม\n\nOK = บันทึกทับด้วยข้อมูลของคุณ\nCancel = ยกเลิก (ข้อมูลในฟอร์มยังอยู่)')) return saveProject(itemId, form, true);
+        if(await uiConfirm('มีผู้อื่นแก้ไข' + e.conflicts[0] + ' หลังจากที่คุณเปิดฟอร์ม\n\nOK = บันทึกทับด้วยข้อมูลของคุณ\nCancel = ยกเลิก (ข้อมูลในฟอร์มยังอยู่)')) return saveProject(itemId, form, true);
         return;
       }
       showToast('บันทึกโครงการไม่สำเร็จ: ' + friendlyError(e), true); return;
@@ -4396,7 +4424,7 @@ async function saveProject(itemId, form, force){
 async function deleteProject(itemId, projectId){
   const st = evalState[itemId];
   const p = st.projects.find(x=>x.projectId===projectId);
-  if(!confirm('ยืนยันการลบโครงการ "' + (p ? p.name : '') + '"?')) return;
+  if(!await uiConfirm('ยืนยันการลบโครงการ "' + (p ? p.name : '') + '"?')) return;
   if(connected){
     try{ await db.collection('projects').doc(projectId).delete(); await firestoreLogAudit(itemId, 'project', 'ลบโครงการ: ' + (p ? p.name : ''), ''); }
     catch(e){ showToast('ลบไม่สำเร็จ: ' + friendlyError(e), true); return; }
@@ -4490,7 +4518,7 @@ async function saveLessonsOrDecision(kind, itemId, force){
         kind === 'lessons' ? 'บันทึกบทเรียนจากการดำเนินงาน' : ('บันทึกมติ: ' + ((DECISIONS[fields.decision || base.decision] || {}).label || 'ยังไม่มีมติ')), '');
     }catch(e){
       if(e && e.conflicts){
-        if(confirm('ช่องต่อไปนี้ถูกผู้อื่นแก้ไขหลังจากที่คุณเปิดหน้า:\n- ' + e.conflicts.join('\n- ') + '\n\nOK = บันทึกทับด้วยข้อความของคุณ\nCancel = ยกเลิก')) return saveLessonsOrDecision(kind, itemId, true);
+        if(await uiConfirm('ช่องต่อไปนี้ถูกผู้อื่นแก้ไขหลังจากที่คุณเปิดหน้า:\n- ' + e.conflicts.join('\n- ') + '\n\nOK = บันทึกทับด้วยข้อความของคุณ\nCancel = ยกเลิก')) return saveLessonsOrDecision(kind, itemId, true);
         return;
       }
       showToast('บันทึกไม่สำเร็จ: ' + friendlyError(e), true); return;
@@ -4693,7 +4721,7 @@ async function addAnalysisItem(quadrant, text){
 }
 async function deleteAnalysisItem(id){
   const a = analysisItems.find(x=>x.id===id);
-  if(!confirm('ลบรายการ "' + (a ? a.text.slice(0,60) : '') + '"?')) return;
+  if(!await uiConfirm('ลบรายการ "' + (a ? a.text.slice(0,60) : '') + '"?')) return;
   if(connected){
     try{ await db.collection('analysis').doc(id).delete(); await firestoreLogAudit('', 'analysis', 'ลบรายการ ' + (a ? a.quadrant : ''), ''); }
     catch(e){ showToast('ลบไม่สำเร็จ: ' + friendlyError(e), true); return; }
@@ -4751,7 +4779,7 @@ document.getElementById('view-analysis').addEventListener('click', async (e)=>{
   const delFw = t.closest('[data-del-fw]');
   if(delFw){
     const f = alignmentFrameworks.find(x=>x.key===delFw.dataset.delFw);
-    if(!confirm('นำ "' + (f ? f.name : '') + '" ออกจากตาราง? (คะแนนที่เคยกรอกจะถูกเก็บไว้ แต่ไม่แสดง)')) return;
+    if(!await uiConfirm('นำ "' + (f ? f.name : '') + '" ออกจากตาราง? (คะแนนที่เคยกรอกจะถูกเก็บไว้ แต่ไม่แสดง)')) return;
     await saveFrameworks(alignmentFrameworks.filter(x=>x.key!==delFw.dataset.delFw)); return;
   }
   if(t.closest('#btnAddFw')){
@@ -5079,7 +5107,7 @@ async function npPersist(fn, auditText){
     return true;
   }catch(e){
     if(e && e.conflicts){
-      if(confirm('รายการนี้ถูกแก้ไขโดย ' + e.conflicts[0] + ' หลังจากที่คุณเปิดฟอร์ม\n\nOK = บันทึกทับด้วยข้อมูลของคุณ\nCancel = ยกเลิก (ข้อมูลในฟอร์มยังอยู่)')) return 'force';
+      if(await uiConfirm('รายการนี้ถูกแก้ไขโดย ' + e.conflicts[0] + ' หลังจากที่คุณเปิดฟอร์ม\n\nOK = บันทึกทับด้วยข้อมูลของคุณ\nCancel = ยกเลิก (ข้อมูลในฟอร์มยังอยู่)')) return 'force';
       return false;
     }
     showToast('บันทึกไม่สำเร็จ: ' + friendlyError(e), true);
@@ -5256,14 +5284,14 @@ async function npDelete(kind, id){
   if(kind === 'strategy'){
     const s = newPlan.strategies.find(x=>x.id===id);
     const ts = npTacticsOf(id);
-    if(!confirm(`ลบยุทธศาสตร์ที่ ${labels[id]} "${s ? s.name : ''}"${ts.length ? ` และกลยุทธ์ภายใต้ ${ts.length} รายการ` : ''}?`)) return;
+    if(!await uiConfirm(`ลบยุทธศาสตร์ที่ ${labels[id]} "${s ? s.name : ''}"${ts.length ? ` และกลยุทธ์ภายใต้ ${ts.length} รายการ` : ''}?`)) return;
     const r = await npPersist(async()=>{ if(connected){ for(const t of ts) await db.collection('newplan').doc(t.id).delete(); await db.collection('newplan').doc(id).delete(); } }, 'ลบยุทธศาสตร์ในร่างแผนใหม่: ' + (s ? s.name : ''));
     if(!r) return;
     newPlan.tactics = newPlan.tactics.filter(t=>t.strategyRef!==id);
     newPlan.strategies = newPlan.strategies.filter(x=>x.id!==id);
   } else {
     const t = newPlan.tactics.find(x=>x.id===id);
-    if(!confirm(`ลบกลยุทธ์ ${labels[id]} "${t ? t.name : ''}"?`)) return;
+    if(!await uiConfirm(`ลบกลยุทธ์ ${labels[id]} "${t ? t.name : ''}"?`)) return;
     const r = await npPersist(async()=>{ if(connected) await db.collection('newplan').doc(id).delete(); }, 'ลบกลยุทธ์ในร่างแผนใหม่: ' + (t ? t.name : ''));
     if(!r) return;
     newPlan.tactics = newPlan.tactics.filter(x=>x.id!==id);
@@ -5274,7 +5302,7 @@ async function npDelete(kind, id){
 /** สร้างร่างตั้งต้นจากมติ: ยุทธศาสตร์เดิม 4 ด้าน + กลยุทธ์จากมติคงไว้/ปรับ/ควบรวม พร้อมตัวชี้วัดและค่าฐานล่าสุด */
 async function npSeedFromDecisions(){
   const undecided = DATA.items.filter(it=>!(((evalState[it.id]||{}).decision||{}).decision));
-  if(!confirm(`สร้างร่างตั้งต้นจากมติ?${undecided.length ? `\n\nหมายเหตุ: มี ${undecided.length} กลยุทธ์ที่ยังไม่มีมติ — ระบบจะใส่ไว้ก่อนเหมือน "คงไว้" และแสดงเตือนในตารางตรวจย้อน` : ''}`)) return;
+  if(!await uiConfirm(`สร้างร่างตั้งต้นจากมติ?${undecided.length ? `\n\nหมายเหตุ: มี ${undecided.length} กลยุทธ์ที่ยังไม่มีมติ — ระบบจะใส่ไว้ก่อนเหมือน "คงไว้" และแสดงเตือนในตารางตรวจย้อน` : ''}`)) return;
   const base = Date.now();
   const ops = [];
   DATA.strategies.forEach((s, si)=>{
@@ -5562,7 +5590,7 @@ document.getElementById('usersContainer').addEventListener('click', async (e)=>{
   if(!sel) return;
   const role = sel.value;
   const name = sel.dataset.userName;
-  if(role === 'executive' && !confirm(`ยืนยันให้ "${name}" เป็นผู้บริหาร?\nผู้บริหารอนุมัติ/ล็อกผลประเมิน ล้างข้อมูล และกำหนดบทบาทผู้อื่นได้`)) return;
+  if(role === 'executive' && !await uiConfirm(`ยืนยันให้ "${name}" เป็นผู้บริหาร?\nผู้บริหารอนุมัติ/ล็อกผลประเมิน ล้างข้อมูล และกำหนดบทบาทผู้อื่นได้`)) return;
   try{
     await db.collection('users').doc(uid).update({role, roleUpdatedBy: actorName(), roleUpdatedByUid: myUid(), roleUpdatedAt: fsTimestamp()});
     await firestoreLogAudit('', 'user', `เปลี่ยนบทบาทของ ${name} เป็น ${ROLE_LABEL[role] || role}`, '');
@@ -5717,6 +5745,122 @@ showMainApp = function(){
   requestAnimationFrame(()=>{ moveTabIndicator(); renderDashboard(); });
 };
 
+
+/* ================================================================ */
+/* POPUP กลางหน้าจอ: แทน confirm()/prompt() ของเบราว์เซอร์ และข้อความแจ้งเตือน */
+/* ================================================================ */
+const UI_ICONS = {
+  danger:  '<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>',
+  warning: '<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>',
+  error:   '<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>',
+  info:    '<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>',
+  question:'<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 015.8 1c0 2-3 3-3 3M12 17h.01"/></svg>'
+};
+/** เดาประเภท/หัวข้อ/ปุ่มจากข้อความ เพื่อให้แต่ละจุดในระบบได้หน้าตาที่เหมาะสมโดยไม่ต้องตั้งค่าเอง */
+function uiGuess(msg){
+  const m = String(msg || '');
+  if(/ผู้อื่นแก้ไข|ถูกแก้ไขโดย|แก้ไขบันทึกทีม/.test(m)) return {type:'warning', title:'มีผู้อื่นแก้ไขข้อมูลเดียวกัน', ok:'บันทึกทับด้วยข้อมูลของฉัน', cancel:'ยกเลิก'};
+  if(/ล้างข้อมูล/.test(m)) return {type:'danger', title:'ล้างข้อมูลทั้งหมด', ok:'ยืนยันล้างข้อมูล', cancel:'ยกเลิก'};
+  if(/ออกจากระบบ/.test(m)) return {type:'question', title:'ออกจากระบบ', ok:'ออกจากระบบ', cancel:'ยกเลิก'};
+  if(/^ยืนยันการลบ|^ลบ|นำ .* ออกจากตาราง/.test(m)) return {type:'danger', title:'ยืนยันการลบ', ok:'ลบ', cancel:'ยกเลิก'};
+  if(/ไฟล์สำรองไม่สำเร็จ/.test(m)) return {type:'warning', title:'สร้างไฟล์สำรองไม่สำเร็จ', ok:'ล้างต่อโดยไม่สำรอง', cancel:'ยกเลิก'};
+  if(/ผู้บริหาร\?/.test(m)) return {type:'warning', title:'กำหนดสิทธิ์ผู้บริหาร', ok:'ยืนยัน', cancel:'ยกเลิก'};
+  return {type:'question', title:'ยืนยันการดำเนินการ', ok:'ยืนยัน', cancel:'ยกเลิก'};
+}
+/** ตัดคำอธิบายปุ่มแบบเดิม ("กด OK เพื่อ..." / "OK = ...") ออก เพราะปุ่มใหม่มีชื่อบอกการกระทำอยู่แล้ว */
+function uiCleanMsg(msg){
+  return String(msg || '')
+    .split('\n').filter(l=>!/^\s*(กด\s*)?(OK|Cancel)\b/.test(l)).join('\n')
+    .replace(/\n{3,}/g, '\n\n').trim();
+}
+let uiQueue = Promise.resolve();
+function uiDialog(opts){
+  const run = () => new Promise(resolve=>{
+    const g = uiGuess(opts.message);
+    const o = Object.assign({}, g, opts);
+    const kind = o.kind || 'confirm';
+    const wrap = document.createElement('div');
+    wrap.className = 'ui-dlg-backdrop';
+    wrap.dataset.kind = kind;
+    wrap.innerHTML = `
+      <div class="ui-dlg ui-${o.type}" role="alertdialog" aria-modal="true" aria-labelledby="uiDlgTitle" aria-describedby="uiDlgMsg">
+        <div class="ui-dlg-icon">${UI_ICONS[o.type] || UI_ICONS.info}</div>
+        <h3 class="ui-dlg-title" id="uiDlgTitle"></h3>
+        <div class="ui-dlg-msg" id="uiDlgMsg"></div>
+        ${kind === 'prompt' ? `<input class="meta-input ui-dlg-input" autocomplete="off">${o.expect ? `<div class="ui-dlg-hint">พิมพ์ <b></b> เพื่อยืนยัน</div>` : ''}` : ''}
+        <div class="ui-dlg-actions">
+          ${kind !== 'alert' ? `<button class="btn-light" data-ui-cancel></button>` : ''}
+          <button class="btn-light btn-light-solid ui-dlg-ok" data-ui-ok></button>
+        </div>
+      </div>`;
+    wrap.querySelector('.ui-dlg-title').textContent = o.title;
+    wrap.querySelector('.ui-dlg-msg').textContent = uiCleanMsg(o.message);
+    wrap.querySelector('[data-ui-ok]').textContent = kind === 'alert' ? (o.okAlert || 'ตกลง') : o.ok;
+    const cancelBtn = wrap.querySelector('[data-ui-cancel]');
+    if(cancelBtn) cancelBtn.textContent = o.cancel;
+    const input = wrap.querySelector('.ui-dlg-input');
+    const okBtn = wrap.querySelector('[data-ui-ok]');
+    if(o.expect){
+      wrap.querySelector('.ui-dlg-hint b').textContent = o.expect;
+      okBtn.disabled = true;
+      input.addEventListener('input', ()=>{ okBtn.disabled = input.value.trim() !== o.expect; });
+    }
+    const lastFocus = document.activeElement;
+    document.body.appendChild(wrap);
+    requestAnimationFrame(()=>{
+      wrap.classList.add('show');
+      (input || (o.type === 'danger' && cancelBtn) || okBtn).focus();
+    });
+    let done = false;
+    const close = val => {
+      if(done) return; done = true;
+      wrap.classList.remove('show');
+      document.removeEventListener('keydown', onKey, true);
+      setTimeout(()=>{ wrap.remove(); if(lastFocus && lastFocus.focus) try{ lastFocus.focus(); }catch(e){} resolve(val); }, 180);
+    };
+    const onOk = () => { if(okBtn.disabled) return; close(kind === 'prompt' ? input.value : true); };
+    const onCancel = () => close(kind === 'prompt' ? null : false);
+    const onKey = e => {
+      if(e.key === 'Escape'){ e.preventDefault(); kind === 'alert' ? onOk() : onCancel(); }
+      else if(e.key === 'Enter' && document.activeElement !== cancelBtn){ e.preventDefault(); onOk(); }
+      else if(e.key === 'Tab'){ // วนโฟกัสภายในกล่อง
+        const f = Array.from(wrap.querySelectorAll('button:not([disabled]),input'));
+        const i = f.indexOf(document.activeElement);
+        e.preventDefault();
+        f[(i + (e.shiftKey ? -1 : 1) + f.length) % f.length].focus();
+      }
+    };
+    document.addEventListener('keydown', onKey, true);
+    okBtn.addEventListener('click', onOk);
+    if(cancelBtn) cancelBtn.addEventListener('click', onCancel);
+    wrap.addEventListener('mousedown', e=>{ if(e.target === wrap){ kind === 'alert' ? onOk() : onCancel(); } });
+  });
+  const p = uiQueue.then(run, run);
+  uiQueue = p.catch(()=>{});
+  return p;
+}
+function uiConfirm(message, opts){ return uiDialog(Object.assign({kind:'confirm', message}, opts || {})); }
+function uiPrompt(message, opts){ return uiDialog(Object.assign({kind:'prompt', message}, opts || {})); }
+function uiAlert(message, opts){ return uiDialog(Object.assign({kind:'alert', message, type:'error', title:'ดำเนินการไม่สำเร็จ'}, opts || {})); }
+
+/* ข้อความแจ้งเตือนทั่วไป: แสดงกลางจอ (ข้อผิดพลาดแสดงเป็นกล่องที่ต้องกดรับทราบ) */
+showToast = function(msg, isError){
+  if(isError){
+    const m = String(msg || '');
+    const isValidation = /^(กรุณา|การประเมินกรอกไม่ครบ|มติต่างจาก|ยังไม่ได้บันทึก|ยกเลิกแล้ว|น้ำหนักทั้งหมด|เฉพาะผู้บริหาร|คุณไม่มีสิทธิ์)/.test(m);
+    uiAlert(m, isValidation ? {type:'warning', title:'โปรดตรวจสอบ'} : {});
+    const t = document.getElementById('toast'); if(t) t.textContent = m; // เก็บข้อความล่าสุดไว้ (ใช้ตรวจสอบ/อ่านซ้ำ)
+    return;
+  }
+  const t = document.getElementById('toast');
+  t.innerHTML = '';
+  t.insertAdjacentHTML('afterbegin', `<span class="toast-icon">${UI_ICONS.info}</span>`);
+  t.appendChild(document.createTextNode(msg || 'บันทึกข้อมูลแล้ว'));
+  t.style.background = '';
+  t.classList.add('show');
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer = setTimeout(()=>t.classList.remove('show'), 2200);
+};
 
 /* ================================================================ */
 /* INIT                                                               */

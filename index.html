@@ -733,6 +733,62 @@ table.syn-table td.num{text-align:center;white-space:nowrap;}
 .method-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .method-stats div{border:1px solid var(--border);border-radius:12px;padding:10px 12px;background:linear-gradient(160deg,#F7F5FF,#fff);display:flex;flex-direction:column;}
 .method-stats span{font-size:13px;color:var(--ink-soft);} .method-stats b{font-size:22px;color:var(--primary);}
+/* ---- reliability · PESTEL · new plan ---- */
+.rel-box{border:1px solid var(--border);border-left:4px solid var(--ink-faint);border-radius:12px;padding:12px 14px;margin-bottom:14px;background:var(--surface-soft);animation:rise .4s var(--ease) both;}
+.rel-box.rel-high{border-left-color:var(--green);} .rel-box.rel-medium{border-left-color:var(--yellow);} .rel-box.rel-low{border-left-color:var(--red);background:#FFF8F8;}
+.rel-head{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;font-weight:600;font-size:15px;}
+.rel-chip{display:inline-block;font-size:13px;font-weight:700;padding:2px 10px;border-radius:999px;background:var(--surface-2);color:var(--ink-soft);}
+.rel-chip.rel-high{background:var(--green-soft);color:var(--green);} .rel-chip.rel-medium{background:var(--yellow-soft);color:var(--yellow);} .rel-chip.rel-low{background:var(--red-soft);color:var(--red);}
+.rel-ranges{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.rel-range{font-size:13px;background:#fff;border:1px solid var(--border);border-radius:999px;padding:2px 10px;color:var(--ink-soft);}
+.rel-range b{color:var(--ink);} .rel-range.hot{border-color:var(--orange);background:var(--orange-soft);color:#8a5418;}
+.rel-flags{margin:8px 0 0;padding-left:18px;font-size:13.5px;color:var(--ink-soft);}
+.rel-summary{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+.rel-list{margin:6px 0 0;padding-left:18px;font-size:14px;} .rel-list li{margin-bottom:6px;}
+.tag-evid{margin-left:6px;} .tag-evid-documented{background:var(--green-soft);color:var(--green);} .tag-evid-partial{background:var(--yellow-soft);color:var(--yellow);} .tag-evid-opinion{background:var(--orange-soft);color:var(--orange);}
+.pestel-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+@media (max-width:900px){.pestel-grid{grid-template-columns:1fr 1fr;}} @media (max-width:600px){.pestel-grid{grid-template-columns:1fr;}}
+.pestel{border:1px solid var(--border);border-radius:14px;padding:14px 16px;background:linear-gradient(160deg,#F6F4FF,#fff);animation:rise .45s var(--ease) both;}
+.pestel-PE_E{background:linear-gradient(160deg,#FFF6EA,#fff);} .pestel-PE_S{background:linear-gradient(160deg,#FDEFF3,#fff);}
+.pestel-PE_T{background:linear-gradient(160deg,#EAF3FE,#fff);} .pestel-PE_En{background:linear-gradient(160deg,#EAF7EF,#fff);} .pestel-PE_L{background:linear-gradient(160deg,#F2F2EF,#fff);}
+.pestel-add{display:grid;grid-template-columns:1fr 92px 86px auto;gap:6px;}
+@media (max-width:600px){.pestel-add{grid-template-columns:1fr 1fr;}}
+.pk,.pi{font-size:12px;font-weight:700;border-radius:999px;padding:0 8px;}
+.pk-opportunity{background:var(--green-soft);color:var(--green);} .pk-threat{background:var(--red-soft);color:var(--red);}
+.pi-high{background:var(--ink);color:#fff;} .pi-medium{background:var(--surface-2);color:var(--ink-soft);} .pi-low{color:var(--ink-faint);}
+.np-strategy{border:1px solid var(--border);border-left:4px solid var(--primary);border-radius:14px;padding:16px 18px;margin-bottom:14px;background:linear-gradient(160deg,#F5F3FF,#fff);animation:rise .45s var(--ease) both;}
+.np-strategy:nth-child(4n+2){border-left-color:var(--teal);} .np-strategy:nth-child(4n+3){border-left-color:var(--accent);} .np-strategy:nth-child(4n+4){border-left-color:var(--s4);}
+.np-s-head,.np-t-head{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:flex-start;}
+.np-s-no{font-size:12.5px;font-weight:700;color:var(--primary);letter-spacing:.04em;}
+.np-s-name{font-size:18px;font-weight:700;}
+.np-s-goal{font-size:14px;color:var(--ink-soft);margin-top:2px;}
+.np-actions{display:flex;gap:6px;}
+.np-tactic{background:#fff;border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-top:10px;}
+.np-t-no{color:var(--primary);} .np-t-name{font-weight:600;}
+.np-sources{display:flex;flex-wrap:wrap;gap:5px;margin:8px 0;}
+.src-chip{font-size:12.5px;border-radius:999px;padding:2px 9px;}
+.src-old{background:var(--primary-soft);color:var(--primary);} .src-prop{background:var(--amber-soft);color:#8a5418;} .src-tows{background:var(--teal-soft);color:#0f6f73;}
+table.np-kpi{width:100%;border-collapse:collapse;font-size:13.5px;min-width:640px;}
+table.np-kpi th{background:var(--primary);color:#fff;padding:6px 8px;text-align:left;font-weight:600;font-size:12.5px;}
+table.np-kpi td{padding:6px 8px;border-bottom:1px solid var(--border);}
+table.np-kpi td.num{text-align:center;}
+table.np-kpi th,table.np-kpi td:nth-child(2),table.np-kpi td:nth-child(3){white-space:nowrap;}
+.np-kpi-edit input{padding:6px 8px !important;font-size:13.5px !important;min-width:70px;}
+.np-kpi-edit td:first-child input{min-width:220px;}
+.np-warn{font-size:13px;color:var(--orange);font-weight:600;}
+.np-empty{text-align:center;padding:20px;border:2px dashed var(--border-strong);border-radius:14px;}
+.np-src-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:12px;}
+@media (max-width:760px){.np-src-grid{grid-template-columns:1fr;}}
+.np-src-t{font-size:13px;font-weight:700;color:var(--ink-soft);margin-bottom:4px;}
+.np-src-box{max-height:220px;overflow:auto;border:1px solid var(--border);border-radius:10px;padding:6px 8px;background:#fff;}
+.np-check{display:flex;gap:8px;align-items:flex-start;font-size:13.5px;padding:4px 2px;border-bottom:1px dashed var(--border);cursor:pointer;}
+.np-check:last-child{border-bottom:none;} .np-check input{margin-top:4px;accent-color:var(--primary);}
+.np-check .decision-chip{font-size:11px;padding:1px 7px;}
+.trace-summary{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+.trace-st{font-size:13.5px;font-weight:600;}
+.trace-green{color:var(--green);} .trace-orange{color:var(--orange);} .trace-red{color:var(--red);} .trace-grey{color:var(--ink-faint);}
+.trace-lists{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px;}
+@media (max-width:900px){.trace-lists{grid-template-columns:1fr;}}
 /* ---- รายงานสำหรับพิมพ์ / ส่งออก PDF ---- */
 .print-only{display:none;}
 
@@ -879,6 +935,12 @@ table.syn-table td.num{text-align:center;white-space:nowrap;}
   .rp-q-SO{background:#e5f4f1;} .rp-q-WO{background:#f2f0ec;} .rp-q-ST{background:#eef3ec;} .rp-q-WT{background:#fbeee8;}
   .rp-fw{font-size:8.5pt;columns:2;column-gap:6mm;margin:0 0 2mm;padding-left:0;list-style:none;} .rp-fw li{margin-bottom:1mm;break-inside:avoid;} .rp-fw b{color:#4B3FD1;}
 
+  .rp-rel{font-size:8.6pt;margin:1mm 0 2mm;padding:1.5mm 3mm;border-radius:2mm;border-left:3px solid #ccc;background:#f7f7f9;}
+  .rp-rel-high{border-left-color:#2FA572;} .rp-rel-medium{border-left-color:#C99A12;} .rp-rel-low{border-left-color:#E0525A;background:#fdf1f1;}
+  .rp-np-s{border:1px solid #e2e0ec;border-radius:2.5mm;padding:3mm 4mm;margin-bottom:4mm;}
+  .rp-np-s-head{font-weight:700;font-size:11pt;color:#2b2370;margin-bottom:1mm;break-after:avoid;}
+  .rp-np-t .rp-table th,.rp-np-t .rp-table td:nth-child(2),.rp-np-t .rp-table td:nth-child(3){white-space:nowrap;}
+  .rp-np-t{margin:2.5mm 0 0 3mm;padding-left:3mm;border-left:2px solid #c9c2f5;font-size:9.2pt;}
   /* ลงนาม */
   .rp-sign{display:grid;grid-template-columns:1fr 1fr;gap:12mm;margin-top:16mm;text-align:center;font-size:10pt;break-inside:avoid;}
   .rp-sign-line{border-bottom:1px dotted #555;height:12mm;margin:0 10mm 2mm;}
@@ -959,6 +1021,7 @@ table.syn-table td.num{text-align:center;white-space:nowrap;}
     <button class="tab-btn active" data-tab="dashboard">แดชบอร์ด</button>
     <button class="tab-btn" data-tab="eval">แบบประเมิน OECD-DAC</button>
     <button class="tab-btn" data-tab="analysis">วิเคราะห์เพื่อแผนใหม่</button>
+    <button class="tab-btn" data-tab="newplan">ร่างแผน 2571-2575</button>
     <button class="tab-btn" data-tab="proposals">ข้อเสนอกลยุทธ์ใหม่</button>
     <button class="tab-btn" data-tab="audit">ประวัติการเปลี่ยนแปลง</button>
     <button class="tab-btn" data-tab="master">ข้อมูลยุทธศาสตร์</button>
@@ -1034,20 +1097,45 @@ table.syn-table td.num{text-align:center;white-space:nowrap;}
       <div id="synthesisTable"></div>
     </div>
     <div class="card pad analysis-card">
-      <h2 class="section-title" style="font-size:17px;">2. การวิเคราะห์ SWOT</h2>
+      <h2 class="section-title" style="font-size:17px;">2. การวิเคราะห์สภาพแวดล้อมภายนอก (PESTEL)</h2>
+      <p class="section-sub">สำรวจแนวโน้มภายนอก 6 ด้านที่จะกระทบมูลนิธิในช่วง 2571-2575 ระบุว่าเป็นโอกาสหรืออุปสรรคและระดับผลกระทบ แล้วส่งปัจจัยสำคัญเข้า SWOT</p>
+      <div id="pestelGrid"></div>
+    </div>
+    <div class="card pad analysis-card">
+      <h2 class="section-title" style="font-size:17px;">3. การวิเคราะห์ SWOT</h2>
       <p class="section-sub">ใช้ผลประเมิน บทเรียน และข้อมูลภายนอกประกอบ — ผู้ประเมินและผู้บริหารเพิ่มรายการได้</p>
       <div id="swotGrid"></div>
     </div>
     <div class="card pad analysis-card">
-      <h2 class="section-title" style="font-size:17px;">3. TOWS Matrix — แปลง SWOT เป็นทางเลือกกลยุทธ์</h2>
+      <h2 class="section-title" style="font-size:17px;">4. TOWS Matrix — แปลง SWOT เป็นทางเลือกกลยุทธ์</h2>
       <p class="section-sub">กด &ldquo;→ ข้อเสนอ&rdquo; เพื่อนำทางเลือกไปเป็นข้อเสนอกลยุทธ์ใหม่ได้ทันที</p>
       <div id="towsGrid"></div>
     </div>
     <div class="card pad analysis-card">
-      <h2 class="section-title" style="font-size:17px;">4. ความสอดคล้องเชิงนโยบาย</h2>
+      <h2 class="section-title" style="font-size:17px;">5. ความสอดคล้องเชิงนโยบาย</h2>
       <p class="section-sub">ประเมินแต่ละกลยุทธ์เทียบกับนโยบาย/แผนระดับชาติ (บันทึกอัตโนมัติเมื่อเลือก) — คอลัมน์ที่ไม่มีกลยุทธ์ใดสอดคล้องสูง คือช่องว่างที่ควรเติมในแผนใหม่</p>
       <div id="alignMatrix"></div>
       <div id="frameworkEditor"></div>
+    </div>
+  </div>
+
+  <!-- ============ NEW PLAN ============ -->
+  <div class="view" id="view-newplan">
+    <h2 class="section-title">ร่างแผนยุทธศาสตร์ พ.ศ. 2571-2575</h2>
+    <p class="section-sub">ยกร่างวิสัยทัศน์ พันธกิจ ยุทธศาสตร์ กลยุทธ์ และตัวชี้วัดพร้อมค่าเป้าหมายรายปี โดยระบุที่มาของแต่ละกลยุทธ์ เพื่อตรวจย้อนได้ว่ามติจากการทบทวนแผนเดิม ข้อเสนอ และผลวิเคราะห์ ถูกนำมาใช้ครบถ้วน</p>
+    <div id="newplanNotice"></div>
+    <div class="card pad analysis-card">
+      <h2 class="section-title" style="font-size:17px;">1. วิสัยทัศน์ พันธกิจ และค่านิยม</h2>
+      <div id="npMeta"></div>
+    </div>
+    <div class="card pad analysis-card">
+      <h2 class="section-title" style="font-size:17px;">2. ยุทธศาสตร์ กลยุทธ์ ตัวชี้วัด และค่าเป้าหมาย</h2>
+      <div id="npStructure"></div>
+    </div>
+    <div class="card pad analysis-card">
+      <h2 class="section-title" style="font-size:17px;">3. ตรวจย้อน: มติแผนเดิม → แผนใหม่</h2>
+      <p class="section-sub">ตรวจว่ากลยุทธ์เดิมแต่ละข้อถูกนำไปใช้ในแผนใหม่ตรงตามมติหรือไม่ และยังมีข้อเสนอหรือทางเลือก TOWS ใดที่ยังไม่ได้พิจารณา</p>
+      <div id="npTrace"></div>
     </div>
   </div>
 
@@ -1231,8 +1319,9 @@ table.syn-table td.num{text-align:center;white-space:nowrap;}
       <label class=""><input type="checkbox" data-rp-opt="items" checked><span>4. ผลการประเมินรายกลยุทธ์<small>คะแนน ตัวชี้วัด งบประมาณ โครงการ หลักฐาน บทเรียน และมติ</small></span></label>
       <label class="sub"><input type="checkbox" data-rp-opt="evalDetail" checked><span>คะแนนรายผู้ประเมิน พร้อมเหตุผล</span></label>
       <label class="sub"><input type="checkbox" data-rp-opt="comments" checked><span>ความคิดเห็นของทีม</span></label>
-      <label class=""><input type="checkbox" data-rp-opt="analysis" checked><span>5. มติและการวิเคราะห์เพื่อแผนใหม่<small>มติเทียบระบบ SWOT, TOWS และความสอดคล้องเชิงนโยบาย</small></span></label>
+      <label class=""><input type="checkbox" data-rp-opt="analysis" checked><span>5. มติและการวิเคราะห์เพื่อแผนใหม่<small>มติเทียบระบบ PESTEL, SWOT, TOWS และความสอดคล้องเชิงนโยบาย</small></span></label>
       <label class=""><input type="checkbox" data-rp-opt="proposals" checked><span>6. ข้อเสนอกลยุทธ์ใหม่</span></label>
+      <label class=""><input type="checkbox" data-rp-opt="newplan" checked><span>7. ร่างแผนยุทธศาสตร์ 2571-2575<small>วิสัยทัศน์ พันธกิจ ยุทธศาสตร์ กลยุทธ์ ค่าเป้าหมาย และการตรวจย้อนมติ</small></span></label>
       <label class=""><input type="checkbox" data-rp-opt="appendix" checked><span>ภาคผนวก<small>บันทึกทีม รายชื่อผู้ประเมิน ประวัติการแก้ไข และช่องลงนาม</small></span></label>
     </div>
     <div class="rp-modal-foot">
@@ -1371,6 +1460,9 @@ service cloud.firestore {
 
     // ความสอดคล้องเชิงนโยบาย และรายการ SWOT/TOWS
     match /alignment/{itemId} { allow read: if isMember(); allow write: if canWriteItem(itemId); }
+    // ร่างแผนยุทธศาสตร์ใหม่ 2571-2575 (วิสัยทัศน์/ยุทธศาสตร์/กลยุทธ์/ตัวชี้วัด): ผู้ประเมินและผู้บริหารร่างร่วมกันได้
+    match /newplan/{id} { allow read: if isMember(); allow write: if isEvaluator(); }
+
     match /analysis/{id} {
       allow read: if isMember();
       allow create: if isEvaluator() && request.resource.data.authorUid == request.auth.uid;
@@ -1638,7 +1730,7 @@ async function firestoreLoadAll(){
   evalSnap.forEach(doc=>{
     const d = doc.data();
     if(!evalsByItem[d.itemId]) evalsByItem[d.itemId] = [];
-    evalsByItem[d.itemId].push({evalId: doc.id, evaluator: d.evaluator||'', evaluatorUid: d.evaluatorUid||'', date: d.date||'', scores: d.scores||{}, reason: d.reason||''});
+    evalsByItem[d.itemId].push({evalId: doc.id, evaluator: d.evaluator||'', evaluatorUid: d.evaluatorUid||'', date: d.date||'', scores: d.scores||{}, reason: d.reason||'', evidenceLevel: d.evidenceLevel||''});
   });
 
   const indByItem = {};
@@ -1889,7 +1981,7 @@ async function firestoreSaveAllForItem(itemId, {evaluation, changes}, force){
     if(evaluation){
       tx.set(db.collection('evaluations').doc(evalDocId(itemId)), {
         itemId, strategyId: item.strategyId, strategyName: STRATEGY_NAME_BY_ID[item.strategyId], num: item.num, text: item.text, owner: item.owner,
-        evaluator: actorName(), evaluatorUid: myUid(), date: evaluation.date || '', scores: evaluation.scores || {}, reason: evaluation.reason || '',
+        evaluator: actorName(), evaluatorUid: myUid(), date: evaluation.date || '', scores: evaluation.scores || {}, reason: evaluation.reason || '', evidenceLevel: evaluation.evidenceLevel || '',
         submittedAt: fsTimestamp()
       });
     }
@@ -1937,7 +2029,7 @@ async function reloadItemFromServer(itemId){
   st.evaluations = [];
   evalSnap.forEach(doc=>{
     const d = doc.data();
-    st.evaluations.push({evalId: doc.id, evaluator: d.evaluator||'', evaluatorUid: d.evaluatorUid||'', date: d.date||'', scores: d.scores||{}, reason: d.reason||''});
+    st.evaluations.push({evalId: doc.id, evaluator: d.evaluator||'', evaluatorUid: d.evaluatorUid||'', date: d.date||'', scores: d.scores||{}, reason: d.reason||'', evidenceLevel: d.evidenceLevel||''});
   });
   const byIdx = {};
   indSnap.forEach(doc=>{
@@ -1998,7 +2090,7 @@ async function firestoreResetAll(){
 
 function itemToState(it){
   return {
-    evaluations: (it.evaluations||[]).map(e=>({evalId:e.evalId, evaluator:e.evaluator||'', evaluatorUid:e.evaluatorUid||'', date:e.date||'', scores:e.scores||{}, reason:e.reason||''})),
+    evaluations: (it.evaluations||[]).map(e=>({evalId:e.evalId, evaluator:e.evaluator||'', evaluatorUid:e.evaluatorUid||'', date:e.date||'', scores:e.scores||{}, reason:e.reason||'', evidenceLevel:e.evidenceLevel||''})),
     indicators: (it.indicators||[]).map(ind=>{
       const yearly = {}, targetYearly = {};
       YEARS.forEach(y => { yearly[y] = numOrNull(ind.yearly ? ind.yearly[y] : null); targetYearly[y] = numOrNull(ind.targetYearly ? ind.targetYearly[y] : null); });
@@ -2058,12 +2150,12 @@ async function loadLocalFallback(){
     local = res && res.value ? JSON.parse(res.value) : null;
   }catch(e){ local = null; }
   if(!local) local = defaultLocalState();
-  applyData({items: DATA.items.map(it => Object.assign({itemId: it.id}, local.items[it.id] || {})), proposals: local.proposals, auditLog: [], weights: local.weights, notes: local.notes, analysis: local.analysis, frameworks: local.frameworks});
+  applyData({items: DATA.items.map(it => Object.assign({itemId: it.id}, local.items[it.id] || {})), proposals: local.proposals, auditLog: [], weights: local.weights, notes: local.notes, analysis: local.analysis, frameworks: local.frameworks, newPlan: local.newPlan});
 }
 async function saveLocalFallback(){
   const items = {};
   Object.keys(evalState).forEach(id=>{ items[id] = evalState[id]; });
-  const payload = {items, proposals, weights, notes: teamNotes, analysis: analysisItems, frameworks: alignmentFrameworks};
+  const payload = {items, proposals, weights, notes: teamNotes, analysis: analysisItems, frameworks: alignmentFrameworks, newPlan};
   try{ await window.storage.set(LOCAL_KEY, JSON.stringify(payload), true); }
   catch(e){ showToast('บันทึกไม่สำเร็จ (โหมดออฟไลน์)', true); }
 }
@@ -2451,6 +2543,7 @@ function renderScorePanel(item, st){
           ${mine ? '<span class="tag tag-mine">ของคุณ</span>' : ''}
           ${cloud && !ev.evaluatorUid ? '<span class="tag" title="บันทึกก่อนที่ระบบจะผูกผลประเมินกับบัญชีผู้ใช้">ข้อมูลเดิม</span>' : ''}
           <span class="eval-entry-date"> · ${escapeHtml(ev.date || '')}</span>
+          ${EVID_LEVELS[ev.evidenceLevel] ? `<span class="tag tag-evid tag-evid-${ev.evidenceLevel}">${EVID_LEVELS[ev.evidenceLevel].label}</span>` : ''}
         </div>
         <div style="display:flex;align-items:center;gap:8px;">
           <span class="eval-entry-avg" style="color:${RECO_COLOR_HEX[getRecoKey(avgOfScores(ev.scores))]}">${fmt(avgOfScores(ev.scores))}</span>
@@ -2500,6 +2593,12 @@ function renderScorePanel(item, st){
             </div>
           </div>`;
         }).join('')}
+      </div>
+      <div style="margin-bottom:10px;max-width:440px;">
+        <div class="field-label">ระดับหลักฐานที่ใช้ประกอบการให้คะแนน</div>
+        <select class="meta-input" data-new-field="evidenceLevel" data-item="${item.id}">
+          <option value="">— เลือกระดับหลักฐาน —</option>${Object.keys(EVID_LEVELS).map(k=>`<option value="${k}" ${pre && pre.evidenceLevel===k ? 'selected' : ''}>${EVID_LEVELS[k].label}</option>`).join('')}
+        </select>
       </div>
       <div style="margin-bottom:10px;">
         <div class="field-label">เหตุผล / หลักฐานประกอบ</div>
@@ -2850,21 +2949,22 @@ function collectEvaluation(itemId){
   const evaluator = cloud ? actorName() : form.querySelector('[data-new-field="evaluator"]').value.trim();
   const date = form.querySelector('[data-new-field="date"]').value;
   const reason = form.querySelector('[data-new-field="reason"]').value.trim();
+  const evidenceLevel = (form.querySelector('[data-new-field="evidenceLevel"]') || {}).value || '';
   const scores = {};
   let nScores = 0;
   CRIT_KEYS.forEach(k=>{
     const active = form.querySelector(`.score-row[data-newcrit="${k}"] .score-btn.active`);
     if(active){ scores[k] = Number(active.dataset.val); nScores++; }
   });
-  const touched = nScores > 0 || reason !== '' || (!cloud && evaluator !== '');
+  const touched = nScores > 0 || reason !== '' || evidenceLevel !== '' || (!cloud && evaluator !== '');
   if(!touched) return {evaluation: null};
   if(!evaluator || nScores < CRIT_KEYS.length) return {evaluation: null, incomplete: true};
   const st = evalState[itemId];
   const mine = cloud ? (st.evaluations||[]).find(ev=>ev.evaluatorUid === myUid()) : null;
-  if(mine && CRIT_KEYS.every(k=>Number(mine.scores[k]) === scores[k]) && (mine.reason||'') === reason && (mine.date||'') === date){
+  if(mine && CRIT_KEYS.every(k=>Number(mine.scores[k]) === scores[k]) && (mine.reason||'') === reason && (mine.date||'') === date && (mine.evidenceLevel||'') === evidenceLevel){
     return {evaluation: null}; // เปิดฟอร์มแก้ไขแต่ไม่ได้เปลี่ยนอะไร
   }
-  return {evaluation: {evaluator, date, scores, reason}};
+  return {evaluation: {evaluator, date, scores, reason, evidenceLevel}};
 }
 
 /** เทียบค่าในฟอร์มกับค่าที่โหลดมา แล้วคืนเฉพาะช่องที่ถูกแก้ไขจริง */
@@ -3261,7 +3361,7 @@ document.getElementById('proposalsContainer').addEventListener('click', async (e
 /* ================================================================ */
 /* AUDIT LOG TAB                                                     */
 /* ================================================================ */
-const FIELD_LABEL = {evaluation:'คะแนนประเมิน', indicator:'ตัวชี้วัด', budget:'งบประมาณ', progress:'ความคืบหน้า', evidence:'หลักฐาน', proposal:'ข้อเสนอใหม่', notes:'บันทึกทีม', weights:'น้ำหนักเกณฑ์', reset:'ล้างข้อมูล', comment:'ความคิดเห็น', approval:'การอนุมัติ', dependency:'ความเชื่อมโยง', saveAll:'บันทึกข้อมูล', user:'ผู้ใช้/บทบาท', project:'โครงการ', lessons:'บทเรียน', decision:'มติคณะกรรมการ', analysis:'วิเคราะห์แผนใหม่'};
+const FIELD_LABEL = {evaluation:'คะแนนประเมิน', indicator:'ตัวชี้วัด', budget:'งบประมาณ', progress:'ความคืบหน้า', evidence:'หลักฐาน', proposal:'ข้อเสนอใหม่', notes:'บันทึกทีม', weights:'น้ำหนักเกณฑ์', reset:'ล้างข้อมูล', comment:'ความคิดเห็น', approval:'การอนุมัติ', dependency:'ความเชื่อมโยง', saveAll:'บันทึกข้อมูล', user:'ผู้ใช้/บทบาท', project:'โครงการ', lessons:'บทเรียน', decision:'มติคณะกรรมการ', analysis:'วิเคราะห์แผนใหม่', newplan:'ร่างแผนใหม่'};
 function renderAudit(){
   const el = document.getElementById('auditContainer');
   if(!connected){
@@ -3451,7 +3551,7 @@ document.getElementById('btnLogout').addEventListener('click', async ()=>{
 /* ================================================================ */
 /* รายงาน PDF ฉบับเต็ม (สร้าง HTML สำหรับพิมพ์ แล้วให้เบราว์เซอร์บันทึกเป็น PDF) */
 /* ================================================================ */
-const REPORT_DEFAULT_OPTS = {summary:true, method:true, overview:true, items:true, evalDetail:true, comments:true, analysis:true, proposals:true, appendix:true, strategy:'all'};
+const REPORT_DEFAULT_OPTS = {summary:true, method:true, overview:true, items:true, evalDetail:true, comments:true, analysis:true, proposals:true, newplan:true, appendix:true, strategy:'all'};
 function rpNl(t){ return escapeHtml(t || '').replace(/\n/g, '<br>'); }
 function rpThaiDate(d){ try{ return (d || new Date()).toLocaleDateString('th-TH', {year:'numeric', month:'long', day:'numeric'}); }catch(e){ return new Date().toISOString().slice(0,10); } }
 function rpBadge(rk, text){ return `<span class="rp-badge rp-${rk}">${escapeHtml(text)}</span>`; }
@@ -3532,6 +3632,7 @@ function rpToc(opts){
   if(opts.items) parts.push('ผลการประเมินรายกลยุทธ์');
   if(opts.analysis) parts.push('มติคณะกรรมการและการวิเคราะห์เพื่อแผนใหม่');
   if(opts.proposals) parts.push('ข้อเสนอกลยุทธ์ใหม่');
+  if(opts.newplan) parts.push('ร่างแผนยุทธศาสตร์ พ.ศ. 2571-2575 และการตรวจย้อนมติ');
   if(opts.appendix) parts.push('ภาคผนวก');
   return `<section class="rp-toc"><h2 class="rp-toc-title">สารบัญ</h2><ol>${parts.map(p=>`<li>${p}</li>`).join('')}</ol>
     <div class="rp-note">หมายเหตุ: คะแนนเฉลี่ยคำนวณแบบถ่วงน้ำหนักตามที่ตั้งค่าในระบบ ข้อเสนอแนะของระบบใช้ประกอบการพิจารณาเท่านั้น มติสุดท้ายเป็นของคณะกรรมการ</div></section>`;
@@ -3550,6 +3651,8 @@ function rpSummary(items, S){
   if(S.indData) pts.push(`ตัวชี้วัดที่มีข้อมูลผลจริงแล้ว ${S.indData} จาก ${S.indTotal} ตัว บรรลุเป้าหมาย <b>${S.indAch}</b> ตัว (${(S.indAch/S.indData*100).toFixed(0)}%)`);
   pts.push(`ความคืบหน้าเฉลี่ยของแผน <b>${S.progress.toFixed(0)}%</b>${S.nProj ? ` · บันทึกโครงการ ${S.nProj} โครงการ` : ''}`);
   if(S.decided) pts.push(`คณะกรรมการมีมติแล้ว <b>${S.decided}</b> กลยุทธ์${S.differs ? ` โดย ${S.differs} กลยุทธ์มีมติต่างจากข้อเสนอแนะของระบบ (ระบุเหตุผลไว้ในส่วนที่ 5)` : ''}`);
+  const relNeed = items.filter(it=>{ const r = itemReliability(it.id); return r && r.needsDiscussion; });
+  if(relNeed.length) pts.push(`มี <b>${relNeed.length}</b> กลยุทธ์ที่ผลประเมินมีความน่าเชื่อถือต่ำหรือผู้ประเมินเห็นต่างกันมาก (${relNeed.map(it=>it.strategyId+'.'+it.num).join(', ')}) ควรหารือเพิ่มก่อนลงมติ`);
   if(gaps.length) pts.push(`พบช่องว่างเชิงนโยบาย: ยังไม่มีกลยุทธ์ที่สอดคล้องสูงกับ ${gaps.map(g=>'&ldquo;'+escapeHtml(g.name)+'&rdquo;').join(', ')}`);
   const rankList = arr => arr.length ? `<ol class="rp-rank">${arr.map(x=>`<li><span>${rpItemLabel(x.it)} ${escapeHtml(x.it.text)}</span><b style="color:${RECO_COLOR_HEX[getRecoKey(x.avg)]}">${x.avg.toFixed(2)}</b></li>`).join('')}</ol>` : rpEmpty('ยังไม่มีข้อมูล');
   return `
@@ -3598,6 +3701,8 @@ function rpMethod(){
           <li><b>ยิ่งน้อยยิ่งดี</b> — % บรรลุ = เป้าหมาย ÷ ผลจริง</li>
           <li><b>มี/ไม่มี</b> — บรรลุเมื่อผลจริงปีล่าสุดเป็น &ldquo;มี&rdquo;</li>
           <li>ใช้ปีล่าสุดที่มีข้อมูลคู่กัน และจำกัดสูงสุด 150%</li></ul>
+        <h3 class="rp-h3">ความน่าเชื่อถือของผลประเมิน</h3>
+        <ul class="rp-points rp-small"><li>พิจารณาจำนวนผู้ประเมิน (แนะนำ ≥ 3 คน) ความเห็นต่างระหว่างผู้ประเมินรายด้าน และระดับหลักฐาน (เอกสารยืนยัน / ข้อมูลบางส่วน / ความเห็น)</li><li>⚑ = ต่ำ หรือมีด้านที่คะแนนห่างกัน ≥ 3 ควรหารือก่อนลงมติ</li></ul>
         <h3 class="rp-h3">การแปลผลงบประมาณ</h3>
         <ul class="rp-points rp-small"><li>ต่างจากแผนไม่เกิน ±10% ถือว่าใกล้เคียงแผน</li><li>ใช้เกินแผนหรือต่ำกว่าแผนมาก ต้องตรวจสอบสาเหตุ (เช่น เบิกจ่ายล่าช้า)</li></ul>
       </div>
@@ -3654,6 +3759,7 @@ function rpItem(it, opts){
   // คะแนนรายด้าน
   parts.push(`<div class="rp-sub">คะแนนรายหลักเกณฑ์ (เฉลี่ยจากผู้ประเมิน ${evals.length} คน)</div>` + (evals.length ? `
     <table class="rp-crit">${CRIT_KEYS.map((k,i)=>`<tr><td>${escapeHtml(CRIT_LABELS[i].th)}</td><td>${rpBar(ca[k]===null?0:ca[k]/5*100, ca[k]===null?'#ddd':RECO_COLOR_HEX[getRecoKey(ca[k])])}</td><td class="c"><b>${fmt(ca[k])}</b></td></tr>`).join('')}</table>` : rpEmpty('ยังไม่มีการประเมิน')));
+  parts.push(rpRelHtml(it.id));
   if(opts.evalDetail && evals.length){
     parts.push(`<div class="rp-sub">รายละเอียดคะแนนรายผู้ประเมิน</div>
       <table class="rp-table rp-compact"><thead><tr><th>ผู้ประเมิน</th><th class="c">วันที่</th>${CRIT_LABELS.map(c=>`<th class="c">${escapeHtml(c.th)}</th>`).join('')}<th class="c">เฉลี่ย</th></tr></thead><tbody>
@@ -3752,9 +3858,10 @@ function rpAnalysis(items){
     <h2 class="rp-h1"><span>5</span>มติคณะกรรมการและการวิเคราะห์เพื่อแผนใหม่</h2>
     <h3 class="rp-h3">5.1 มติรายกลยุทธ์เทียบกับข้อเสนอแนะของระบบ</h3>
     <table class="rp-table rp-compact rp-fixed">${rpCols([5,27,7,13,13,17.5,17.5])}<thead><tr><th class="c">ที่</th><th>กลยุทธ์</th><th class="c">คะแนน</th><th>ระบบแนะนำ</th><th>มติ</th><th>เหตุผลประกอบมติ</th><th>แนวทางแผน 2571-2575</th></tr></thead><tbody>${syn}</tbody></table>
-    <h3 class="rp-h3 rp-break-avoid">5.2 การวิเคราะห์ SWOT</h3>${quad(SWOT_Q)}
-    <h3 class="rp-h3 rp-break-avoid">5.3 TOWS Matrix — ทางเลือกเชิงกลยุทธ์</h3>${quad(TOWS_Q)}
-    <h3 class="rp-h3">5.4 ความสอดคล้องเชิงนโยบาย</h3>
+    <h3 class="rp-h3">5.2 การวิเคราะห์สภาพแวดล้อมภายนอก (PESTEL)</h3>${rpPestel()}
+    <h3 class="rp-h3 rp-break-avoid">5.3 การวิเคราะห์ SWOT</h3>${quad(SWOT_Q)}
+    <h3 class="rp-h3 rp-break-avoid">5.4 TOWS Matrix — ทางเลือกเชิงกลยุทธ์</h3>${quad(TOWS_Q)}
+    <h3 class="rp-h3">5.5 ความสอดคล้องเชิงนโยบาย</h3>
     <ol class="rp-fw">${fws.map((f,i)=>`<li><b>N${i+1}</b> ${escapeHtml(f.name)}</li>`).join('')}</ol>
     <table class="rp-table rp-compact rp-fixed">${rpCols([5, Math.max(30, 87 - fws.length*6.5)].concat(fws.map(()=>6.5)).concat([8]))}<thead><tr><th class="c">ที่</th><th>กลยุทธ์</th>${fws.map((f,i)=>`<th class="c">N${i+1}</th>`).join('')}<th class="c">รวม</th></tr></thead><tbody>${alRows}
       <tr class="rp-total"><td colspan="2">จำนวนกลยุทธ์ที่สอดคล้องสูง</td>${colHigh.map(n=>`<td class="c ${n===0?'rp-gap':''}">${n}</td>`).join('')}<td></td></tr></tbody></table>
@@ -3805,6 +3912,7 @@ function buildReportHtml(opts){
   if(opts.items) html += rpItems(items, strategies, opts);
   if(opts.analysis) html += rpAnalysis(items);
   if(opts.proposals) html += rpProposals();
+  if(opts.newplan) html += rpNewPlan();
   if(opts.appendix) html += rpAppendix(S);
   return `<div class="rp-doc">${html}</div>`;
 }
@@ -3874,24 +3982,24 @@ function exportExcel(){
 
   // --- Sheet 2: คะแนนประเมิน ---
   const evalHeaders = ['ยุทธศาสตร์ที่','ชื่อยุทธศาสตร์','กลยุทธ์ที่','กลยุทธ์','ผู้รับผิดชอบ','ผู้ประเมิน','วันที่ประเมิน',
-    'ความสอดคล้อง','ความสอดคล้องเชิงระบบ','ประสิทธิผล','ประสิทธิภาพ','ผลกระทบ','ความยั่งยืน','คะแนนเฉลี่ย(รายคน)','เหตุผล/หลักฐานประกอบ'];
+    'ความสอดคล้อง','ความสอดคล้องเชิงระบบ','ประสิทธิผล','ประสิทธิภาพ','ผลกระทบ','ความยั่งยืน','คะแนนเฉลี่ย(รายคน)','ระดับหลักฐาน','เหตุผล/หลักฐานประกอบ'];
   const evalRows = [evalHeaders];
   items.forEach(it=>{
     const s = DATA.strategies.find(x=>x.id===it.strategyId);
     const st = evalState[it.id];
     const evals = (st && st.evaluations) || [];
     if(!evals.length){
-      evalRows.push([it.strategyId, s.name, it.num, it.text, it.owner, '', '', '', '', '', '', '', '', '', '(ยังไม่มีการประเมิน)']);
+      evalRows.push([it.strategyId, s.name, it.num, it.text, it.owner, '', '', '', '', '', '', '', '', '', '', '(ยังไม่มีการประเมิน)']);
     } else {
       evals.forEach(ev=>{
         evalRows.push([it.strategyId, s.name, it.num, it.text, it.owner, ev.evaluator, ev.date,
           ev.scores.rel??'', ev.scores.coh??'', ev.scores.eff??'', ev.scores.effy??'', ev.scores.imp??'', ev.scores.sus??'',
-          avgOfScores(ev.scores)===null?'':Number(avgOfScores(ev.scores).toFixed(2)), ev.reason||'']);
+          avgOfScores(ev.scores)===null?'':Number(avgOfScores(ev.scores).toFixed(2)), (EVID_LEVELS[ev.evidenceLevel]||{}).label||'', ev.reason||'']);
       });
     }
   });
   const wsEval = XLSX.utils.aoa_to_sheet(evalRows);
-  wsEval['!cols'] = [{wch:8},{wch:22},{wch:8},{wch:40},{wch:18},{wch:16},{wch:12},{wch:10},{wch:10},{wch:10},{wch:10},{wch:10},{wch:10},{wch:10},{wch:40}];
+  wsEval['!cols'] = [{wch:8},{wch:22},{wch:8},{wch:40},{wch:18},{wch:16},{wch:12},{wch:10},{wch:10},{wch:10},{wch:10},{wch:10},{wch:10},{wch:10},{wch:24},{wch:40}];
   XLSX.utils.book_append_sheet(wb, wsEval, 'คะแนนประเมิน');
 
   // --- Sheet 3: ตัวชี้วัด ---
@@ -4112,7 +4220,7 @@ async function loadMethodologyData(){
   if(les) les.forEach(doc=>{ out.lessons[doc.id] = doc.data(); });
   if(dec) dec.forEach(doc=>{ const d = doc.data(); out.decisions[doc.id] = Object.assign({}, d, {decidedAt: tsToIso(d.decidedAt)}); });
   if(ali) ali.forEach(doc=>{ out.alignment[doc.id] = (doc.data().scores) || {}; });
-  if(ana) ana.forEach(doc=>{ const d = doc.data(); out.analysis.push({id: doc.id, quadrant: d.quadrant, text: d.text||'', author: d.author||'', authorUid: d.authorUid||'', createdAt: tsToIso(d.createdAt)}); });
+  if(ana) ana.forEach(doc=>{ const d = doc.data(); out.analysis.push({id: doc.id, quadrant: d.quadrant, text: d.text||'', kind: d.kind||'', impact: d.impact||'', author: d.author||'', authorUid: d.authorUid||'', createdAt: tsToIso(d.createdAt)}); });
   out.analysis.sort((a,b)=> (a.createdAt||'') < (b.createdAt||'') ? -1 : 1);
   if(meta && meta.exists && Array.isArray(meta.data().frameworks)) out.frameworks = meta.data().frameworks;
   return out;
@@ -4476,7 +4584,7 @@ function renderSynthesisTable(){
   if(!el) return;
   const rows = DATA.strategies.map(s=>{
     const items = DATA.items.filter(it=>it.strategyId===s.id);
-    return `<tr class="syn-strategy"><td colspan="9">ยุทธศาสตร์ที่ ${s.id}: ${escapeHtml(s.name)}</td></tr>` + items.map(it=>{
+    return `<tr class="syn-strategy"><td colspan="10">ยุทธศาสตร์ที่ ${s.id}: ${escapeHtml(s.name)}</td></tr>` + items.map(it=>{
       const st = evalState[it.id] || {};
       const avg = computeItemAvg(it.id), rk = getRecoKey(avg);
       const ind = indicatorSummary(it.id);
@@ -4490,6 +4598,7 @@ function renderSynthesisTable(){
         <td class="num" style="color:${RECO_COLOR_HEX[rk]};font-weight:700;">${fmt(avg)}</td>
         <td><span class="badge ${rk}">${RECO[rk].label}</span></td>
         <td>${D.decision ? `<span class="decision-chip dc-${DECISIONS[D.decision].color}">${DECISIONS[D.decision].label}</span>${differs ? '<div class="differs-flag">ต่างจากระบบ</div>' : ''}` : '<span class="muted">ยังไม่มีมติ</span>'}</td>
+        <td class="num">${relChipHtml(it.id)}</td>
         <td class="num">${ind.withData ? `${ind.achieved}/${ind.withData}` : '—'}<div class="muted">จาก ${ind.total} ตัว</div></td>
         <td class="num" style="color:${budgetVarColor(v)};">${v===null ? '—' : (100+v).toFixed(0) + '%'}</td>
         <td class="num">${(st.projects||[]).length || '—'}</td>
@@ -4500,9 +4609,9 @@ function renderSynthesisTable(){
   }).join('');
   const decided = DATA.items.filter(it=>evalState[it.id] && evalState[it.id].decision && evalState[it.id].decision.decision).length;
   el.innerHTML = `
-    <p class="section-sub" style="margin:0 0 10px;">มีมติแล้ว <b>${decided}/${DATA.items.length}</b> กลยุทธ์ · อัตราเบิกจ่าย = งบใช้จริง ÷ งบตามแผน · ความสอดคล้องนโยบาย = คะแนนเฉลี่ยจากตารางข้อ 4</p>
+    <p class="section-sub" style="margin:0 0 10px;">มีมติแล้ว <b>${decided}/${DATA.items.length}</b> กลยุทธ์ · อัตราเบิกจ่าย = งบใช้จริง ÷ งบตามแผน · ความสอดคล้องนโยบาย = คะแนนเฉลี่ยจากตารางข้อ 5 · ความน่าเชื่อถือ ⚑ = ควรหารือเพิ่ม</p>
     <div class="table-scroll"><table class="syn-table">
-      <tr><th>กลยุทธ์</th><th>คะแนน</th><th>ระบบแนะนำ</th><th>มติ</th><th>ตัวชี้วัดบรรลุ</th><th>อัตราเบิกจ่าย</th><th>โครงการ</th><th>สอดคล้องนโยบาย</th><th>แนวทางแผนใหม่ / บทเรียน</th></tr>
+      <tr><th>กลยุทธ์</th><th>คะแนน</th><th>ระบบแนะนำ</th><th>มติ</th><th>ความน่าเชื่อถือ</th><th>ตัวชี้วัดบรรลุ</th><th>อัตราเบิกจ่าย</th><th>โครงการ</th><th>สอดคล้องนโยบาย</th><th>แนวทางแผนใหม่ / บทเรียน</th></tr>
       ${rows}
     </table></div>`;
 }
@@ -4734,6 +4843,644 @@ function appendMethodologySheets(wb){
   DATA.items.forEach(it=>{ const a = (evalState[it.id]||{}).alignment || {}; const sc = alignmentScoreOf(it.id);
     al.push([it.strategyId, it.num, it.text, ...alignmentFrameworks.map(f=>{ const v = a[f.key]; return (v===null||v===undefined||v==='') ? '' : ALIGN_LEVELS[String(v)]; }), sc===null?'':Number(sc.toFixed(0))]); });
   sheet(al, [8,8,40, ...alignmentFrameworks.map(()=>18), 10], 'ความสอดคล้องนโยบาย');
+}
+
+/* ================================================================ */
+/* RELIABILITY · PESTEL · ร่างแผนใหม่ 2571-2575                         */
+/* ================================================================ */
+
+/* ---------- ข้อ 3: ความน่าเชื่อถือของผลประเมิน ---------- */
+const EVID_LEVELS = {
+  documented: {label:'มีเอกสาร/ข้อมูลยืนยัน', w:1},
+  partial:    {label:'มีข้อมูลบางส่วน', w:0.6},
+  opinion:    {label:'ความเห็น/ประสบการณ์ผู้ประเมิน', w:0.25}
+};
+const REL_LEVEL = {high:{label:'สูง', color:'green'}, medium:{label:'ปานกลาง', color:'yellow'}, low:{label:'ต่ำ', color:'red'}};
+/** คำนวณความน่าเชื่อถือจาก 3 ปัจจัย: จำนวนผู้ประเมิน, ความเห็นต่างระหว่างผู้ประเมิน, ระดับหลักฐาน (รวม 0-6 คะแนน) */
+function itemReliability(itemId){
+  const evals = ((evalState[itemId]||{}).evaluations) || [];
+  if(!evals.length) return null;
+  const n = evals.length;
+  const ranges = {};
+  CRIT_KEYS.forEach(k=>{
+    const v = evals.map(e=>Number(e.scores && e.scores[k])).filter(x=>!isNaN(x) && x>0);
+    ranges[k] = v.length ? {min: Math.min(...v), max: Math.max(...v), range: Math.max(...v) - Math.min(...v)} : null;
+  });
+  const maxRange = Math.max(0, ...Object.values(ranges).filter(Boolean).map(r=>r.range));
+  const known = evals.map(e=>e.evidenceLevel).filter(l=>EVID_LEVELS[l]);
+  const evidScore = known.length ? known.reduce((a,l)=>a+EVID_LEVELS[l].w, 0) / known.length : null;
+  const flags = [];
+  let pts = 0;
+  pts += n >= 3 ? 2 : n === 2 ? 1 : 0;
+  if(n === 1) flags.push('มีผู้ประเมินเพียง 1 คน — ควรมีอย่างน้อย 3 คนจากหลายฝ่าย');
+  else if(n === 2) flags.push('มีผู้ประเมิน 2 คน — แนะนำอย่างน้อย 3 คน');
+  pts += maxRange <= 1 ? 2 : maxRange === 2 ? 1 : 0;
+  const hi = CRIT_KEYS.map((k,i)=>({k, th: CRIT_LABELS[i].th, r: ranges[k]})).filter(x=>x.r && x.r.range >= 2);
+  if(hi.length) flags.push('ความเห็นต่างกันมากในด้าน ' + hi.map(x=>`${x.th} (${x.r.min}–${x.r.max})`).join(', '));
+  if(evidScore === null){ pts += 1; flags.push('ผู้ประเมินยังไม่ได้ระบุระดับหลักฐาน'); }
+  else {
+    pts += evidScore >= 0.8 ? 2 : evidScore >= 0.5 ? 1 : 0;
+    if(evidScore < 0.5) flags.push('คะแนนส่วนใหญ่อ้างอิงความเห็นของผู้ประเมิน ยังขาดเอกสาร/ข้อมูลยืนยัน');
+    if(known.length < n) flags.push(`มีผู้ประเมิน ${n - known.length} คนยังไม่ระบุระดับหลักฐาน`);
+  }
+  const level = pts >= 5 ? 'high' : pts >= 3 ? 'medium' : 'low';
+  return {n, ranges, maxRange, evidScore, level, flags, needsDiscussion: maxRange >= 3 || level === 'low'};
+}
+function relChipHtml(itemId){
+  const r = itemReliability(itemId);
+  if(!r) return '<span class="muted">—</span>';
+  return `<span class="rel-chip rel-${r.level}" title="${escapeHtml(r.flags.join(' · '))}">${REL_LEVEL[r.level].label}${r.needsDiscussion ? ' ⚑' : ''}</span>`;
+}
+function reliabilityBoxHtml(itemId){
+  const r = itemReliability(itemId);
+  if(!r) return '';
+  const evid = r.evidScore === null ? 'ยังไม่ระบุ' : r.evidScore >= 0.8 ? 'หนักแน่น' : r.evidScore >= 0.5 ? 'ปานกลาง' : 'อ่อน';
+  return `
+  <div class="rel-box rel-${r.level}">
+    <div class="rel-head">
+      <span>ความน่าเชื่อถือของผลประเมิน <span class="rel-chip rel-${r.level}">${REL_LEVEL[r.level].label}</span>${r.needsDiscussion ? ' <span class="differs-flag">⚑ ควรหารือในที่ประชุม</span>' : ''}</span>
+      <span class="muted">ผู้ประเมิน ${r.n} คน · ความต่างสูงสุด ${r.maxRange} คะแนน · หลักฐาน${evid}</span>
+    </div>
+    <div class="rel-ranges">${CRIT_KEYS.map((k,i)=>{ const x = r.ranges[k]; if(!x) return ''; return `<span class="rel-range ${x.range>=2?'hot':''}">${escapeHtml(CRIT_LABELS[i].th)} <b>${x.min===x.max ? x.min : x.min + '–' + x.max}</b></span>`; }).join('')}</div>
+    ${r.flags.length ? `<ul class="rel-flags">${r.flags.map(f=>`<li>${escapeHtml(f)}</li>`).join('')}</ul>` : ''}
+  </div>`;
+}
+const __renderScorePanelBase = renderScorePanel;
+renderScorePanel = function(item, st){ return reliabilityBoxHtml(item.id) + __renderScorePanelBase(item, st); };
+
+const __renderMethodSummaryBase = renderMethodSummary;
+renderMethodSummary = function(){
+  __renderMethodSummaryBase();
+  const el = document.getElementById('methodSummary');
+  if(!el) return;
+  const list = DATA.items.map(it=>({it, r: itemReliability(it.id)})).filter(x=>x.r && x.r.needsDiscussion);
+  const counts = {high:0, medium:0, low:0};
+  DATA.items.forEach(it=>{ const r = itemReliability(it.id); if(r) counts[r.level]++; });
+  el.insertAdjacentHTML('beforeend', `
+    <div class="card pad" style="margin-top:14px;">
+      <h2 class="section-title" style="font-size:17px;">ความน่าเชื่อถือของผลประเมิน</h2>
+      <div class="rel-summary">${Object.keys(REL_LEVEL).map(k=>`<span class="rel-chip rel-${k}">${REL_LEVEL[k].label} ${counts[k]}</span>`).join('')}
+        <span class="muted">คำนวณจากจำนวนผู้ประเมิน ความเห็นต่าง และระดับหลักฐาน</span></div>
+      ${list.length ? `<div class="field-label" style="margin-top:10px;">กลยุทธ์ที่ควรหารือเพิ่มก่อนลงมติ (${list.length})</div>
+        <ul class="rel-list">${list.map(x=>`<li><b>${x.it.strategyId}.${x.it.num}</b> ${escapeHtml(x.it.text)}<div class="muted">${escapeHtml(x.r.flags.join(' · '))}</div></li>`).join('')}</ul>`
+        : '<p class="muted" style="margin:8px 0 0;">ยังไม่มีกลยุทธ์ที่ต้องหารือเพิ่ม</p>'}
+    </div>`);
+};
+
+/* ---------- ข้อ 4: PESTEL ---------- */
+const PESTEL_Q = {
+  PE_P: {label:'การเมือง/นโยบาย (Political)', hint:'นโยบายรัฐ การปฏิรูปการศึกษา ทิศทางกระทรวง'},
+  PE_E: {label:'เศรษฐกิจ (Economic)', hint:'งบประมาณ ภาวะเศรษฐกิจ ความเหลื่อมล้ำ'},
+  PE_S: {label:'สังคม/ประชากร (Social)', hint:'จำนวนเด็กเกิดลดลง โรงเรียนขนาดเล็ก พฤติกรรมการเรียนรู้'},
+  PE_T: {label:'เทคโนโลยี (Technological)', hint:'AI แพลตฟอร์มออนไลน์ อินเทอร์เน็ต การรับชมผ่านมือถือ'},
+  PE_En:{label:'สิ่งแวดล้อม (Environmental)', hint:'ภัยพิบัติ โรคระบาด พลังงาน'},
+  PE_L: {label:'กฎหมาย/ระเบียบ (Legal)', hint:'กฎหมายการศึกษา ลิขสิทธิ์ PDPA'}
+};
+const PESTEL_IMPACT = {high:'ผลกระทบสูง', medium:'ผลกระทบปานกลาง', low:'ผลกระทบต่ำ'};
+const PESTEL_KIND = {opportunity:'โอกาส', threat:'อุปสรรค'};
+function pestelInSwot(a){ const q = a.kind === 'opportunity' ? 'O' : 'T'; return analysisItems.some(x=>x.quadrant === q && x.text === a.text); }
+function renderPestel(){
+  const el = document.getElementById('pestelGrid');
+  if(!el) return;
+  const canAdd = canEdit();
+  const all = analysisItems.filter(a=>PESTEL_Q[a.quadrant]);
+  const hiO = all.filter(a=>a.kind==='opportunity' && a.impact==='high').length, hiT = all.filter(a=>a.kind==='threat' && a.impact==='high').length;
+  el.innerHTML = `
+    <p class="section-sub" style="margin:0 0 10px;">รวม ${all.length} ปัจจัย · โอกาสที่ผลกระทบสูง <b style="color:var(--green)">${hiO}</b> · อุปสรรคที่ผลกระทบสูง <b style="color:var(--red)">${hiT}</b> — กด &ldquo;→ SWOT&rdquo; เพื่อส่งปัจจัยไปเป็นโอกาส/อุปสรรคในตาราง SWOT</p>
+    <div class="pestel-grid">${Object.keys(PESTEL_Q).map(q=>{
+      const items = all.filter(a=>a.quadrant===q).sort((a,b)=>({high:0,medium:1,low:2}[a.impact]??3)-({high:0,medium:1,low:2}[b.impact]??3));
+      return `<div class="pestel pestel-${q}">
+        <div class="quad-title">${PESTEL_Q[q].label}</div>
+        <div class="quad-hint">${PESTEL_Q[q].hint}</div>
+        <ul class="quad-list">${items.map(a=>{
+          const canDel = canApprove() || (canAdd && (!isCloudUser() || a.authorUid === myUid()));
+          const sent = pestelInSwot(a);
+          return `<li><span>${escapeHtml(a.text)}</span><span class="quad-actions">
+            ${canAdd ? (sent ? '<span class="muted">✓ อยู่ใน SWOT</span>' : `<button class="btn-tiny" data-pestel-to-swot="${escapeHtml(a.id)}">→ SWOT</button>`) : ''}
+            ${canDel ? `<button class="quad-del" data-del-analysis="${escapeHtml(a.id)}" title="ลบ">✕</button>` : ''}</span>
+            <em><span class="pk pk-${a.kind||'none'}">${PESTEL_KIND[a.kind]||'ไม่ระบุ'}</span> <span class="pi pi-${a.impact||'none'}">${PESTEL_IMPACT[a.impact]||''}</span>${a.author ? ' · ' + escapeHtml(a.author) : ''}</em></li>`;
+        }).join('') || '<li class="muted">ยังไม่มีรายการ</li>'}</ul>
+        ${canAdd ? `<div class="pestel-add">
+          <input class="meta-input" data-pestel-text="${q}" placeholder="ปัจจัย/แนวโน้ม...">
+          <select class="meta-input" data-pestel-kind="${q}"><option value="opportunity">โอกาส</option><option value="threat">อุปสรรค</option></select>
+          <select class="meta-input" data-pestel-impact="${q}"><option value="high">สูง</option><option value="medium" selected>ปานกลาง</option><option value="low">ต่ำ</option></select>
+          <button class="btn-tiny success" data-add-pestel="${q}">+</button></div>` : ''}
+      </div>`;
+    }).join('')}</div>`;
+}
+async function addPestelItem(quadrant, text, kind, impact){
+  const item = {quadrant, text, kind, impact, author: actorName(), authorUid: myUid() || '', createdAt: new Date().toISOString()};
+  if(connected){
+    try{
+      const ref = await db.collection('analysis').add({quadrant, text, kind, impact, author: actorName(), authorUid: myUid(), createdAt: fsTimestamp()});
+      item.id = ref.id;
+      await firestoreLogAudit('', 'analysis', 'เพิ่มปัจจัย PESTEL: ' + text.slice(0,60), '');
+    }catch(e){ showToast('บันทึกไม่สำเร็จ: ' + friendlyError(e), true); return; }
+  } else item.id = 'A_' + Date.now();
+  analysisItems.push(item);
+  if(!connected) await saveLocalFallback();
+  renderAnalysisTab();
+}
+const __renderAnalysisTabBase = renderAnalysisTab;
+renderAnalysisTab = function(){ __renderAnalysisTabBase(); renderPestel(); };
+document.getElementById('view-analysis').addEventListener('click', async (e)=>{
+  const add = e.target.closest('[data-add-pestel]');
+  if(add){
+    const q = add.dataset.addPestel;
+    const text = document.querySelector(`[data-pestel-text="${q}"]`).value.trim();
+    if(!text){ showToast('กรุณาพิมพ์ปัจจัยก่อน', true); return; }
+    await addPestelItem(q, text, document.querySelector(`[data-pestel-kind="${q}"]`).value, document.querySelector(`[data-pestel-impact="${q}"]`).value);
+    return;
+  }
+  const toSwot = e.target.closest('[data-pestel-to-swot]');
+  if(toSwot){
+    const a = analysisItems.find(x=>x.id===toSwot.dataset.pestelToSwot);
+    if(!a) return;
+    if(pestelInSwot(a)){ showToast('มีรายการนี้ใน SWOT แล้ว'); return; }
+    await addAnalysisItem(a.kind === 'opportunity' ? 'O' : 'T', a.text);
+    showToast('ส่งไปที่ SWOT (' + (a.kind === 'opportunity' ? 'โอกาส' : 'อุปสรรค') + ') แล้ว');
+  }
+});
+document.getElementById('view-analysis').addEventListener('keydown', (e)=>{
+  const inp = e.target.closest('[data-pestel-text]');
+  if(inp && e.key === 'Enter'){ e.preventDefault(); document.querySelector(`[data-add-pestel="${inp.dataset.pestelText}"]`).click(); }
+});
+
+/* ---------- ข้อ 6: ร่างแผนยุทธศาสตร์ 2571-2575 ---------- */
+const NEW_YEARS = ['2571','2572','2573','2574','2575'];
+let newPlan = {meta:{vision:'', mission:'', values:''}, strategies:[], tactics:[]};
+function npBlank(){ return {meta:{vision:'', mission:'', values:''}, strategies:[], tactics:[]}; }
+function npSortedStrategies(){ return [...newPlan.strategies].sort((a,b)=>(a.order||0)-(b.order||0)); }
+function npTacticsOf(sid){ return newPlan.tactics.filter(t=>t.strategyRef===sid).sort((a,b)=>(a.order||0)-(b.order||0)); }
+function npLabels(){
+  const map = {};
+  npSortedStrategies().forEach((s, i)=>{ map[s.id] = String(i+1); npTacticsOf(s.id).forEach((t, j)=>{ map[t.id] = `${i+1}.${j+1}`; }); });
+  return map;
+}
+function npNormTactic(t){
+  return Object.assign({name:'', owner:'', order:0, rev:1, strategyRef:'', kpis:[]}, t, {
+    sources: Object.assign({items:[], proposals:[], analysis:[]}, t.sources || {}),
+    kpis: (t.kpis||[]).map(k=>({name:k.name||'', unit:k.unit||'', baseline: k.baseline ?? '', targets: Object.assign({}, k.targets||{})}))
+  });
+}
+const __applyDataNp = applyData;
+applyData = function(data){
+  __applyDataNp(data);
+  if(data.newPlan !== undefined){
+    const np = data.newPlan || npBlank();
+    newPlan = {meta: Object.assign({vision:'', mission:'', values:''}, np.meta||{}), strategies: (np.strategies||[]).slice(), tactics: (np.tactics||[]).map(npNormTactic)};
+  }
+};
+let newPlanRulesMissing = false;
+const __firestoreLoadAllNp = firestoreLoadAll;
+firestoreLoadAll = async function(){
+  const data = await __firestoreLoadAllNp();
+  newPlanRulesMissing = false;
+  const np = npBlank();
+  try{
+    const snap = await db.collection('newplan').get();
+    snap.forEach(doc=>{
+      const d = doc.data();
+      if(d.kind === 'meta') np.meta = {vision: d.vision||'', mission: d.mission||'', values: d.values||''};
+      else if(d.kind === 'strategy') np.strategies.push({id: doc.id, name: d.name||'', goal: d.goal||'', order: d.order||0, rev: d.rev||1});
+      else if(d.kind === 'tactic') np.tactics.push(Object.assign({id: doc.id}, d));
+    });
+  }catch(e){ if(String(e && e.code).includes('permission')) newPlanRulesMissing = true; }
+  data.newPlan = np;
+  return data;
+};
+
+function npCanEdit(){ return canEdit(); }
+async function npSaveDoc(id, data, rev, force){
+  if(!connected) return {id: id || ('np_' + Date.now().toString(36) + Math.random().toString(36).slice(2,6)), rev: (rev||0) + 1};
+  const stamp = {updatedBy: actorName(), updatedByUid: myUid(), updatedAt: fsTimestamp()};
+  if(!id){
+    const ref = db.collection('newplan').doc();
+    await ref.set(Object.assign({}, data, stamp, {rev: 1, createdBy: actorName(), createdByUid: myUid(), createdAt: fsTimestamp()}));
+    return {id: ref.id, rev: 1};
+  }
+  const ref = db.collection('newplan').doc(id);
+  let newRev = (rev||1) + 1;
+  await db.runTransaction(async tx=>{
+    const snap = await tx.get(ref);
+    if(!snap.exists) throw new Error('รายการนี้ถูกลบไปแล้วโดยผู้อื่น');
+    const serverRev = Number(snap.data().rev) || 1;
+    if(serverRev !== (rev||1) && !force){ const e = new Error('conflict'); e.conflicts = [snap.data().updatedBy || 'ผู้อื่น']; throw e; }
+    newRev = serverRev + 1;
+    tx.set(ref, Object.assign({}, data, stamp, {rev: newRev}), {merge:true});
+  });
+  return {id, rev: newRev};
+}
+async function npPersist(fn, auditText){
+  try{
+    await fn();
+    if(connected) await firestoreLogAudit('', 'newplan', auditText, '');
+    else await saveLocalFallback();
+    return true;
+  }catch(e){
+    if(e && e.conflicts){
+      if(confirm('รายการนี้ถูกแก้ไขโดย ' + e.conflicts[0] + ' หลังจากที่คุณเปิดฟอร์ม\n\nOK = บันทึกทับด้วยข้อมูลของคุณ\nCancel = ยกเลิก (ข้อมูลในฟอร์มยังอยู่)')) return 'force';
+      return false;
+    }
+    showToast('บันทึกไม่สำเร็จ: ' + friendlyError(e), true);
+    return false;
+  }
+}
+
+function renderNewPlanTab(){
+  const notice = document.getElementById('newplanNotice');
+  if(notice) notice.innerHTML = newPlanRulesMissing
+    ? '<div class="offline-banner error"><b>⚠️ ยังอ่าน/บันทึกร่างแผนใหม่ไม่ได้</b><span>ผู้บริหารต้องนำ Security Rules ชุดล่าสุด (แท็บ &ldquo;จัดการผู้ใช้&rdquo;) ไป Publish ใน Firebase Console ก่อน</span></div>' : '';
+  renderNpMeta(); renderNpStructure(); renderNpTrace();
+}
+function renderNpMeta(){
+  const el = document.getElementById('npMeta');
+  if(!el) return;
+  const can = npCanEdit();
+  const M = newPlan.meta;
+  const ro = can ? '' : 'readonly';
+  el.innerHTML = `
+    <div class="proj-grid">
+      <div class="span2"><div class="field-label">วิสัยทัศน์ (Vision)</div><textarea class="reason-input np-vision" data-np-meta="vision" ${ro} placeholder="ภาพอนาคตที่มูลนิธิต้องการเป็นภายในปี 2575">${escapeHtml(M.vision)}</textarea></div>
+      <div><div class="field-label">พันธกิจ (Mission) — บรรทัดละ 1 ข้อ</div><textarea class="reason-input" style="min-height:120px;" data-np-meta="mission" ${ro}>${escapeHtml(M.mission)}</textarea></div>
+      <div><div class="field-label">ค่านิยม / หลักการ (ไม่บังคับ)</div><textarea class="reason-input" style="min-height:120px;" data-np-meta="values" ${ro}>${escapeHtml(M.values)}</textarea></div>
+    </div>
+    ${can ? `<div class="block-actions"><button class="btn-light btn-light-solid" id="btnNpSaveMeta">บันทึกวิสัยทัศน์/พันธกิจ</button><span class="unsaved-note" id="npMetaUnsaved" style="display:none;">ยังไม่บันทึก</span></div>` : ''}`;
+}
+function npSourceChips(t, labels){
+  const chips = [];
+  (t.sources.items||[]).forEach(id=>{
+    const it = DATA.items.find(x=>x.id===id); if(!it) return;
+    const d = (evalState[id]||{}).decision || {};
+    chips.push(`<span class="src-chip src-old" title="${escapeHtml(it.text)}">เดิม ${it.strategyId}.${it.num}${d.decision ? ' · ' + escapeHtml(DECISIONS[d.decision].label) : ''}</span>`);
+  });
+  (t.sources.proposals||[]).forEach(pid=>{ const p = proposals.find(x=>x.proposalId===pid); if(p) chips.push(`<span class="src-chip src-prop">ข้อเสนอ: ${escapeHtml(p.title.slice(0,40))}</span>`); });
+  (t.sources.analysis||[]).forEach(aid=>{ const a = analysisItems.find(x=>x.id===aid); if(a) chips.push(`<span class="src-chip src-tows">${escapeHtml(a.quadrant)}: ${escapeHtml(a.text.slice(0,40))}</span>`); });
+  return chips.length ? chips.join('') : '<span class="muted">ยังไม่ระบุที่มา</span>';
+}
+function renderNpStructure(){
+  const el = document.getElementById('npStructure');
+  if(!el) return;
+  const can = npCanEdit();
+  const labels = npLabels();
+  const strategies = npSortedStrategies();
+  const body = strategies.map(s=>{
+    const tactics = npTacticsOf(s.id);
+    return `
+    <div class="np-strategy" data-np-strategy="${escapeHtml(s.id)}">
+      <div class="np-s-head">
+        <div><div class="np-s-no">ยุทธศาสตร์ที่ ${labels[s.id]}</div><div class="np-s-name">${escapeHtml(s.name)}</div>${s.goal ? `<div class="np-s-goal">เป้าประสงค์: ${escapeHtml(s.goal)}</div>` : ''}</div>
+        ${can ? `<div class="np-actions"><button class="btn-tiny" data-np-edit-strategy="${escapeHtml(s.id)}">✎ แก้ไข</button><button class="btn-tiny danger" data-np-del-strategy="${escapeHtml(s.id)}">ลบ</button></div>` : ''}
+      </div>
+      <div class="np-form-host" id="npsform-${escapeHtml(s.id)}"></div>
+      ${tactics.map(t=>`
+        <div class="np-tactic">
+          <div class="np-t-head">
+            <div><b class="np-t-no">${labels[t.id]}</b> <span class="np-t-name">${escapeHtml(t.name)}</span>${t.owner ? `<div class="muted">ผู้รับผิดชอบ: ${escapeHtml(t.owner)}</div>` : ''}</div>
+            ${can ? `<div class="np-actions"><button class="btn-tiny" data-np-edit-tactic="${escapeHtml(t.id)}">✎ แก้ไข</button><button class="btn-tiny danger" data-np-del-tactic="${escapeHtml(t.id)}">ลบ</button></div>` : ''}
+          </div>
+          <div class="np-sources">${npSourceChips(t, labels)}</div>
+          ${t.kpis.length ? `<div class="table-scroll"><table class="np-kpi"><tr><th>ตัวชี้วัด</th><th>หน่วย</th><th>ค่าฐาน</th>${NEW_YEARS.map(y=>`<th>${y}</th>`).join('')}</tr>
+            ${t.kpis.map(k=>`<tr><td>${escapeHtml(k.name)}</td><td>${escapeHtml(k.unit)}</td><td class="num">${escapeHtml(String(k.baseline ?? ''))}</td>${NEW_YEARS.map(y=>`<td class="num">${escapeHtml(String(k.targets[y] ?? ''))}</td>`).join('')}</tr>`).join('')}</table></div>`
+            : '<div class="np-warn">⚠ ยังไม่มีตัวชี้วัด</div>'}
+          <div class="np-form-host" id="nptform-${escapeHtml(t.id)}"></div>
+        </div>`).join('')}
+      ${can ? `<button class="btn-tiny" data-np-new-tactic="${escapeHtml(s.id)}" style="margin-top:8px;">+ เพิ่มกลยุทธ์ในยุทธศาสตร์นี้</button><div class="np-form-host" id="npnewt-${escapeHtml(s.id)}"></div>` : ''}
+    </div>`;
+  }).join('');
+  el.innerHTML = `
+    ${strategies.length ? body : `<div class="np-empty">
+      <p>ยังไม่มีโครงสร้างแผนใหม่</p>
+      ${can ? `<p class="muted">เริ่มจากศูนย์ หรือให้ระบบสร้าง <b>ร่างตั้งต้นจากมติ</b>: คงยุทธศาสตร์เดิมไว้ก่อน สร้างกลยุทธ์จากกลยุทธ์เดิมที่มติให้คงไว้/ปรับปรุง รวมกลยุทธ์ที่มติให้ควบรวม ตัดกลยุทธ์ที่มติให้ยุติ และดึงตัวชี้วัดเดิมพร้อมค่าฐานล่าสุดมาให้ แล้วค่อยแก้ไขต่อ</p>
+        <button class="btn-light btn-light-solid" id="btnNpSeed">✨ สร้างร่างตั้งต้นจากมติ</button>` : ''}
+    </div>`}
+    ${can ? `<div style="margin-top:12px;"><button class="btn-tiny success" id="btnNpNewStrategy" style="padding:8px 14px;">+ เพิ่มยุทธศาสตร์</button><div class="np-form-host" id="npnews"></div></div>` : ''}`;
+}
+function npStrategyFormHtml(s){
+  s = s || {name:'', goal:''};
+  return `<div class="addeval-form show np-form" data-np-kind="strategy" data-np-id="${escapeHtml(s.id||'')}" data-rev="${s.rev||0}">
+    <div class="addeval-header">${s.id ? 'แก้ไขยุทธศาสตร์' : 'เพิ่มยุทธศาสตร์ใหม่'}</div>
+    <div class="field-label">ชื่อยุทธศาสตร์ *</div><input class="meta-input" data-np-f="name" value="${escapeHtml(s.name)}">
+    <div class="field-label" style="margin-top:8px;">เป้าประสงค์</div><textarea class="reason-input" data-np-f="goal">${escapeHtml(s.goal||'')}</textarea>
+    <div class="block-actions"><button class="btn-light btn-light-solid" data-np-save>บันทึก</button><button class="btn-light" data-np-cancel>ยกเลิก</button></div>
+  </div>`;
+}
+function npKpiRowHtml(k){
+  k = k || {name:'', unit:'', baseline:'', targets:{}};
+  return `<tr class="np-kpi-row"><td><input class="meta-input" data-k="name" value="${escapeHtml(k.name)}" placeholder="ชื่อตัวชี้วัด"></td>
+    <td><input class="meta-input" data-k="unit" value="${escapeHtml(k.unit)}" placeholder="หน่วย"></td>
+    <td><input class="meta-input" data-k="baseline" value="${escapeHtml(String(k.baseline ?? ''))}" placeholder="ค่าฐาน"></td>
+    ${NEW_YEARS.map(y=>`<td><input class="meta-input" data-k="t${y}" value="${escapeHtml(String(k.targets[y] ?? ''))}"></td>`).join('')}
+    <td><button class="quad-del" data-np-del-kpi title="ลบแถว">✕</button></td></tr>`;
+}
+function npTacticFormHtml(t, sid){
+  t = npNormTactic(t || {strategyRef: sid});
+  const usedElsewhere = id => newPlan.tactics.some(x=>x.id!==t.id && (x.sources.items||[]).includes(id));
+  const oldItems = DATA.items.map(it=>{
+    const d = ((evalState[it.id]||{}).decision||{}).decision;
+    return `<label class="np-check"><input type="checkbox" data-np-src="items" value="${it.id}" ${t.sources.items.includes(it.id)?'checked':''}>
+      <span><b>${it.strategyId}.${it.num}</b> ${escapeHtml(it.text.slice(0,70))}${it.text.length>70?'…':''} ${d ? `<span class="decision-chip dc-${DECISIONS[d].color}">${DECISIONS[d].label}</span>` : ''}${usedElsewhere(it.id) ? ' <span class="muted">(ใช้ในกลยุทธ์อื่นแล้ว)</span>' : ''}</span></label>`;
+  }).join('');
+  const props = proposals.map(p=>`<label class="np-check"><input type="checkbox" data-np-src="proposals" value="${escapeHtml(p.proposalId)}" ${t.sources.proposals.includes(p.proposalId)?'checked':''}><span>${escapeHtml(p.title)}</span></label>`).join('') || '<span class="muted">ยังไม่มีข้อเสนอ</span>';
+  const tows = analysisItems.filter(a=>TOWS_Q[a.quadrant]).map(a=>`<label class="np-check"><input type="checkbox" data-np-src="analysis" value="${escapeHtml(a.id)}" ${t.sources.analysis.includes(a.id)?'checked':''}><span><b>${a.quadrant}</b> ${escapeHtml(a.text)}</span></label>`).join('') || '<span class="muted">ยังไม่มีรายการ TOWS</span>';
+  return `<div class="addeval-form show np-form" data-np-kind="tactic" data-np-id="${escapeHtml(t.id||'')}" data-np-sid="${escapeHtml(t.strategyRef)}" data-rev="${t.rev||0}">
+    <div class="addeval-header">${t.id ? 'แก้ไขกลยุทธ์' : 'เพิ่มกลยุทธ์ใหม่'}</div>
+    <div class="proj-grid">
+      <div class="span2"><div class="field-label">ชื่อกลยุทธ์ *</div><input class="meta-input" data-np-f="name" value="${escapeHtml(t.name)}"></div>
+      <div><div class="field-label">ผู้รับผิดชอบหลัก</div><input class="meta-input" data-np-f="owner" value="${escapeHtml(t.owner)}"></div>
+    </div>
+    <div class="field-label" style="margin-top:10px;">ที่มาของกลยุทธ์ (ใช้ตรวจย้อนว่าทุกมติถูกนำมาใช้)</div>
+    <div class="np-src-grid">
+      <div><div class="np-src-t">กลยุทธ์เดิม (แผน 2566-2570)</div><div class="np-src-box">${oldItems}</div></div>
+      <div><div class="np-src-t">ข้อเสนอกลยุทธ์ใหม่</div><div class="np-src-box">${props}</div>
+        <div class="np-src-t" style="margin-top:8px;">ทางเลือกจาก TOWS</div><div class="np-src-box">${tows}</div></div>
+    </div>
+    <div class="field-label" style="margin-top:10px;">ตัวชี้วัดและค่าเป้าหมาย</div>
+    <div class="table-scroll"><table class="np-kpi np-kpi-edit"><tr><th>ตัวชี้วัด</th><th>หน่วย</th><th>ค่าฐาน</th>${NEW_YEARS.map(y=>`<th>${y}</th>`).join('')}<th></th></tr>
+      <tbody data-np-kpis>${t.kpis.map(npKpiRowHtml).join('')}</tbody></table></div>
+    <button class="btn-tiny" data-np-add-kpi style="margin-top:6px;">+ เพิ่มตัวชี้วัด</button>
+    <div class="block-actions"><button class="btn-light btn-light-solid" data-np-save>บันทึกกลยุทธ์</button><button class="btn-light" data-np-cancel>ยกเลิก</button></div>
+  </div>`;
+}
+function npReadForm(form){
+  const data = {};
+  form.querySelectorAll('[data-np-f]').forEach(i=>{ data[i.dataset.npF] = i.value.trim(); });
+  if(form.dataset.npKind === 'tactic'){
+    data.sources = {items:[], proposals:[], analysis:[]};
+    form.querySelectorAll('[data-np-src]:checked').forEach(c=>data.sources[c.dataset.npSrc].push(c.value));
+    data.kpis = [];
+    form.querySelectorAll('.np-kpi-row').forEach(r=>{
+      const g = k => r.querySelector(`[data-k="${k}"]`).value.trim();
+      const k = {name: g('name'), unit: g('unit'), baseline: g('baseline'), targets: {}};
+      NEW_YEARS.forEach(y=>{ const v = g('t'+y); if(v!=='') k.targets[y] = v; });
+      if(k.name) data.kpis.push(k);
+    });
+  }
+  return data;
+}
+async function npSaveForm(form, force){
+  const kind = form.dataset.npKind;
+  const id = form.dataset.npId || null;
+  const rev = Number(form.dataset.rev) || 0;
+  const data = npReadForm(form);
+  if(!data.name){ showToast('กรุณาระบุชื่อ' + (kind==='strategy' ? 'ยุทธศาสตร์' : 'กลยุทธ์'), true); return; }
+  let saved = null;
+  let docData;
+  if(kind === 'strategy'){
+    const prev = newPlan.strategies.find(s=>s.id===id);
+    docData = {kind:'strategy', name: data.name, goal: data.goal||'', order: prev ? prev.order : Date.now()};
+  } else {
+    const sid = form.dataset.npSid;
+    const prev = newPlan.tactics.find(t=>t.id===id);
+    docData = {kind:'tactic', strategyRef: sid, name: data.name, owner: data.owner||'', sources: data.sources, kpis: data.kpis, order: prev ? prev.order : Date.now()};
+  }
+  const r = await npPersist(async()=>{ saved = await npSaveDoc(id, docData, rev || 1, !!force); }, (id ? 'แก้ไข' : 'เพิ่ม') + (kind==='strategy' ? 'ยุทธศาสตร์' : 'กลยุทธ์') + 'ในร่างแผนใหม่: ' + data.name);
+  if(r === 'force') return npSaveForm(form, true);
+  if(!r) return;
+  // อัปเดตสถานะในหน้า (โหมดออฟไลน์บันทึกหลังอัปเดต)
+  if(kind === 'strategy'){
+    const obj = {id: saved.id, name: docData.name, goal: docData.goal, order: docData.order, rev: saved.rev};
+    const i = newPlan.strategies.findIndex(s=>s.id===saved.id);
+    if(i>=0) newPlan.strategies[i] = obj; else newPlan.strategies.push(obj);
+  } else {
+    const obj = npNormTactic(Object.assign({id: saved.id, rev: saved.rev}, docData));
+    const i = newPlan.tactics.findIndex(t=>t.id===saved.id);
+    if(i>=0) newPlan.tactics[i] = obj; else newPlan.tactics.push(obj);
+  }
+  if(!connected) await saveLocalFallback();
+  showSuccessPopup('บันทึกแล้ว');
+  renderNewPlanTab();
+}
+async function npDelete(kind, id){
+  const labels = npLabels();
+  if(kind === 'strategy'){
+    const s = newPlan.strategies.find(x=>x.id===id);
+    const ts = npTacticsOf(id);
+    if(!confirm(`ลบยุทธศาสตร์ที่ ${labels[id]} "${s ? s.name : ''}"${ts.length ? ` และกลยุทธ์ภายใต้ ${ts.length} รายการ` : ''}?`)) return;
+    const r = await npPersist(async()=>{ if(connected){ for(const t of ts) await db.collection('newplan').doc(t.id).delete(); await db.collection('newplan').doc(id).delete(); } }, 'ลบยุทธศาสตร์ในร่างแผนใหม่: ' + (s ? s.name : ''));
+    if(!r) return;
+    newPlan.tactics = newPlan.tactics.filter(t=>t.strategyRef!==id);
+    newPlan.strategies = newPlan.strategies.filter(x=>x.id!==id);
+  } else {
+    const t = newPlan.tactics.find(x=>x.id===id);
+    if(!confirm(`ลบกลยุทธ์ ${labels[id]} "${t ? t.name : ''}"?`)) return;
+    const r = await npPersist(async()=>{ if(connected) await db.collection('newplan').doc(id).delete(); }, 'ลบกลยุทธ์ในร่างแผนใหม่: ' + (t ? t.name : ''));
+    if(!r) return;
+    newPlan.tactics = newPlan.tactics.filter(x=>x.id!==id);
+  }
+  if(!connected) await saveLocalFallback();
+  renderNewPlanTab();
+}
+/** สร้างร่างตั้งต้นจากมติ: ยุทธศาสตร์เดิม 4 ด้าน + กลยุทธ์จากมติคงไว้/ปรับ/ควบรวม พร้อมตัวชี้วัดและค่าฐานล่าสุด */
+async function npSeedFromDecisions(){
+  const undecided = DATA.items.filter(it=>!(((evalState[it.id]||{}).decision||{}).decision));
+  if(!confirm(`สร้างร่างตั้งต้นจากมติ?${undecided.length ? `\n\nหมายเหตุ: มี ${undecided.length} กลยุทธ์ที่ยังไม่มีมติ — ระบบจะใส่ไว้ก่อนเหมือน "คงไว้" และแสดงเตือนในตารางตรวจย้อน` : ''}`)) return;
+  const base = Date.now();
+  const ops = [];
+  DATA.strategies.forEach((s, si)=>{
+    const sDoc = {kind:'strategy', name: s.name, goal: s.goal, order: base + si*1000};
+    const tacticDocs = [];
+    DATA.items.filter(it=>it.strategyId===s.id).forEach((it, ti)=>{
+      const d = ((evalState[it.id]||{}).decision||{});
+      if(d.decision === 'discontinue' || d.decision === 'merge') return;
+      const merged = DATA.items.filter(x=>{ const dx = (evalState[x.id]||{}).decision||{}; return dx.decision === 'merge' && dx.mergeWith === it.id; }).map(x=>x.id);
+      const inds = getIndicatorsForItem(it, evalState[it.id] || {});
+      const kpis = inds.map(ind=>{ const last = latestActualOf(ind); return {name: ind.text, unit: ind.unit || '', baseline: indType(ind)==='binary' ? (last ? (last.value>=1?'มี':'ไม่มี') : '') : (last ? String(last.value) : ''), targets: {}}; });
+      tacticDocs.push({kind:'tactic', name: it.text, owner: it.owner, sources: {items: [it.id, ...merged], proposals: [], analysis: []}, kpis, order: base + si*1000 + ti + 1});
+    });
+    ops.push({sDoc, tacticDocs});
+  });
+  const r = await npPersist(async()=>{
+    for(const op of ops){
+      const sSaved = await npSaveDoc(null, op.sDoc, 0, false);
+      newPlan.strategies.push({id: sSaved.id, name: op.sDoc.name, goal: op.sDoc.goal, order: op.sDoc.order, rev: sSaved.rev});
+      for(const td of op.tacticDocs){
+        td.strategyRef = sSaved.id;
+        const tSaved = await npSaveDoc(null, td, 0, false);
+        newPlan.tactics.push(npNormTactic(Object.assign({id: tSaved.id, rev: tSaved.rev}, td)));
+      }
+    }
+  }, 'สร้างร่างแผนใหม่ตั้งต้นจากมติ');
+  if(!r) return;
+  if(!connected) await saveLocalFallback();
+  showSuccessPopup('สร้างร่างตั้งต้นแล้ว');
+  renderNewPlanTab();
+}
+
+/** ตรวจย้อน: แต่ละกลยุทธ์เดิมถูกนำไปใช้ตามมติหรือไม่ */
+function npTraceRows(){
+  const labels = npLabels();
+  return DATA.items.map(it=>{
+    const d = ((evalState[it.id]||{}).decision||{}).decision || '';
+    const usedIn = newPlan.tactics.filter(t=>(t.sources.items||[]).includes(it.id)).map(t=>({id: t.id, label: labels[t.id] || '?', name: t.name}));
+    let status, cls;
+    if(!d){ status = usedIn.length ? 'ใช้ในแผนใหม่แล้ว แต่ยังไม่มีมติ' : 'ยังไม่มีมติ'; cls = 'grey'; }
+    else if(d === 'discontinue'){ status = usedIn.length ? 'มติให้ยุติ แต่ยังถูกอ้างอิงในแผนใหม่' : 'ยุติตามมติ'; cls = usedIn.length ? 'red' : 'green'; }
+    else if(d === 'merge'){
+      const target = ((evalState[it.id]||{}).decision||{}).mergeWith;
+      const ok = usedIn.length && (!target || usedIn.some(u=>newPlan.tactics.find(t=>t.id===u.id).sources.items.includes(target)));
+      status = !usedIn.length ? 'มติให้ควบรวม แต่ยังไม่อยู่ในแผนใหม่' : ok ? 'ควบรวมแล้ว' : 'อยู่ในแผนใหม่ แต่ไม่ได้รวมกับกลยุทธ์ปลายทางตามมติ';
+      cls = usedIn.length && ok ? 'green' : 'orange';
+    } else { status = usedIn.length ? 'นำไปใช้แล้ว' : 'มติให้คงไว้/ปรับปรุง แต่ยังไม่อยู่ในแผนใหม่'; cls = usedIn.length ? 'green' : 'orange'; }
+    return {it, d, usedIn, status, cls};
+  });
+}
+function renderNpTrace(){
+  const el = document.getElementById('npTrace');
+  if(!el) return;
+  const rows = npTraceRows();
+  const ok = rows.filter(r=>r.cls==='green').length, warn = rows.filter(r=>r.cls==='orange' || r.cls==='red').length, nod = rows.filter(r=>r.cls==='grey').length;
+  const usedProps = new Set(newPlan.tactics.flatMap(t=>t.sources.proposals||[]));
+  const usedTows = new Set(newPlan.tactics.flatMap(t=>t.sources.analysis||[]));
+  const unusedProps = proposals.filter(p=>!usedProps.has(p.proposalId));
+  const unusedTows = analysisItems.filter(a=>TOWS_Q[a.quadrant] && !usedTows.has(a.id));
+  const noKpi = newPlan.tactics.filter(t=>!t.kpis.length);
+  const noTarget = newPlan.tactics.filter(t=>t.kpis.length && t.kpis.some(k=>!NEW_YEARS.some(y=>k.targets[y]!==undefined && k.targets[y]!=='')));
+  const labels = npLabels();
+  el.innerHTML = `
+    <div class="trace-summary">
+      <span class="rel-chip rel-high">สอดคล้องกับมติ ${ok}</span>
+      <span class="rel-chip rel-low">ต้องตรวจสอบ ${warn}</span>
+      <span class="rel-chip">ยังไม่มีมติ ${nod}</span>
+    </div>
+    <div class="table-scroll"><table class="syn-table trace-table">
+      <tr><th>กลยุทธ์เดิม</th><th>มติ</th><th>อยู่ในแผนใหม่ที่</th><th>ผลการตรวจ</th></tr>
+      ${rows.map(r=>`<tr><td class="syn-name"><b>${r.it.strategyId}.${r.it.num}</b> ${escapeHtml(r.it.text)}</td>
+        <td>${r.d ? `<span class="decision-chip dc-${DECISIONS[r.d].color}">${DECISIONS[r.d].label}</span>` : '<span class="muted">ยังไม่มีมติ</span>'}</td>
+        <td>${r.usedIn.length ? r.usedIn.map(u=>`<div><b>${u.label}</b> ${escapeHtml(u.name.slice(0,50))}${u.name.length>50?'…':''}</div>`).join('') : '<span class="muted">—</span>'}</td>
+        <td><span class="trace-st trace-${r.cls}">${r.cls==='green'?'✓':r.cls==='grey'?'•':'⚠'} ${escapeHtml(r.status)}</span></td></tr>`).join('')}
+    </table></div>
+    <div class="trace-lists">
+      <div><div class="field-label">ข้อเสนอที่ยังไม่ถูกนำไปใช้ (${unusedProps.length})</div>${unusedProps.length ? `<ul class="rel-list">${unusedProps.map(p=>`<li>${escapeHtml(p.title)} <span class="muted">· ความสำคัญ${({high:'สูง',medium:'กลาง',low:'ต่ำ'})[p.priority]||''}</span></li>`).join('')}</ul>` : '<p class="muted">ครบแล้ว</p>'}</div>
+      <div><div class="field-label">ทางเลือก TOWS ที่ยังไม่ถูกนำไปใช้ (${unusedTows.length})</div>${unusedTows.length ? `<ul class="rel-list">${unusedTows.map(a=>`<li><b>${a.quadrant}</b> ${escapeHtml(a.text)}</li>`).join('')}</ul>` : '<p class="muted">ครบแล้ว</p>'}</div>
+      <div><div class="field-label">คุณภาพตัวชี้วัดในแผนใหม่</div><ul class="rel-list">
+        ${noKpi.length ? `<li>⚠ กลยุทธ์ที่ยังไม่มีตัวชี้วัด: ${noKpi.map(t=>labels[t.id]).join(', ')}</li>` : '<li>✓ ทุกกลยุทธ์มีตัวชี้วัด</li>'}
+        ${noTarget.length ? `<li>⚠ มีตัวชี้วัดที่ยังไม่กำหนดค่าเป้าหมาย: ${noTarget.map(t=>labels[t.id]).join(', ')}</li>` : (newPlan.tactics.length ? '<li>✓ ตัวชี้วัดมีค่าเป้าหมาย</li>' : '')}
+      </ul></div>
+    </div>`;
+}
+document.getElementById('view-newplan').addEventListener('click', async (e)=>{
+  const t = e.target;
+  if(t.closest('#btnNpSaveMeta')){
+    const fields = {};
+    document.querySelectorAll('[data-np-meta]').forEach(i=>{ const f = i.dataset.npMeta; if(!sameText(i.value, newPlan.meta[f])) fields[f] = i.value; });
+    if(!Object.keys(fields).length){ showToast('ไม่มีข้อมูลที่เปลี่ยนแปลง'); return; }
+    const save = async force => {
+      if(connected) await saveFieldsDoc('newplan', 'meta', fields, newPlan.meta, {kind:'meta', updatedBy: actorName(), updatedByUid: myUid(), updatedAt: fsTimestamp()}, {vision:'วิสัยทัศน์', mission:'พันธกิจ', values:'ค่านิยม'}, force);
+    };
+    let r = await npPersist(()=>save(false), 'แก้ไขวิสัยทัศน์/พันธกิจของแผนใหม่');
+    if(r === 'force') r = await npPersist(()=>save(true), 'แก้ไขวิสัยทัศน์/พันธกิจของแผนใหม่ (เขียนทับ)');
+    if(!r) return;
+    Object.assign(newPlan.meta, fields);
+    if(!connected) await saveLocalFallback();
+    showSuccessPopup('บันทึกแล้ว');
+    renderNpMeta();
+    return;
+  }
+  if(t.closest('#btnNpSeed')){ await npSeedFromDecisions(); return; }
+  if(t.closest('#btnNpNewStrategy')){ document.getElementById('npnews').innerHTML = npStrategyFormHtml(null); return; }
+  const es = t.closest('[data-np-edit-strategy]');
+  if(es){ const s = newPlan.strategies.find(x=>x.id===es.dataset.npEditStrategy); document.getElementById('npsform-' + s.id).innerHTML = npStrategyFormHtml(s); return; }
+  const ds = t.closest('[data-np-del-strategy]');
+  if(ds){ await npDelete('strategy', ds.dataset.npDelStrategy); return; }
+  const nt = t.closest('[data-np-new-tactic]');
+  if(nt){ const sid = nt.dataset.npNewTactic; document.getElementById('npnewt-' + sid).innerHTML = npTacticFormHtml(null, sid); return; }
+  const et = t.closest('[data-np-edit-tactic]');
+  if(et){ const tt = newPlan.tactics.find(x=>x.id===et.dataset.npEditTactic); document.getElementById('nptform-' + tt.id).innerHTML = npTacticFormHtml(tt, tt.strategyRef); return; }
+  const dt = t.closest('[data-np-del-tactic]');
+  if(dt){ await npDelete('tactic', dt.dataset.npDelTactic); return; }
+  if(t.closest('[data-np-add-kpi]')){ t.closest('.np-form').querySelector('[data-np-kpis]').insertAdjacentHTML('beforeend', npKpiRowHtml(null)); return; }
+  if(t.closest('[data-np-del-kpi]')){ t.closest('.np-kpi-row').remove(); return; }
+  if(t.closest('[data-np-cancel]')){ t.closest('.np-form').remove(); return; }
+  if(t.closest('[data-np-save]')){ await npSaveForm(t.closest('.np-form')); return; }
+});
+document.getElementById('view-newplan').addEventListener('input', (e)=>{
+  if(e.target.closest('[data-np-meta]')){ const n = document.getElementById('npMetaUnsaved'); if(n) n.style.display = 'inline'; }
+});
+document.getElementById('tabbar').addEventListener('click', (e)=>{
+  const btn = e.target.closest('.tab-btn');
+  if(btn && btn.dataset.tab === 'newplan') renderNewPlanTab();
+});
+const __renderAllTabsNp = renderAllTabs;
+renderAllTabs = function(){ __renderAllTabsNp(); renderNewPlanTab(); };
+
+/* ---------- Excel: ชีตเพิ่มเติม ---------- */
+const __appendMethodologySheetsNp = appendMethodologySheets;
+appendMethodologySheets = function(wb){
+  __appendMethodologySheetsNp(wb);
+  const sheet = (rows, cols, name)=>{ const ws = XLSX.utils.aoa_to_sheet(rows); ws['!cols'] = cols.map(w=>({wch:w})); XLSX.utils.book_append_sheet(wb, ws, name); };
+  const rel = [['ยุทธศาสตร์ที่','กลยุทธ์ที่','กลยุทธ์','จำนวนผู้ประเมิน','ความต่างสูงสุด (คะแนน)','ดัชนีหลักฐาน (0-1)','ระดับความน่าเชื่อถือ','ควรหารือเพิ่ม','ข้อสังเกต']];
+  DATA.items.forEach(it=>{ const r = itemReliability(it.id); rel.push([it.strategyId, it.num, it.text, r ? r.n : 0, r ? r.maxRange : '', r && r.evidScore!==null ? Number(r.evidScore.toFixed(2)) : '', r ? REL_LEVEL[r.level].label : 'ยังไม่ประเมิน', r && r.needsDiscussion ? 'ใช่' : '', r ? r.flags.join(' · ') : '']); });
+  sheet(rel, [8,8,40,12,14,14,16,10,60], 'ความน่าเชื่อถือ');
+  const pe = [['ด้าน','ปัจจัย/แนวโน้ม','โอกาส/อุปสรรค','ระดับผลกระทบ','อยู่ใน SWOT แล้ว','ผู้เพิ่ม']];
+  analysisItems.filter(a=>PESTEL_Q[a.quadrant]).forEach(a=>pe.push([PESTEL_Q[a.quadrant].label, a.text, PESTEL_KIND[a.kind]||'', PESTEL_IMPACT[a.impact]||'', pestelInSwot(a)?'ใช่':'', a.author||'']));
+  sheet(pe, [26,60,12,16,14,18], 'PESTEL');
+  const labels = npLabels();
+  const np = [['วิสัยทัศน์', newPlan.meta.vision], ['พันธกิจ', newPlan.meta.mission], ['ค่านิยม', newPlan.meta.values], [],
+    ['ยุทธศาสตร์','ชื่อยุทธศาสตร์','กลยุทธ์','ชื่อกลยุทธ์','ผู้รับผิดชอบ','ที่มา (กลยุทธ์เดิม)','ตัวชี้วัด','หน่วย','ค่าฐาน', ...NEW_YEARS]];
+  npSortedStrategies().forEach(s=>{
+    const ts = npTacticsOf(s.id);
+    if(!ts.length) np.push([labels[s.id], s.name]);
+    ts.forEach(t=>{
+      const src = (t.sources.items||[]).map(id=>{ const it = DATA.items.find(x=>x.id===id); return it ? it.strategyId + '.' + it.num : id; }).join(', ');
+      if(!t.kpis.length) np.push([labels[s.id], s.name, labels[t.id], t.name, t.owner, src]);
+      t.kpis.forEach(k=>np.push([labels[s.id], s.name, labels[t.id], t.name, t.owner, src, k.name, k.unit, k.baseline, ...NEW_YEARS.map(y=>k.targets[y] ?? '')]));
+    });
+  });
+  sheet(np, [12,30,10,40,18,16,45,10,10,10,10,10,10,10], 'ร่างแผน 2571-2575');
+  const tr = [['ยุทธศาสตร์ที่','กลยุทธ์ที่','กลยุทธ์เดิม','มติ','อยู่ในแผนใหม่ที่','ผลการตรวจ']];
+  npTraceRows().forEach(r=>tr.push([r.it.strategyId, r.it.num, r.it.text, r.d ? DECISIONS[r.d].label : 'ยังไม่มีมติ', r.usedIn.map(u=>u.label).join(', '), r.status]));
+  sheet(tr, [8,8,40,22,16,40], 'ตรวจย้อนมติ');
+};
+
+/* ---------- รายงาน PDF: ส่วนเพิ่มเติม ---------- */
+function rpRelHtml(itemId){
+  const r = itemReliability(itemId);
+  if(!r) return '';
+  return `<div class="rp-rel rp-rel-${r.level}"><b>ความน่าเชื่อถือของผลประเมิน: ${REL_LEVEL[r.level].label}</b>${r.needsDiscussion ? ' · ⚑ ควรหารือเพิ่ม' : ''}
+    <span class="rp-muted"> — ผู้ประเมิน ${r.n} คน, ความต่างสูงสุด ${r.maxRange} คะแนน${r.flags.length ? '; ' + escapeHtml(r.flags.join('; ')) : ''}</span></div>`;
+}
+function rpPestel(){
+  const items = analysisItems.filter(a=>PESTEL_Q[a.quadrant]);
+  if(!items.length) return rpEmpty('ยังไม่ได้วิเคราะห์ PESTEL');
+  return `<table class="rp-table rp-compact rp-fixed">${rpCols([22,52,13,13])}<thead><tr><th>ด้าน</th><th>ปัจจัย/แนวโน้ม</th><th class="c">ประเภท</th><th class="c">ผลกระทบ</th></tr></thead><tbody>
+    ${Object.keys(PESTEL_Q).flatMap(q=>items.filter(a=>a.quadrant===q).map(a=>`<tr><td>${escapeHtml(PESTEL_Q[q].label)}</td><td>${escapeHtml(a.text)}</td>
+      <td class="c">${a.kind ? rpBadge(a.kind==='opportunity'?'green':'red', PESTEL_KIND[a.kind]) : '–'}</td><td class="c">${escapeHtml((PESTEL_IMPACT[a.impact]||'–').replace('ผลกระทบ',''))}</td></tr>`)).join('')}</tbody></table>`;
+}
+function rpNewPlan(){
+  const labels = npLabels();
+  const M = newPlan.meta;
+  const strategies = npSortedStrategies();
+  const rows = npTraceRows();
+  const struct = strategies.length ? strategies.map(s=>{
+    const ts = npTacticsOf(s.id);
+    return `<div class="rp-np-s"><div class="rp-np-s-head">ยุทธศาสตร์ที่ ${labels[s.id]}: ${escapeHtml(s.name)}</div>${s.goal ? `<p class="rp-muted">เป้าประสงค์: ${escapeHtml(s.goal)}</p>` : ''}
+      ${ts.map(t=>{
+        const src = [...(t.sources.items||[]).map(id=>{ const it = DATA.items.find(x=>x.id===id); return it ? 'เดิม ' + it.strategyId + '.' + it.num : ''; }),
+          ...(t.sources.proposals||[]).map(pid=>{ const p = proposals.find(x=>x.proposalId===pid); return p ? 'ข้อเสนอ: ' + p.title : ''; }),
+          ...(t.sources.analysis||[]).map(aid=>{ const a = analysisItems.find(x=>x.id===aid); return a ? a.quadrant + ': ' + a.text : ''; })].filter(Boolean);
+        return `<div class="rp-np-t"><b>กลยุทธ์ ${labels[t.id]}</b> ${escapeHtml(t.name)}${t.owner ? ` <span class="rp-muted">(${escapeHtml(t.owner)})</span>` : ''}
+          ${src.length ? `<div class="rp-muted">ที่มา: ${escapeHtml(src.join(' · '))}</div>` : ''}
+          ${t.kpis.length ? `<table class="rp-table rp-compact"><thead><tr><th>ตัวชี้วัด</th><th class="c">หน่วย</th><th class="c">ค่าฐาน</th>${NEW_YEARS.map(y=>`<th class="c">${y}</th>`).join('')}</tr></thead><tbody>
+            ${t.kpis.map(k=>`<tr><td>${escapeHtml(k.name)}</td><td class="c">${escapeHtml(k.unit)}</td><td class="c">${escapeHtml(String(k.baseline ?? ''))}</td>${NEW_YEARS.map(y=>`<td class="c">${escapeHtml(String(k.targets[y] ?? '–'))}</td>`).join('')}</tr>`).join('')}</tbody></table>` : '<div class="rp-empty">ยังไม่มีตัวชี้วัด</div>'}</div>`;
+      }).join('') || rpEmpty('ยังไม่มีกลยุทธ์')}</div>`;
+  }).join('') : rpEmpty('ยังไม่ได้ร่างโครงสร้างแผนใหม่');
+  const mission = (M.mission||'').split('\n').map(x=>x.trim()).filter(Boolean);
+  return `
+  <section class="rp-section rp-break">
+    <h2 class="rp-h1"><span>7</span>ร่างแผนยุทธศาสตร์ พ.ศ. 2571-2575</h2>
+    <div class="rp-box rp-box-violet"><div class="rp-box-t">วิสัยทัศน์</div><p style="font-size:11pt;">${M.vision ? rpNl(M.vision) : '<span class="rp-muted">ยังไม่ได้กำหนด</span>'}</p></div>
+    <div class="rp-two" style="margin-top:3mm;">
+      <div class="rp-box"><div class="rp-box-t">พันธกิจ</div>${mission.length ? `<ol class="rp-list">${mission.map(m=>`<li>${escapeHtml(m)}</li>`).join('')}</ol>` : '<span class="rp-muted">ยังไม่ได้กำหนด</span>'}</div>
+      <div class="rp-box"><div class="rp-box-t">ค่านิยม / หลักการ</div>${M.values ? rpNl(M.values) : '<span class="rp-muted">–</span>'}</div>
+    </div>
+    <h3 class="rp-h3">7.1 ยุทธศาสตร์ กลยุทธ์ และค่าเป้าหมาย</h3>
+    ${struct}
+    <h3 class="rp-h3">7.2 การตรวจย้อน: มติแผนเดิม → แผนใหม่</h3>
+    <table class="rp-table rp-compact rp-fixed">${rpCols([6,36,16,16,26])}<thead><tr><th class="c">ที่</th><th>กลยุทธ์เดิม</th><th>มติ</th><th>อยู่ในแผนใหม่ที่</th><th>ผลการตรวจ</th></tr></thead><tbody>
+      ${rows.map(r=>`<tr><td class="c">${r.it.strategyId}.${r.it.num}</td><td>${escapeHtml(r.it.text)}</td><td>${rpDecisionBadge(r.d)}</td><td>${r.usedIn.map(u=>u.label).join(', ') || '–'}</td>
+        <td>${rpBadge(r.cls==='green'?'green':r.cls==='grey'?'grey':r.cls==='red'?'red':'orange', r.status)}</td></tr>`).join('')}</tbody></table>
+  </section>`;
 }
 
 /* ================================================================ */
